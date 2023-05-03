@@ -6,7 +6,8 @@
 #' Phasing information is not required for a simple DAR analysis.
 #' Removing this enables easy counting of alleles from genotype calls.
 #'
-#' @param gt matrix or data.frame containing genotype information
+#' @param gt A matrix or data.frame containing only genotype information
+#' @param ... Not used
 #'
 #' @return
 #' A \link[base]{data.frame} containing unphased genotype calls
@@ -18,18 +19,36 @@
 #' gt <- geno(vcf)$GT
 #' unphaseGT(gt)
 #'
-#' @importFrom dplyr mutate across
-#' @importFrom tidyselect everything
-#'
+#' @rdname unphaseGT-methods
+#' @aliases unphaseGT
 #' @export
-unphaseGT <- function(gt) {
-    gt <- as.data.frame(gt)
-    gt <- dplyr::mutate(gt, dplyr::across(tidyselect::everything(), .unphase))
-    gt
-}
+setMethod(
+    "unphaseGT",
+    signature = signature(gt = "matrix"),
+    function(gt, ...) {
 
-#' @importFrom stringr str_replace
+        rowIds <- row.names(gt)
+        gt <- as.data.frame(gt)
+        gt <- lapply(gt, .unphase)
+        as.data.frame(gt, row.names = rowIds)
+
+    }
+)
+#' @rdname unphaseGT-methods
+#' @aliases unphaseGT
+#' @export
+setMethod(
+    "unphaseGT",
+    signature = signature("data.frame"),
+    function(gt, ...) {
+
+        rowIds <- row.names(gt)
+        gt <- lapply(gt, .unphase)
+        as.data.frame(gt, row.names = rowIds)
+
+    }
+)
 #' @keywords internal
 .unphase <- function(x) {
-    str_replace(x, "\\|", "\\/")
+    gsub("\\|", "\\/", x)
 }

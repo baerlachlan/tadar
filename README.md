@@ -3,7 +3,7 @@
 
 <!-- badges: start -->
 [![check-bioc](https://github.com/baerlachlan/darr/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/baerlachlan/darr/actions/workflows/check-bioc.yml)
-[![test-coverage](https://github.com/baerlachlan/darr/actions/workflows/test-coverage.yml/badge.svg)](https://github.com/baerlachlan/darr/actions/workflows/test-coverage.yml)
+[![test-coverage](https://github.com/baerlachlan/darr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/baerlachlan/darr/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 The goal of darr is to ...

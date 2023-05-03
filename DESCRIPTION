@@ -16,7 +16,7 @@ Authors@R:
         comment = c(ORCID = "0000-0001-5213-3401")),
     person("Stephen", "Pederson",
         email = "stephen.pederson.au@gmail.com",
-        role = c("aut"),
+        role = "aut",
         comment = c(ORCID = "0000-0001-8197-3303")))
 License: GPL-3
 Encoding: UTF-8
@@ -28,14 +28,16 @@ URL: https://github.com/baerlachlan/darr
 BiocType: Software
 biocViews: Sequencing, RNASeq, SNP, GenomicVariation, VariantAnnotation,
     DifferentialExpression
+VignetteBuilder: knitr
+Depends: 
+    GenomicRanges
 Imports: 
-    dplyr,
-    stringr,
-    tidyselect
+    MatrixGenerics,
+    S4Vectors,
+    VariantAnnotation
 Suggests: 
     covr,
     knitr,
+    methods,
     rmarkdown,
-    testthat (>= 3.0.0),
-    VariantAnnotation
-VignetteBuilder: knitr
+    testthat (>= 3.0.0)
