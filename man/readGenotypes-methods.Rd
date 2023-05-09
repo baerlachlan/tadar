@@ -3,25 +3,37 @@
 \name{readGenotypes}
 \alias{readGenotypes}
 \alias{readGenotypes,character-method}
+\alias{readGenotypes,TabixFile-method}
 \title{Read genotypes from a VCF file}
 \usage{
-readGenotypes(file, ...)
+readGenotypes(file, unphase = TRUE, ...)
 
-\S4method{readGenotypes}{character}(file, ...)
+\S4method{readGenotypes}{character}(file, unphase = TRUE, ...)
+
+\S4method{readGenotypes}{TabixFile}(file, unphase = TRUE, ...)
 }
 \arguments{
-\item{file}{The file path of a VCF file containing genotype data}
+\item{file}{The file path of a VCF file containing genotype data.
+Alternatively, a \link[Rsamtools]{TabixFile} as described in
+\code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
+
+\item{unphase}{A \code{logical} specifying if phasing information should be
+removed from genotypes. This is recommended if proceeding with DAR analysis}
 
 \item{...}{Passed to \code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
 }
 \value{
-tmp
+A \code{GRanges} object constructed from the CHROM, POS, ID and REF
+fields of the supplied \code{VCF} file. Genotype data for each sample present in
+the \code{VCF} file is added to the metadata columns
 }
 \description{
-Extract genotypes from a VCF file into a GRanges object
+Extract genotypes from a VCF file into a GRanges object for
+downstream DAR analysis
 }
 \details{
-Extract genotype information from the GT field
+Extract genotypes from a VCF file with the option to remove phasing
+information for DAR analysis
 }
 \examples{
 library(VariantAnnotation)

@@ -13,7 +13,7 @@ gt_unphased <- matrix(
     dimnames = list("SNP1", c("sample1", "sample2", "sample3"))
 )
 
-test_that("Correct output returned by unphaseGT", {
+test_that("unphaseGT returns correct output", {
     expect_equal(unphaseGT(gt_mat), gt_unphased)
     expect_equal(unphaseGT(gt_df), gt_unphased)
 })
