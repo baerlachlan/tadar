@@ -6,10 +6,4 @@
 [![Codecov test coverage](https://codecov.io/gh/baerlachlan/darr/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/baerlachlan/darr?branch=devel)
 <!-- badges: end -->
 
-## Installation
-
-```r
-install.packages("BiocManager")
-BiocManager::install("darr")
-```
-
+This package is currently under development

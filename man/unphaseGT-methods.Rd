@@ -6,19 +6,17 @@
 \alias{unphaseGT,data.frame-method}
 \title{Unphase genotypes}
 \usage{
-unphaseGT(gt, ...)
+unphaseGT(gt)
 
-\S4method{unphaseGT}{matrix}(gt, ...)
+\S4method{unphaseGT}{matrix}(gt)
 
-\S4method{unphaseGT}{data.frame}(gt, ...)
+\S4method{unphaseGT}{data.frame}(gt)
 }
 \arguments{
 \item{gt}{A matrix or data.frame containing only genotype information}
-
-\item{...}{Not used}
 }
 \value{
-A \link[base]{data.frame} containing unphased genotype calls
+A \link[base]{matrix} containing unphased genotype calls
 }
 \description{
 Remove phasing information from genotype calls

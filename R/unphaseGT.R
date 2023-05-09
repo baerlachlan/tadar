@@ -7,10 +7,9 @@
 #' Removing this enables easy counting of alleles from genotype calls.
 #'
 #' @param gt A matrix or data.frame containing only genotype information
-#' @param ... Not used
 #'
 #' @return
-#' A \link[base]{data.frame} containing unphased genotype calls
+#' A \link[base]{matrix} containing unphased genotype calls
 #'
 #' @examples
 #' library(VariantAnnotation)
@@ -25,12 +24,10 @@
 setMethod(
     "unphaseGT",
     signature = signature(gt = "matrix"),
-    function(gt, ...) {
+    function(gt) {
 
-        rowIds <- row.names(gt)
-        gt <- as.data.frame(gt)
-        gt <- lapply(gt, .unphase)
-        as.data.frame(gt, row.names = rowIds)
+        gt <- apply(gt, c(1,2), .unphase)
+        gt
 
     }
 )
@@ -40,11 +37,11 @@ setMethod(
 setMethod(
     "unphaseGT",
     signature = signature("data.frame"),
-    function(gt, ...) {
+    function(gt) {
 
-        rowIds <- row.names(gt)
-        gt <- lapply(gt, .unphase)
-        as.data.frame(gt, row.names = rowIds)
+        gt <- as.matrix(gt)
+        gt <- apply(gt, c(1,2), .unphase)
+        gt
 
     }
 )
