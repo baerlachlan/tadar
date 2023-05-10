@@ -19,9 +19,9 @@
 #' the `VCF` file is added to the metadata columns
 #'
 #' @examples
-#' library(VariantAnnotation)
-#' fl <- system.file("extdata", "chr22.vcf.gz", package="VariantAnnotation")
-#' readGenotypes(fl, genome = "hg19")
+#' fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
+#' genotypes <- readGenotypes(fl)
+#' genotypes
 #'
 #' @rdname readGenotypes-methods
 #' @aliases readGenotypes
@@ -57,6 +57,7 @@ setMethod(
     stopifnot(is.logical(unphase))
     vcf <- readVcf(file, ...)
     gt <- geno(vcf)$GT
+    stopifnot(!is.null(gt))
     if (unphase) gt <- unphaseGT(gt)
     gr <- rowRanges(vcf)
     ## Remove names to reduce object size

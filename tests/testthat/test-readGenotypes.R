@@ -1,11 +1,12 @@
-fl <- system.file("extdata", "chr22.vcf.gz", package="VariantAnnotation")
+fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
 
 test_that("readGenotypes returns the expected names", {
-    genos <- readGenotypes(fl)
-    expect_equal(names(genos), NULL)
+    genotypes <- readGenotypes(fl)
+    expect_equal(names(genotypes), NULL)
     expect_equal(
-        names(mcols(genos)),
-        c("HG00096", "HG00097", "HG00099", "HG00100", "HG00101")
+        names(mcols(genotypes)),
+        c("S2", "S7", "S9", "S10", "S19", "S20",
+          "S3", "S6", "S11", "S12", "S15", "S16", "S18")
     )
 })
 
