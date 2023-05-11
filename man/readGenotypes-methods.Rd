@@ -6,7 +6,7 @@
 \alias{readGenotypes,TabixFile-method}
 \title{Read genotypes from a VCF file}
 \usage{
-readGenotypes(file, unphase = TRUE, ...)
+readGenotypes(file, ...)
 
 \S4method{readGenotypes}{character}(file, unphase = TRUE, ...)
 
@@ -17,10 +17,10 @@ readGenotypes(file, unphase = TRUE, ...)
 Alternatively, a \link[Rsamtools]{TabixFile} as described in
 \code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
 
+\item{...}{Passed to \code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
+
 \item{unphase}{A \code{logical} specifying if phasing information should be
 removed from genotypes. This is recommended if proceeding with DAR analysis}
-
-\item{...}{Passed to \code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
 }
 \value{
 A \code{GRanges} object constructed from the CHROM, POS, ID and REF

@@ -3,7 +3,7 @@
 #' @export
 setGeneric(
     "readGenotypes",
-    function(file, unphase=TRUE, ...) standardGeneric("readGenotypes")
+    function(file, ...) standardGeneric("readGenotypes")
 )
 
 #' @name unphaseGT

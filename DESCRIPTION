@@ -33,6 +33,7 @@ Depends:
     GenomicRanges
 Imports: 
     MatrixGenerics,
+    Rsamtools,
     S4Vectors,
     VariantAnnotation
 Suggests: 

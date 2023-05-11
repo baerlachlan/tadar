@@ -29,38 +29,51 @@
 setMethod(
     "readGenotypes",
     signature = signature(file = "character"),
-    function(file, unphase, ...) {
+    function(file, unphase = TRUE, ...) {
 
         .readGenotypes(file, unphase, ...)
 
     }
 )
+#' @importFrom Rsamtools TabixFile
 #' @rdname readGenotypes-methods
 #' @aliases readGenotypes
 #' @export
 setMethod(
     "readGenotypes",
     signature = signature(file = "TabixFile"),
-    function(file, unphase, ...) {
+    function(file, unphase = TRUE, ...) {
 
         .readGenotypes(file, unphase, ...)
 
     }
 )
 #' @import GenomicRanges
-#' @importFrom VariantAnnotation readVcf geno
+#' @importFrom VariantAnnotation readVcf geno ScanVcfParam
 #' @importFrom MatrixGenerics rowRanges
 #' @importFrom S4Vectors 'mcols<-'
 #' @keywords internal
 .readGenotypes <- function(file, unphase, ...) {
 
     stopifnot(is.logical(unphase))
+    dotArgs <- list(...)
+    ## Define a minimal ScanVcfParam object for fast loading
+    if (!exists("param", where = dotArgs)) dotArgs$param <- ScanVcfParam(
+        fixed = NA, info = NA, geno = "GT"
+    )
+    gtChecks <- c(
+        ## Check for GT field if user-specified param
+        "GT" %in% dotArgs$param@geno,
+        ## Or if no geno specified, this will also return GT field
+        is.character(dotArgs$param@geno) & length(dotArgs$param@geno) == 0
+    )
+    stopifnot(any(gtChecks))
     vcf <- readVcf(file, ...)
     gt <- geno(vcf)$GT
     stopifnot(!is.null(gt))
     if (unphase) gt <- unphaseGT(gt)
     gr <- rowRanges(vcf)
-    ## Remove names to reduce object size
+    ## Reduce object size
     gr <- unname(gr)
     mcols(gr) <- gt
     gr
