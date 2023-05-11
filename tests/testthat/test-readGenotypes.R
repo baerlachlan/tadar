@@ -16,5 +16,5 @@ test_that("readGenotypes errors when expected", {
     expect_error(readGenotypes(fl, unphase = c()), 'is.logical(.+) is not TRUE')
     expect_error(
         readGenotypes(fl, param = ScanVcfParam(geno = NA)),
-        'any\\(gtChecks\\) is not TRUE')
+        'any\\(svpChecks\\) is not TRUE')
 })

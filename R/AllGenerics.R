@@ -13,3 +13,11 @@ setGeneric(
     "unphaseGT",
     function(gt) standardGeneric("unphaseGT")
 )
+
+#' @name countAlleles
+#' @rdname countAlleles-methods
+#' @export
+setGeneric(
+    "countAlleles",
+    function(x, groups) standardGeneric("countAlleles")
+)

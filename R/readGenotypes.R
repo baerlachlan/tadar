@@ -61,13 +61,13 @@ setMethod(
     if (!exists("param", where = dotArgs)) dotArgs$param <- ScanVcfParam(
         fixed = NA, info = NA, geno = "GT"
     )
-    gtChecks <- c(
+    svpChecks <- c(
         ## Check for GT field if user-specified param
         "GT" %in% dotArgs$param@geno,
         ## Or if no geno specified, this will also return GT field
         is.character(dotArgs$param@geno) & length(dotArgs$param@geno) == 0
     )
-    stopifnot(any(gtChecks))
+    stopifnot(any(svpChecks))
     vcf <- readVcf(file, ...)
     gt <- geno(vcf)$GT
     stopifnot(!is.null(gt))
