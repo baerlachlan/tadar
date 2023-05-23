@@ -1,5 +1,4 @@
 fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
-tbx <- TabixFile(fl)
 
 test_that("readGenotypes returns the expected names", {
     mcolNames <- c("S2", "S7", "S9", "S10", "S19", "S20",
@@ -7,6 +6,7 @@ test_that("readGenotypes returns the expected names", {
     geno_fl <- readGenotypes(fl)
     expect_equal(names(geno_fl), NULL)
     expect_equal(names(mcols(geno_fl)), mcolNames)
+    tbx <- TabixFile(fl)
     geno_tbx <- readGenotypes(tbx)
     expect_equal(names(geno_tbx), NULL)
     expect_equal(names(mcols(geno_tbx)), mcolNames)
