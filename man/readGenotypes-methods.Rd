@@ -37,7 +37,6 @@ information for DAR analysis
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
-genotypes <- readGenotypes(fl)
-genotypes
+readGenotypes(fl)
 
 }

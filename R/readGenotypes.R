@@ -20,8 +20,7 @@
 #'
 #' @examples
 #' fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
-#' genotypes <- readGenotypes(fl)
-#' genotypes
+#'readGenotypes(fl)
 #'
 #' @rdname readGenotypes-methods
 #' @aliases readGenotypes
@@ -49,7 +48,7 @@ setMethod(
     }
 )
 #' @import GenomicRanges
-#' @importFrom VariantAnnotation readVcf geno ScanVcfParam
+#' @importFrom VariantAnnotation readVcf ScanVcfParam geno vcfGeno
 #' @importFrom MatrixGenerics rowRanges
 #' @importFrom S4Vectors 'mcols<-'
 #' @keywords internal
@@ -61,11 +60,12 @@ setMethod(
     if (!exists("param", where = dotArgs)) dotArgs$param <- ScanVcfParam(
         fixed = NA, info = NA, geno = "GT"
     )
+    genoParam <- vcfGeno(dotArgs$param)
     svpChecks <- c(
         ## Check for GT field if user-specified param
-        "GT" %in% dotArgs$param@geno,
+        "GT" %in% genoParam,
         ## Or if no geno specified, this will also return GT field
-        is.character(dotArgs$param@geno) & length(dotArgs$param@geno) == 0
+        is.character(genoParam) & length(genoParam) == 0
     )
     stopifnot(any(svpChecks))
     vcf <- readVcf(file, ...)
@@ -73,7 +73,7 @@ setMethod(
     stopifnot(!is.null(gt))
     if (unphase) gt <- unphaseGT(gt)
     gr <- rowRanges(vcf)
-    ## Reduce object size
+    ## Remove names to reduce object size
     gr <- unname(gr)
     mcols(gr) <- gt
     gr

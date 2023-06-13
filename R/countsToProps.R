@@ -30,7 +30,7 @@
 #' props
 #'
 #' @import GenomicRanges
-#' @importFrom S4Vectors mcols
+#' @importFrom S4Vectors mcols 'mcols<-' endoapply
 #' @rdname countsToProps-methods
 #' @aliases countsToProps
 #' @export
@@ -40,7 +40,7 @@ setMethod(
     function(counts, filter = TRUE) {
 
         if (filter) counts <- filterLoci(counts)
-        grList <- lapply(counts, function(x){
+        endoapply(counts, function(x){
             gr <- granges(x)
             x <- mcols(x)
             if (!filter & min(x$n_called) == 0)
@@ -69,7 +69,6 @@ setMethod(
             mcols(gr) <- props
             gr
         })
-        GRangesList(grList)
 
     }
 )

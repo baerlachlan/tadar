@@ -35,7 +35,7 @@
 #' filterLoci(counts)
 #'
 #' @import GenomicRanges
-#' @importFrom S4Vectors mcols
+#' @importFrom S4Vectors mcols endoapply
 #' @importFrom rlang enquo eval_tidy
 #' @rdname filterLoci-methods
 #' @aliases filterLoci
@@ -49,7 +49,7 @@ setMethod(
         n_called <- n_missing <- NULL
         ## Defuse filter expression
         filter <- enquo(filter)
-        countsFilt <- lapply(counts, function(x){
+        endoapply(counts, function(x){
             checkNames <- c("n_called", "n_missing", "n_0", "n_1", "n_2", "n_3")
             if (!all(names(mcols(x)) == checkNames))
                 stop(
@@ -60,7 +60,7 @@ setMethod(
             df <- as.data.frame(mcols(x))
             ## Evaluate filter expression using data mask
             keep <- eval_tidy(filter, data = df)
-            checks <- c(is.logical(keep), length(keep) == NROW(df))
+            checks <- c(is.logical(keep), length(keep) == nrow(df))
             if (!all(checks))
                 stop(
                     "`filter` expression must return a logical vector",
@@ -68,7 +68,6 @@ setMethod(
                 )
             x[keep,]
         })
-        GRangesList(countsFilt)
 
     }
 )

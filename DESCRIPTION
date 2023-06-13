@@ -32,10 +32,13 @@ VignetteBuilder: knitr
 Depends: 
     GenomicRanges
 Imports: 
+    GenomeInfoDb,
+    IRanges,
     MatrixGenerics,
     rlang,
     Rsamtools,
     S4Vectors,
+    stats,
     VariantAnnotation
 Suggests: 
     covr,
