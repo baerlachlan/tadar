@@ -31,7 +31,7 @@ DAR values to the elastic sliding window ranges associated with the smoothed
 DAR values
 }
 \examples{
-fl <- system.file("extdata", "", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),

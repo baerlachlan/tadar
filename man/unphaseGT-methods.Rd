@@ -27,7 +27,7 @@ Removing this enables easy counting of alleles from genotype calls.
 }
 \examples{
 library(VariantAnnotation)
-fl <- system.file("extdata", "", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 vcf <- readVcf(fl)
 gt <- geno(vcf)$GT
 unphaseGT(gt)

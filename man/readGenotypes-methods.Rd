@@ -36,7 +36,7 @@ Extract genotypes from a VCF file with the option to remove phasing
 information for DAR analysis
 }
 \examples{
-fl <- system.file("extdata", "", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 readGenotypes(fl)
 
 }

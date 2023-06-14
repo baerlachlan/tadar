@@ -17,7 +17,7 @@
 #' Each element of the list represents a comparison between two sample groups.
 #'
 #' @examples
-#' fl <- system.file("extdata", "", package="darr")
+#' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 #' genotypes <- readGenotypes(fl)
 #' groups <- list(
 #'     group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
@@ -76,7 +76,7 @@ setMethod(
                     chr <- unique(chr)
                     chr <- as.character(chr)
                     seqlen <- seqlengths(y)[[chr]]
-                    if (!is.numeric(seqlen))
+                    if (is.na(seqlen))
                         stop(
                             "Cannot extend edges. Check seqlength for seqname ",
                             chr
