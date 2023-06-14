@@ -1,24 +1,23 @@
 #' @title Get the elastic sliding window ranges of the smoothed DAR metric
 #'
-#' @description Switch the ranges associated with single base pair position DAR
-#' values to the elastic sliding window ranges associated with the smoothed DAR
-#' values
+#' @description Replace the ranges associated with single base position raw
+#' DAR values to the elastic sliding window ranges associated with the smoothed
+#' DAR values
 #'
-#' @param dar A GRangesList with ranges representing single base pair positions
+#' @param dar A GRangesList with ranges representing single base positions
 #' and metadata columns containing the smoothed DAR values.
-#' Each element of the list represents a comparison between two sample groups
-#' @param extendEdges A logical specifying if the edges of each chromosome
-#' should be extended to cover the entire chromosome.
-#' This is useful for assigning DAR values to genomic features that exist
+#' @param extendEdges A logical specifying if ranges at the edges of each
+#' chromosome should be extended to cover the entire chromosome.
+#' Useful for assigning DAR values to genomic features that exist
 #' at the 5' or 3' edges of the chromosome
 #' @param ... Not used
 #'
-#' @return A GRangesList with ranges elements that represent the elastic
-#' sliding windows used to smooth the DAR metric.
+#' @return A GRangesList with ranges that represent the elastic sliding windows
+#' used to smooth the DAR metric.
 #' Each element of the list represents a comparison between two sample groups.
 #'
 #' @examples
-#' fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
+#' fl <- system.file("extdata", "", package="darr")
 #' genotypes <- readGenotypes(fl)
 #' groups <- list(
 #'     group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
@@ -77,9 +76,9 @@ setMethod(
                     chr <- unique(chr)
                     chr <- as.character(chr)
                     seqlen <- seqlengths(y)[[chr]]
-                    if (is.na(seqlen))
+                    if (!is.numeric(seqlen))
                         stop(
-                            "Cannot extend edges. No seqlength for seqname ",
+                            "Cannot extend edges. Check seqlength for seqname ",
                             chr
                         )
                     start[1] <- 1

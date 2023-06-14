@@ -19,7 +19,7 @@
 #' the `VCF` file is added to the metadata columns
 #'
 #' @examples
-#' fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
+#' fl <- system.file("extdata", "", package="darr")
 #'readGenotypes(fl)
 #'
 #' @rdname readGenotypes-methods

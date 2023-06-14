@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' library(VariantAnnotation)
-#' fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
+#' fl <- system.file("extdata", "", package="darr")
 #' vcf <- readVcf(fl)
 #' gt <- geno(vcf)$GT
 #' unphaseGT(gt)

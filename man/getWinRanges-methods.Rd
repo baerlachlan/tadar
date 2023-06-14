@@ -10,29 +10,28 @@ getWinRanges(dar, ...)
 \S4method{getWinRanges}{GRangesList}(dar, extendEdges = FALSE)
 }
 \arguments{
-\item{dar}{A GRangesList with ranges representing single base pair positions
-and metadata columns containing the smoothed DAR values.
-Each element of the list represents a comparison between two sample groups}
+\item{dar}{A GRangesList with ranges representing single base positions
+and metadata columns containing the smoothed DAR values.}
 
 \item{...}{Not used}
 
-\item{extendEdges}{A logical specifying if the edges of each chromosome
-should be extended to cover the entire chromosome.
-This is useful for assigning DAR values to genomic features that exist
+\item{extendEdges}{A logical specifying if ranges at the edges of each
+chromosome should be extended to cover the entire chromosome.
+Useful for assigning DAR values to genomic features that exist
 at the 5' or 3' edges of the chromosome}
 }
 \value{
-A GRangesList with ranges elements that represent the elastic
-sliding windows used to smooth the DAR metric.
+A GRangesList with ranges that represent the elastic sliding windows
+used to smooth the DAR metric.
 Each element of the list represents a comparison between two sample groups.
 }
 \description{
-Switch the ranges associated with single base pair position DAR
-values to the elastic sliding window ranges associated with the smoothed DAR
-values
+Replace the ranges associated with single base position raw
+DAR values to the elastic sliding window ranges associated with the smoothed
+DAR values
 }
 \examples{
-fl <- system.file("extdata", "chr1.vcf.gz", package="darr")
+fl <- system.file("extdata", "", package="darr")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
