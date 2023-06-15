@@ -53,7 +53,7 @@ setMethod(
             if (is.null(winSize)) {
                 stop(
                     "No winSize detected. Use `smoothDar()` before ",
-                    "`getWinRanges()`"
+                    "`getWinRanges()`", call. = FALSE
                 )
             }
             grl <- split(x, f = seqnames(x))

@@ -1,3 +1,11 @@
+#' @name assignFeatureDar
+#' @rdname assignFeatureDar-methods
+#' @export
+setGeneric(
+    "assignFeatureDar",
+    function(features, dar, ...) standardGeneric("assignFeatureDar")
+)
+
 #' @name countAlleles
 #' @rdname countAlleles-methods
 #' @export

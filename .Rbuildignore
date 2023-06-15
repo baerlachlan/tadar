@@ -5,3 +5,4 @@
 ^codecov\.yml$
 ^.*TODO\.md$
 ^LICENSE\.md$
+^data-raw$
