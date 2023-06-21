@@ -38,6 +38,7 @@
 #' @import GenomicRanges
 #' @importFrom S4Vectors mcols 'mcols<-' from to
 #' @importFrom stats dist
+#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
 #' @rdname dar-methods
 #' @aliases dar
 #' @export
@@ -72,6 +73,8 @@ setMethod(
             }, numeric(1))
             ## Convert to DAR
             mcols(gr)$dar <- dist / sqrt(2)
+            ## In case a seqlevel is lost due to no overlap
+            seqlevels(gr) <- seqlevelsInUse(gr)
             gr
         })
         GRangesList(grl)

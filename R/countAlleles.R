@@ -18,8 +18,7 @@
 #'     group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
 #'     group2 = c("S3", "S6", "S11", "S12", "S15", "S16", "S18")
 #' )
-#' counts <- countAlleles(genotypes, groups)
-#' counts
+#' countAlleles(genotypes, groups)
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors 'mcols<-'

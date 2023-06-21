@@ -20,7 +20,7 @@
 #'
 #' @examples
 #' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
-#'readGenotypes(fl)
+#' readGenotypes(fl)
 #'
 #' @rdname readGenotypes-methods
 #' @aliases readGenotypes
@@ -51,6 +51,7 @@ setMethod(
 #' @importFrom VariantAnnotation readVcf ScanVcfParam geno vcfGeno
 #' @importFrom MatrixGenerics rowRanges
 #' @importFrom S4Vectors 'mcols<-'
+#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
 #' @keywords internal
 .readGenotypes <- function(file, unphase, ...) {
 
@@ -73,8 +74,8 @@ setMethod(
     stopifnot(!is.null(gt))
     if (unphase) gt <- unphaseGT(gt)
     gr <- rowRanges(vcf)
-    ## Remove names to reduce object size
-    gr <- unname(gr)
+    seqlevels(gr) <- seqlevelsInUse(gr)  # Remove seqlevels not present in data
+    gr <- unname(gr)  # Remove names to reduce object size
     mcols(gr) <- gt
     gr
 

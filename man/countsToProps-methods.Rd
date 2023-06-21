@@ -40,7 +40,6 @@ groups <- list(
     group2 = c("S3", "S6", "S11", "S12", "S15", "S16", "S18")
 )
 counts <- countAlleles(genotypes, groups)
-props <- countsToProps(counts)
-props
+countsToProps(counts)
 
 }

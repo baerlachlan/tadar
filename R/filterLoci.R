@@ -37,6 +37,7 @@
 #' @import GenomicRanges
 #' @importFrom S4Vectors mcols endoapply
 #' @importFrom rlang enquo eval_tidy
+#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
 #' @rdname filterLoci-methods
 #' @aliases filterLoci
 #' @export
@@ -66,7 +67,9 @@ setMethod(
                     "`filter` expression must return a logical vector",
                     " of correct length"
                 )
-            x[keep,]
+            gr <- x[keep,]
+            seqlevels(gr) <- seqlevelsInUse(gr)  # In case lost with filter
+            gr
         })
 
     }

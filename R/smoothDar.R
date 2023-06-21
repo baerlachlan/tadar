@@ -49,15 +49,12 @@ setMethod(
         endoapply(dar, function(x){
             if (winSize < 1 || winSize %% 2 != 1)
                 stop("`winSize` must be an odd integer greater than 0")
-            ## Add winSize to metadata for downstream use (e.g. getWinRanges())
-            ## so the user doesn't need to specify winSize in two funcs
-            ## Alternatively could use the number of NA's to determine winSize
-            ## Not sure about this, remember to ask Stevie
+            ## Add winSize to metadata for downstream use so the user doesn't
+            ## need to specify winSize in two funcs
             metadata(x)$winSize <- winSize
             grl <- split(x, f = seqnames(x))
             grl <- endoapply(grl, function(y){
-                ## Throw a more informative error than filter() in the
-                ## rare scenario that this occurs
+                ## Throw a more informative error than filter() would
                 if (winSize > NROW(y))
                     stop(
                         "`winSize` greater than number of ranges for seqname ",
@@ -72,7 +69,7 @@ setMethod(
                 mcols(y)$dar_smooth <- as.numeric(mcols(y)$dar_smooth)
                 y
             })
-            unlist(grl)
+            unlist(grl, use.names = FALSE)
         })
 
     }

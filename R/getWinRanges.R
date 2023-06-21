@@ -60,13 +60,6 @@ setMethod(
             grl <- endoapply(grl, function(y){
                 isNA <- is.na(y$dar_smooth)
                 nNA <- sum(isNA)
-                # ## Commenting this out while deciding if it's needed
-                # ## since using metadata() now as opposed to a winSize arg
-                # if (nNA != winSize - 1)
-                #     stop(
-                #         "`winSize` does not match the window size used to ",
-                #         "smooth the DAR metric"
-                #     )
                 ## Grab edges of windows while accounting for NA removal
                 n <- NROW(y)
                 start <- start(y)[seq_len(n - nNA)]
