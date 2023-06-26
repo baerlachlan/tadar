@@ -6,6 +6,14 @@ setGeneric(
     function(features, dar, ...) standardGeneric("assignFeatureDar")
 )
 
+#' @name convertRanges
+#' @rdname convertRanges-methods
+#' @export
+setGeneric(
+    "convertRanges",
+    function(dar, ...) standardGeneric("convertRanges")
+)
+
 #' @name countAlleles
 #' @rdname countAlleles-methods
 #' @export
@@ -38,28 +46,12 @@ setGeneric(
     function(counts, ...) standardGeneric("filterLoci")
 )
 
-#' @name getWinRanges
-#' @rdname getWinRanges-methods
-#' @export
-setGeneric(
-    "getWinRanges",
-    function(dar, ...) standardGeneric("getWinRanges")
-)
-
 #' @name readGenotypes
 #' @rdname readGenotypes-methods
 #' @export
 setGeneric(
     "readGenotypes",
     function(file, ...) standardGeneric("readGenotypes")
-)
-
-#' @name smoothDar
-#' @rdname smoothDar-methods
-#' @export
-setGeneric(
-    "smoothDar",
-    function(dar, ...) standardGeneric("smoothDar")
 )
 
 #' @name unphaseGT

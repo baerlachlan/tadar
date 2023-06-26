@@ -15,9 +15,8 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts)
-darSmooth <- smoothDar(dar, winSize = 5)
-darWindows <- getWinRanges(darSmooth)
-darWindows_ex <- getWinRanges(darSmooth, extendEdges = TRUE)
+darWindows <- convertRanges(dar)
+darWindows_ex <- convertRanges(dar, extendEdges = TRUE)
 
 test_that("assignFeatureDar returns the expected output", {
     geneDar_raw <- assignFeatureDar(chr1_genes, dar, darVal = "raw")
@@ -43,7 +42,7 @@ test_that("assignFeatureDar errors whene expected", {
 
 test_that("assignFeatureDar gives warnings when expected", {
     expect_warning(
-        assignFeatureDar(chr1_genes, darSmooth, darVal = "smooth"),
+        assignFeatureDar(chr1_genes, dar, darVal = "smooth"),
         "Range\\(s\\) detected with width == 1"
     )
     expect_warning(

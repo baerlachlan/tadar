@@ -7,7 +7,7 @@
 \usage{
 dar(props, contrasts, ...)
 
-\S4method{dar}{GRangesList,matrix}(props, contrasts)
+\S4method{dar}{GRangesList,matrix}(props, contrasts, winSize = 5)
 }
 \arguments{
 \item{props}{A GRangesList containing a summary of normalised allele counts
@@ -22,6 +22,9 @@ The two levels involved with each contrast should be specified with
 \code{1} and \code{-1}}
 
 \item{...}{Not used}
+
+\item{winSize}{integer specifying the number of ranges to include in the
+elastic sliding window used for smoothing the DAR metric}
 }
 \value{
 A GRangesList containing DAR values at each overlapping range

@@ -44,8 +44,7 @@
 #' dar <- dar(props, contrasts)
 #' assignFeatureDar(chr1_genes, dar, darVal = "raw")
 #'
-#' darSmooth <- smoothDar(dar, winSize = 5)
-#' darWindows <- getWinRanges(darSmooth, extendEdges = TRUE)
+#' darWindows <- convertRanges(dar, extendEdges = TRUE)
 #' assignFeatureDar(chr1_genes, darWindows, darVal = "smooth")
 #'
 #' @import GenomicRanges
@@ -60,7 +59,7 @@ setMethod(
 
         darVal <- match.arg(darVal)
         endoapply(dar, function(x){
-            .afdChecks(x, darVal)
+            .assignFeatureDar_checks(x, darVal)
             hits <- findOverlaps(features, x)
             queries <- from(hits)
             queries <- unique(queries)
@@ -81,7 +80,7 @@ setMethod(
 #' @keywords internal#'
 #' @importFrom S4Vectors mcols
 #' @importFrom BiocGenerics width
-.afdChecks <- function(dar, darVal) {
+.assignFeatureDar_checks <- function(dar, darVal) {
     widths <- width(dar)
     if (darVal == "smooth") {
         if (!"dar_smooth" %in% names(mcols(dar)))

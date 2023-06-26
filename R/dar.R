@@ -11,6 +11,8 @@
 #' (i.e. sample groups) to be contrasted.
 #' The two levels involved with each contrast should be specified with
 #' `1` and `-1`
+#' @param winSize integer specifying the number of ranges to include in the
+#' elastic sliding window used for smoothing the DAR metric
 #' @param ... Not used
 #'
 #' @return A GRangesList containing DAR values at each overlapping range
@@ -36,16 +38,17 @@
 #' dar(props, contrasts)
 #'
 #' @import GenomicRanges
-#' @importFrom S4Vectors mcols 'mcols<-' from to
+#' @importFrom S4Vectors endoapply mcols 'mcols<-' from to 'metadata<-'
 #' @importFrom stats dist
-#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
+#' @importFrom GenomeInfoDb seqnames 'seqlevels<-' seqlevelsInUse
+#' @importFrom stats filter
 #' @rdname dar-methods
 #' @aliases dar
 #' @export
 setMethod(
     "dar",
     signature = signature(props = "GRangesList", contrasts = "matrix"),
-    function(props, contrasts) {
+    function(props, contrasts, winSize = 5) {
 
         lvls <- dimnames(contrasts)[[1]]
         conts <- dimnames(contrasts)[[2]]
@@ -54,30 +57,10 @@ setMethod(
         if (!all(lvls %in% names(props)))
             stop("Levels of `contrasts` must match names of `props`")
         contrasts <- .contrastsAsList(contrasts)
-        grl <- lapply(contrasts, function(x){
-            ## Subset for groups to be contrasted
-            props <- props[x]
-            ## Subset for ranges present in both groups
-            overlaps <- findOverlaps(props[[1]], props[[2]])
-            props[[1]] <- props[[1]][from(overlaps),]
-            props[[2]] <- props[[2]][to(overlaps),]
-            stopifnot(identical(granges(props[[1]]), granges(props[[2]])))
-            gr <- granges(props[[1]])
-            props <- lapply(props, mcols)
-            props <- lapply(props, as.matrix)
-            ## Calculate Euclidean distance
-            dist <- vapply(seq_along(gr), function(i){
-                mat <- rbind(props[[1]][i,], props[[2]][i,])
-                dist <- dist(mat, method = "euclidean")
-                as.numeric(dist)
-            }, numeric(1))
-            ## Convert to DAR
-            mcols(gr)$dar <- dist / sqrt(2)
-            ## In case a seqlevel is lost due to no overlap
-            seqlevels(gr) <- seqlevelsInUse(gr)
-            gr
-        })
-        GRangesList(grl)
+        if (winSize < 1 || winSize %% 2 != 1)
+            stop("`winSize` must be an odd integer greater than 0")
+        grl <- .calcDar(props = props, contrasts = contrasts)
+        grl <- .smoothDar(dar = grl, winSize = winSize)
 
     }
 )
@@ -94,5 +77,62 @@ setMethod(
     })
     names(contrastsList) <- colnames(contrasts)
     contrastsList
+
+}
+
+#' @keywords internal
+.calcDar <- function(props, contrasts) {
+
+    grl <- lapply(contrasts, function(x){
+        ## Subset for groups to be contrasted
+        props <- props[x]
+        ## Subset for ranges present in both groups
+        overlaps <- findOverlaps(props[[1]], props[[2]])
+        props[[1]] <- props[[1]][from(overlaps),]
+        props[[2]] <- props[[2]][to(overlaps),]
+        stopifnot(identical(granges(props[[1]]), granges(props[[2]])))
+        gr <- granges(props[[1]])
+        props <- lapply(props, mcols)
+        props <- lapply(props, as.matrix)
+        ## Calculate Euclidean distance
+        dist <- vapply(seq_along(gr), function(i){
+            mat <- rbind(props[[1]][i,], props[[2]][i,])
+            dist <- dist(mat, method = "euclidean")
+            as.numeric(dist)
+        }, numeric(1))
+        ## Convert to DAR
+        mcols(gr)$dar <- dist / sqrt(2)
+        ## Remove seqlevels that may be lost due to no overlap
+        seqlevels(gr) <- seqlevelsInUse(gr)
+        ## Add rangeType to metadata for downstream use
+        metadata(gr)$rangeType <- "origin"
+        gr
+    })
+    GRangesList(grl)
+
+}
+
+#' @keywords internal
+.smoothDar <- function(dar, winSize) {
+
+    endoapply(dar, function(x){
+        ## Add winSize to metadata for downstream use
+        metadata(x)$winSize <- winSize
+        grl <- split(x, f = seqnames(x))
+        grl <- endoapply(grl, function(y){
+            ## Throw a more informative error than filter() would
+            if (winSize > NROW(y))
+                stop(
+                    "`winSize` greater than number of ranges for seqname ",
+                    unique(seqnames(y)), call. = FALSE
+                )
+            mcols(y)$dar_smooth <- filter(
+                y$dar, rep(1 / winSize, winSize), sides = 2
+            )
+            mcols(y)$dar_smooth <- as.numeric(mcols(y)$dar_smooth)
+            y
+        })
+        unlist(grl, use.names = FALSE)
+    })
 
 }

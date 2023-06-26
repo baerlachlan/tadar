@@ -59,8 +59,7 @@ contrasts <- matrix(
 dar <- dar(props, contrasts)
 assignFeatureDar(chr1_genes, dar, darVal = "raw")
 
-darSmooth <- smoothDar(dar, winSize = 5)
-darWindows <- getWinRanges(darSmooth, extendEdges = TRUE)
+darWindows <- convertRanges(dar, extendEdges = TRUE)
 assignFeatureDar(chr1_genes, darWindows, darVal = "smooth")
 
 }
