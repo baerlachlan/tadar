@@ -16,7 +16,6 @@
 #' Possible options are "raw" and "smooth".
 #' Raw DAR values should be chosen for single base positions, while
 #' smoothed DAR values should be chosen for windows
-#' @param ... Not used
 #'
 #' @return A GRangesList with ranges representing features of interest that
 #' overlap at least one DAR range.
@@ -55,7 +54,7 @@
 setMethod(
     "assignFeatureDar",
     signature = signature(dar = "GRangesList", features = "GRanges"),
-    function(features, dar, darVal = c("smooth", "raw")) {
+    function(features, dar, darVal) {
 
         darVal <- match.arg(darVal)
         endoapply(dar, function(x){

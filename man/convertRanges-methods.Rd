@@ -6,15 +6,13 @@
 \title{Convert ranges from single base positions to elastic windows,
 or vice versa}
 \usage{
-convertRanges(dar, ...)
+convertRanges(dar, extendEdges = FALSE)
 
 \S4method{convertRanges}{GRangesList}(dar, extendEdges = FALSE)
 }
 \arguments{
 \item{dar}{A GRangesList with ranges representing single base positions
 and metadata columns containing the smoothed DAR values.}
-
-\item{...}{Not used}
 
 \item{extendEdges}{A logical specifying if ranges at the edges of each
 chromosome should be extended to cover the entire chromosome.

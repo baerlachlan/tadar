@@ -3,7 +3,8 @@
 #' @export
 setGeneric(
     "assignFeatureDar",
-    function(features, dar, ...) standardGeneric("assignFeatureDar")
+    function(features, dar, darVal = c("smooth", "raw"))
+        standardGeneric("assignFeatureDar")
 )
 
 #' @name convertRanges
@@ -11,7 +12,7 @@ setGeneric(
 #' @export
 setGeneric(
     "convertRanges",
-    function(dar, ...) standardGeneric("convertRanges")
+    function(dar, extendEdges = FALSE) standardGeneric("convertRanges")
 )
 
 #' @name countAlleles
@@ -27,7 +28,7 @@ setGeneric(
 #' @export
 setGeneric(
     "countsToProps",
-    function(counts, ...) standardGeneric("countsToProps")
+    function(counts, filter = TRUE) standardGeneric("countsToProps")
 )
 
 #' @name dar
@@ -35,7 +36,7 @@ setGeneric(
 #' @export
 setGeneric(
     "dar",
-    function(props, contrasts, ...) standardGeneric("dar")
+    function(props, contrasts, winSize = 5) standardGeneric("dar")
 )
 
 #' @name filterLoci
@@ -43,7 +44,8 @@ setGeneric(
 #' @export
 setGeneric(
     "filterLoci",
-    function(counts, ...) standardGeneric("filterLoci")
+    function(counts, filter = n_called > n_missing)
+        standardGeneric("filterLoci")
 )
 
 #' @name readGenotypes
@@ -51,7 +53,7 @@ setGeneric(
 #' @export
 setGeneric(
     "readGenotypes",
-    function(file, ...) standardGeneric("readGenotypes")
+    function(file, unphase = TRUE, ...) standardGeneric("readGenotypes")
 )
 
 #' @name unphaseGT

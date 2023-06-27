@@ -5,7 +5,7 @@
 \alias{assignFeatureDar,GRanges,GRangesList-method}
 \title{Assign DAR values to genomic features}
 \usage{
-assignFeatureDar(features, dar, ...)
+assignFeatureDar(features, dar, darVal = c("smooth", "raw"))
 
 \S4method{assignFeatureDar}{GRanges,GRangesList}(features, dar, darVal = c("smooth", "raw"))
 }
@@ -19,8 +19,6 @@ Windows are recommended to assign the greatest number of features with
 DAR values.
 Alternatively, the use of single base positions results in a more precise
 representation of DAR for overlapping features}
-
-\item{...}{Not used}
 
 \item{darVal}{A character specifying the whether to use raw or smoothed DAR
 values for the chosen ranges.

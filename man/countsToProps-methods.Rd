@@ -5,7 +5,7 @@
 \alias{countsToProps,GRangesList-method}
 \title{Convert allele counts to proportions}
 \usage{
-countsToProps(counts, ...)
+countsToProps(counts, filter = TRUE)
 
 \S4method{countsToProps}{GRangesList}(counts, filter = TRUE)
 }
@@ -13,8 +13,6 @@ countsToProps(counts, ...)
 \item{counts}{A GRangesList containing a summary of allele counts at each
 range.
 Each element of the list represents a distinct sample group}
-
-\item{...}{Not used}
 
 \item{filter}{A \code{logical} specifying if ranges should be filtered using
 default criteria.

@@ -5,7 +5,7 @@
 \alias{dar,GRangesList,matrix-method}
 \title{Calculate Differential Allelic Representation (DAR)}
 \usage{
-dar(props, contrasts, ...)
+dar(props, contrasts, winSize = 5)
 
 \S4method{dar}{GRangesList,matrix}(props, contrasts, winSize = 5)
 }
@@ -20,8 +20,6 @@ Each column must represent a single contrast, and rows represent the levels
 (i.e. sample groups) to be contrasted.
 The two levels involved with each contrast should be specified with
 \code{1} and \code{-1}}
-
-\item{...}{Not used}
 
 \item{winSize}{integer specifying the number of ranges to include in the
 elastic sliding window used for smoothing the DAR metric}

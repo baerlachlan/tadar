@@ -12,7 +12,6 @@
 #' default criteria.
 #' If filtering is not required, or if performed manually with
 #' [darr::filterLoci()], set this to `FALSE`
-#' @param ... Not used
 #'
 #' @return A GRangesList containing a summary of normalised allele counts
 #' (i.e. as proportions) at each range.
@@ -36,7 +35,7 @@
 setMethod(
     "countsToProps",
     signature = signature(counts = "GRangesList"),
-    function(counts, filter = TRUE) {
+    function(counts, filter) {
 
         if (filter) counts <- filterLoci(counts)
         endoapply(counts, function(x){

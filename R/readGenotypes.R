@@ -28,7 +28,7 @@
 setMethod(
     "readGenotypes",
     signature = signature(file = "character"),
-    function(file, unphase = TRUE, ...) {
+    function(file, unphase, ...) {
 
         .readGenotypes(file, unphase, ...)
 
@@ -41,7 +41,7 @@ setMethod(
 setMethod(
     "readGenotypes",
     signature = signature(file = "TabixFile"),
-    function(file, unphase = TRUE, ...) {
+    function(file, unphase, ...) {
 
         .readGenotypes(file, unphase, ...)
 

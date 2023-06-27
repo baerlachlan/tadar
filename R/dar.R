@@ -13,7 +13,6 @@
 #' `1` and `-1`
 #' @param winSize integer specifying the number of ranges to include in the
 #' elastic sliding window used for smoothing the DAR metric
-#' @param ... Not used
 #'
 #' @return A GRangesList containing DAR values at each overlapping range
 #' between the contrasted sample groups.
@@ -48,7 +47,7 @@
 setMethod(
     "dar",
     signature = signature(props = "GRangesList", contrasts = "matrix"),
-    function(props, contrasts, winSize = 5) {
+    function(props, contrasts, winSize) {
 
         lvls <- dimnames(contrasts)[[1]]
         conts <- dimnames(contrasts)[[2]]

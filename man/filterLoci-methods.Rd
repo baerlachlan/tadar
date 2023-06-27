@@ -5,7 +5,7 @@
 \alias{filterLoci,GRangesList-method}
 \title{Filter loci}
 \usage{
-filterLoci(counts, ...)
+filterLoci(counts, filter = n_called > n_missing)
 
 \S4method{filterLoci}{GRangesList}(counts, filter = n_called > n_missing)
 }
@@ -13,8 +13,6 @@ filterLoci(counts, ...)
 \item{counts}{A GRangesList containing a summary of allele counts at each
 range.
 Each element of the list represents a distinct sample group}
-
-\item{...}{Not used}
 
 \item{filter}{A logical expression indicating which rows to keep.
 Possible values include:

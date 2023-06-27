@@ -13,7 +13,6 @@
 #' smooth DAR values (i.e. `to = "smooth`).
 #' Useful for downstream assignment of DAR values to genomic features that
 #' exist at the 5' or 3' edges of the chromosome.
-#' @param ... Not used
 #'
 #' @return A GRangesList with ranges that represent the elastic sliding windows
 #' used to smooth the DAR metric.
@@ -52,7 +51,7 @@
 setMethod(
     "convertRanges",
     signature = signature(dar = "GRangesList"),
-    function(dar, extendEdges = FALSE) {
+    function(dar, extendEdges) {
 
 
         endoapply(dar, function(x){

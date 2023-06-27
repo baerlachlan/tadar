@@ -18,7 +18,6 @@
 #' All values represent the sum of counts across all samples within the group.
 #' Defaults to return loci where the number of samples containing allele
 #' information is greater than number samples with missing information
-#' @param ... Not used
 #'
 #' @return A filtered GRangesList containing a summary of allele counts at each
 #' range.
@@ -44,10 +43,8 @@
 setMethod(
     "filterLoci",
     signature = signature(counts = "GRangesList"),
-    function(counts, filter = n_called > n_missing) {
+    function(counts, filter) {
 
-        ## Supress global variables check note
-        n_called <- n_missing <- NULL
         ## Defuse filter expression
         filter <- enquo(filter)
         endoapply(counts, function(x){
