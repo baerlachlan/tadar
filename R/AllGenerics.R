@@ -3,7 +3,7 @@
 #' @export
 setGeneric(
     "assignFeatureDar",
-    function(features, dar, darVal = c("smooth", "raw"))
+    function(features, dar, darVal = c("origin", "region"))
         standardGeneric("assignFeatureDar")
 )
 
@@ -46,6 +46,15 @@ setGeneric(
     "filterLoci",
     function(counts, filter = n_called > n_missing)
         standardGeneric("filterLoci")
+)
+
+#' @name plotDarECDF
+#' @rdname plotDarECDF-methods
+#' @export
+setGeneric(
+    "plotDarECDF",
+    function(dar, darVal = c("origin", "region"), highlight = NULL)
+        standardGeneric("plotDarECDF")
 )
 
 #' @name readGenotypes

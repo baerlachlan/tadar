@@ -1,21 +1,24 @@
 #' @title Assign DAR values to genomic features
 #'
 #' @description Assign DAR values to genomic features of interest by
-#' averaging the DAR values at ranges that overlap the feature range
+#' averaging the DAR values of ranges that overlap the feature range
 #'
-#' @param dar A GRangesList with ranges representing either single base
-#' positions for raw DAR values or windows for smoothed DAR values.
-#' DAR values for each range must exist in metadata columns.
-#' Windows are recommended to assign the greatest number of features with
-#' DAR values.
-#' Alternatively, the use of single base positions results in a more precise
-#' representation of DAR for overlapping features
+#' @param dar A GRangesList with DAR values of the associated ranges contained
+#' in metadata columns.
+#' Ranges that represent DAR regions are recommended to assign the greatest
+#' number of features with DAR values.
+#' This results in an assigned estimate of DAR in the region surrounding the
+#' feature.
+#' Alternatively, the use of DAR origin ranges results in an assigned average
+#' of DAR solely within the feature.
+#' Ranges can be converted between origins and regions with `convertRanges()`
 #' @param features A GRanges object specifying the features of interest
-#' @param darVal A character specifying the whether to use raw or smoothed DAR
+#' @param darVal A character specifying the whether to use origin or region DAR
 #' values for the chosen ranges.
-#' Possible options are "raw" and "smooth".
-#' Raw DAR values should be chosen for single base positions, while
-#' smoothed DAR values should be chosen for windows
+#' Options are "origin" and "region".
+#' A warning will be produced if the chosen `darVal` does not match the
+#' ranges detected in the object provided to the `dar` argument, as this is
+#' likely unintended by the user
 #'
 #' @return A GRangesList with ranges representing features of interest that
 #' overlap at least one DAR range.
@@ -41,10 +44,10 @@
 #'     )
 #' )
 #' dar <- dar(props, contrasts)
-#' assignFeatureDar(chr1_genes, dar, darVal = "raw")
+#' assignFeatureDar(chr1_genes, dar, darVal = "origin")
 #'
-#' darWindows <- convertRanges(dar, extendEdges = TRUE)
-#' assignFeatureDar(chr1_genes, darWindows, darVal = "smooth")
+#' darRegions <- convertRanges(dar, extendEdges = TRUE)
+#' assignFeatureDar(chr1_genes, darRegions, darVal = "region")
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply from to
@@ -64,8 +67,8 @@ setMethod(
             queries <- unique(queries)
             darMean <- vapply(queries, function(y){
                 subjects <- to(hits)[from(hits) == y]
-                if (darVal == "smooth") featureDar <- x$dar_smooth[subjects]
-                if (darVal == "raw") featureDar <- x$dar[subjects]
+                if (darVal == "origin") featureDar <- x$dar_origin[subjects]
+                if (darVal == "region") featureDar <- x$dar_region[subjects]
                 mean(featureDar)
             }, numeric(1))
             features <- features[queries]
@@ -76,26 +79,26 @@ setMethod(
     }
 )
 
-#' @keywords internal#'
+#' @keywords internal
 #' @importFrom S4Vectors mcols
 #' @importFrom BiocGenerics width
 .assignFeatureDar_checks <- function(dar, darVal) {
     widths <- width(dar)
-    if (darVal == "smooth") {
-        if (!"dar_smooth" %in% names(mcols(dar)))
-            stop("No smoothed DAR values detected", call. = FALSE)
+    if (darVal == "region") {
+        if (!"dar_region" %in% names(mcols(dar)))
+            stop("No dar_region values detected", call. = FALSE)
         if (min(widths) == 1)
             warning(
-                "Range(s) detected with width == 1 but darVal = smooth. ",
+                "Range(s) detected with width == 1 but darVal = region. ",
                 "See ?assignGeneDar", call. = FALSE
             )
     }
-    if (darVal == "raw") {
-        if (!"dar" %in% names(mcols(dar)))
-            stop("No DAR values detected", call. = FALSE)
+    if (darVal == "origin") {
+        if (!"dar_origin" %in% names(mcols(dar)))
+            stop("No dar_origin values detected", call. = FALSE)
         if (max(widths) > 1)
             warning(
-                "Range(s) detected with width > 1 but darVal = raw. ",
+                "Range(s) detected with width > 1 but darVal = origin. ",
                 "See ?assignGeneDar", call. = FALSE
             )
     }

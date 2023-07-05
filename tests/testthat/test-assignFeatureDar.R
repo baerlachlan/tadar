@@ -15,38 +15,38 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts)
-darWindows <- convertRanges(dar)
-darWindows_ex <- convertRanges(dar, extendEdges = TRUE)
+darRegions <- convertRanges(dar)
+darRegions_ex <- convertRanges(dar, extendEdges = TRUE)
 
 test_that("assignFeatureDar returns the expected output", {
-    geneDar_raw <- assignFeatureDar(chr1_genes, dar, darVal = "raw")
-    expect_equal(length(geneDar_raw$group1v2), 820)
-    geneDar_smooth <- assignFeatureDar(chr1_genes, darWindows, darVal = "smooth")
-    expect_equal(length(geneDar_smooth$group1v2), 1455)
-    geneDar_ex <- assignFeatureDar(chr1_genes, darWindows_ex, darVal = "smooth")
+    geneDar_origin <- assignFeatureDar(chr1_genes, dar, darVal = "origin")
+    expect_equal(length(geneDar_origin$group1v2), 820)
+    geneDar_region <- assignFeatureDar(chr1_genes, darRegions, darVal = "region")
+    expect_equal(length(geneDar_region$group1v2), 1455)
+    geneDar_ex <- assignFeatureDar(chr1_genes, darRegions_ex, darVal = "region")
     expect_equal(length(geneDar_ex$group1v2), 1456)
 })
 
-test_that("assignFeatureDar errors whene expected", {
+test_that("assignFeatureDar errors when expected", {
     dar <- endoapply(dar, function(x) x[,c()])
     expect_error(
-        assignFeatureDar(chr1_genes, dar, darVal = "raw"),
-        "No DAR values detected"
+        assignFeatureDar(chr1_genes, dar, darVal = "origin"),
+        "No dar_origin values detected"
     )
-    darWindows <- endoapply(darWindows, function(x) x[,c()])
+    darRegions <- endoapply(darRegions, function(x) x[,c()])
     expect_error(
-        assignFeatureDar(chr1_genes, darWindows, darVal = "smooth"),
-        "No smoothed DAR values detected"
+        assignFeatureDar(chr1_genes, darRegions, darVal = "region"),
+        "No dar_region values detected"
     )
 })
 
 test_that("assignFeatureDar gives warnings when expected", {
     expect_warning(
-        assignFeatureDar(chr1_genes, dar, darVal = "smooth"),
+        assignFeatureDar(chr1_genes, dar, darVal = "region"),
         "Range\\(s\\) detected with width == 1"
     )
     expect_warning(
-        assignFeatureDar(chr1_genes, darWindows, darVal = "raw"),
+        assignFeatureDar(chr1_genes, darRegions, darVal = "origin"),
         "Range\\(s\\) detected with width > 1"
     )
 })

@@ -11,5 +11,6 @@
 #' @name darr-package
 NULL
 
-## Supress undefined global variables check note
+## Supress R CMD check note
 n_called <- n_missing <- NULL
+Chromosome <- NULL

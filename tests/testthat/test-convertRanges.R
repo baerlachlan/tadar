@@ -15,16 +15,16 @@ contrasts <- matrix(
 )
 dar <- dar(props, contrasts, winSize = 5)
 
-test_that("convertRanges returns windows", {
-    darWindows <- convertRanges(dar)
-    widths <- width(darWindows$group1v2)
+test_that("convertRanges returns regions", {
+    darRegions <- convertRanges(dar)
+    widths <- width(darRegions$group1v2)
     expect_true(max(widths) > 1)
 })
 
 test_that("convertRanges extends ranges", {
-    darWindows <- convertRanges(dar, extendEdges = TRUE)
-    expect_equal(min(start(darWindows$group1v2)), 1)
-    expect_equal(max(end(darWindows$group1v2)), 59578282)
+    darRegions <- convertRanges(dar, extendEdges = TRUE)
+    expect_equal(min(start(darRegions$group1v2)), 1)
+    expect_equal(max(end(darRegions$group1v2)), 59578282)
 })
 
 test_that("convertRanges errors when no winSize in metadata", {
@@ -47,8 +47,8 @@ test_that("convertRanges errors when no seqlengths and extendEdges = TRUE", {
 })
 
 test_that("convertRanges can revert back to output of dar()", {
-    darWindows <- convertRanges(dar)
-    expect_identical(convertRanges(darWindows), dar)
-    darWindows <- convertRanges(dar, extendEdges = TRUE)
-    expect_identical(convertRanges(darWindows), dar)
+    darRegions <- convertRanges(dar)
+    expect_identical(convertRanges(darRegions), dar)
+    darRegions <- convertRanges(dar, extendEdges = TRUE)
+    expect_identical(convertRanges(darRegions), dar)
 })

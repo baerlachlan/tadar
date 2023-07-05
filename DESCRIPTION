@@ -30,7 +30,8 @@ biocViews: Sequencing, RNASeq, SNP, GenomicVariation, VariantAnnotation,
     DifferentialExpression
 VignetteBuilder: knitr
 Depends: 
-    GenomicRanges
+    GenomicRanges,
+    ggplot2
 Imports: 
     BiocGenerics,
     GenomeInfoDb,

@@ -5,26 +5,29 @@
 \alias{assignFeatureDar,GRanges,GRangesList-method}
 \title{Assign DAR values to genomic features}
 \usage{
-assignFeatureDar(features, dar, darVal = c("smooth", "raw"))
+assignFeatureDar(features, dar, darVal = c("origin", "region"))
 
-\S4method{assignFeatureDar}{GRanges,GRangesList}(features, dar, darVal = c("smooth", "raw"))
+\S4method{assignFeatureDar}{GRanges,GRangesList}(features, dar, darVal = c("origin", "region"))
 }
 \arguments{
 \item{features}{A GRanges object specifying the features of interest}
 
-\item{dar}{A GRangesList with ranges representing either single base
-positions for raw DAR values or windows for smoothed DAR values.
-DAR values for each range must exist in metadata columns.
-Windows are recommended to assign the greatest number of features with
-DAR values.
-Alternatively, the use of single base positions results in a more precise
-representation of DAR for overlapping features}
+\item{dar}{A GRangesList with DAR values of the associated ranges contained
+in metadata columns.
+Ranges that represent DAR regions are recommended to assign the greatest
+number of features with DAR values.
+This results in an assigned estimate of DAR in the region surrounding the
+feature.
+Alternatively, the use of DAR origin ranges results in an assigned average
+of DAR solely within the feature.
+Ranges can be converted between origins and regions with \code{convertRanges()}}
 
-\item{darVal}{A character specifying the whether to use raw or smoothed DAR
+\item{darVal}{A character specifying the whether to use origin or region DAR
 values for the chosen ranges.
-Possible options are "raw" and "smooth".
-Raw DAR values should be chosen for single base positions, while
-smoothed DAR values should be chosen for windows}
+Options are "origin" and "region".
+A warning will be produced if the chosen \code{darVal} does not match the
+ranges detected in the object provided to the \code{dar} argument, as this is
+likely unintended by the user}
 }
 \value{
 A GRangesList with ranges representing features of interest that
@@ -35,7 +38,7 @@ Each element of the list represents a DAR analysis between two sample groups
 }
 \description{
 Assign DAR values to genomic features of interest by
-averaging the DAR values at ranges that overlap the feature range
+averaging the DAR values of ranges that overlap the feature range
 }
 \examples{
 data("chr1_genes")
@@ -55,9 +58,9 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts)
-assignFeatureDar(chr1_genes, dar, darVal = "raw")
+assignFeatureDar(chr1_genes, dar, darVal = "origin")
 
-darWindows <- convertRanges(dar, extendEdges = TRUE)
-assignFeatureDar(chr1_genes, darWindows, darVal = "smooth")
+darRegions <- convertRanges(dar, extendEdges = TRUE)
+assignFeatureDar(chr1_genes, darRegions, darVal = "region")
 
 }

@@ -3,33 +3,33 @@
 \name{convertRanges}
 \alias{convertRanges}
 \alias{convertRanges,GRangesList-method}
-\title{Convert ranges from single base positions to elastic windows,
-or vice versa}
+\title{Convert DAR origin ranges to DAR region ranges, or vice versa}
 \usage{
 convertRanges(dar, extendEdges = FALSE)
 
 \S4method{convertRanges}{GRangesList}(dar, extendEdges = FALSE)
 }
 \arguments{
-\item{dar}{A GRangesList with ranges representing single base positions
-and metadata columns containing the smoothed DAR values.}
+\item{dar}{A GRangesList with ranges representing single nucleotide (origin)
+positions}
 
-\item{extendEdges}{A logical specifying if ranges at the edges of each
-chromosome should be extended to cover the entire chromosome.
-This argument is only used when converting to ranges associated with the
-smooth DAR values (i.e. \verb{to = "smooth}).
+\item{extendEdges}{A logical specifying if region DAR ranges at the edges of
+each chromosome should be extended to cover the entire chromosome.
+This argument is only considered when converting from origin DAR ranges to
+region DAR ranges.
 Useful for downstream assignment of DAR values to genomic features that
-exist at the 5' or 3' edges of the chromosome.}
+exist at the 5' or 3' edges of the chromosome, which would have otherwise
+been missed}
 }
 \value{
-A GRangesList with ranges that represent the elastic sliding windows
-used to smooth the DAR metric.
-Each element of the list represents a comparison between two sample groups.
+A GRangesList with ranges that represent either DAR regions or
+DAR origins, depending on the ranges of the input object.
 }
 \description{
-Convert the ranges element associated with single base position
-raw DAR values to the elastic sliding window ranges associated with the
-smoothed DAR values, or vice versa
+Convert the ranges element associated with origin DAR values
+to ranges associated with the region DAR values.
+This function can also be used to revert back to the original object
+containing origin ranges if desired
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
@@ -47,11 +47,14 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts)
+dar <- dar(props, contrasts, winSize = 5)
+## Convert ranges to regions associated with dar_region values
 convertRanges(dar)
+## Extend the outer regions the cover the entire chromosome
+convertRanges(dar, extendEdges = TRUE)
 
-## Convert back to origin ranges
-darWindows <- convertRanges(dar)
-convertRanges(darWindows)
+## Convert back to origin ranges associated with dar_origin values
+darRegions <- convertRanges(dar)
+convertRanges(darRegions)
 
 }

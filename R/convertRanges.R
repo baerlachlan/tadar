@@ -1,22 +1,22 @@
-#' @title Convert ranges from single base positions to elastic windows,
-#' or vice versa
+#' @title Convert DAR origin ranges to DAR region ranges, or vice versa
 #'
-#' @description Convert the ranges element associated with single base position
-#' raw DAR values to the elastic sliding window ranges associated with the
-#' smoothed DAR values, or vice versa
+#' @description Convert the ranges element associated with origin DAR values
+#' to ranges associated with the region DAR values.
+#' This function can also be used to revert back to the original object
+#' containing origin ranges if desired
 #'
-#' @param dar A GRangesList with ranges representing single base positions
-#' and metadata columns containing the smoothed DAR values.
-#' @param extendEdges A logical specifying if ranges at the edges of each
-#' chromosome should be extended to cover the entire chromosome.
-#' This argument is only used when converting to ranges associated with the
-#' smooth DAR values (i.e. `to = "smooth`).
+#' @param dar A GRangesList with ranges representing single nucleotide (origin)
+#' positions
+#' @param extendEdges A logical specifying if region DAR ranges at the edges of
+#' each chromosome should be extended to cover the entire chromosome.
+#' This argument is only considered when converting from origin DAR ranges to
+#' region DAR ranges.
 #' Useful for downstream assignment of DAR values to genomic features that
-#' exist at the 5' or 3' edges of the chromosome.
+#' exist at the 5' or 3' edges of the chromosome, which would have otherwise
+#' been missed
 #'
-#' @return A GRangesList with ranges that represent the elastic sliding windows
-#' used to smooth the DAR metric.
-#' Each element of the list represents a comparison between two sample groups.
+#' @return A GRangesList with ranges that represent either DAR regions or
+#' DAR origins, depending on the ranges of the input object.
 #'
 #' @examples
 #' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
@@ -34,12 +34,15 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar <- dar(props, contrasts)
+#' dar <- dar(props, contrasts, winSize = 5)
+#' ## Convert ranges to regions associated with dar_region values
 #' convertRanges(dar)
+#' ## Extend the outer regions the cover the entire chromosome
+#' convertRanges(dar, extendEdges = TRUE)
 #'
-#' ## Convert back to origin ranges
-#' darWindows <- convertRanges(dar)
-#' convertRanges(darWindows)
+#' ## Convert back to origin ranges associated with dar_origin values
+#' darRegions <- convertRanges(dar)
+#' convertRanges(darRegions)
 #'
 #' @import GenomicRanges
 #' @importFrom IRanges IRanges ranges 'ranges<-'
@@ -56,16 +59,16 @@ setMethod(
 
         endoapply(dar, function(x){
             if (metadata(x)$rangeType == "origin")
-                .switchToWindows(x, extendEdges)
-            else if (metadata(x)$rangeType == "window")
-                .switchToOrigins(x)
+                .switchToRegion(x, extendEdges)
+            else if (metadata(x)$rangeType == "region")
+                .switchToOrigin(x)
         })
 
     }
 )
 
 #' @keywords internal
-.extend <- function(windows, dar) {
+.extend <- function(regions, dar) {
     chr <- seqnames(dar)
     chr <- unique(chr)
     chr <- as.character(chr)
@@ -75,13 +78,13 @@ setMethod(
             "Cannot extend edges. Check seqlength for seqname ",
             chr
         )
-    start(windows)[1] <- 1
-    end(windows)[length(end(windows))] <- seqlen
-    windows
+    start(regions)[1] <- 1
+    end(regions)[length(end(regions))] <- seqlen
+    regions
 }
 
 #' @keywords internal
-.switchToWindows <- function(dar, extendEdges) {
+.switchToRegion <- function(dar, extendEdges) {
 
     winSize <- metadata(dar)$winSize
     if (is.null(winSize)) {
@@ -90,35 +93,35 @@ setMethod(
             "`convertRanges()`", call. = FALSE
         )
     }
-    removedRanges <- dar[is.na(dar$dar_smooth),]
+    removedRanges <- dar[is.na(dar$dar_region),]
     grl <- split(dar, f = seqnames(dar))
     grl <- endoapply(grl, function(x){
-        isNA <- is.na(x$dar_smooth)
+        isNA <- is.na(x$dar_region)
         nNA <- sum(isNA)
         n <- NROW(x)
-        ## Construct windows while accounting for NA removal
-        windows <- IRanges(
+        ## Construct regions while accounting for NA removal
+        regions <- IRanges(
             start = start(x)[seq_len(n - nNA)],
             end = end(x)[winSize:n]
         )
-        if (extendEdges) windows <- .extend(windows, x)
+        if (extendEdges) regions <- .extend(regions, x)
         x <- x[!isNA,]
-        mcols(x)$origin <- ranges(x)
-        ranges(x) <- windows
+        mcols(x)$origin_ranges <- ranges(x)
+        ranges(x) <- regions
         x
     })
     gr <- unlist(grl,)
-    metadata(gr)$removedRanges <- removedRanges  # Keep for .switchToOrigins()
-    metadata(gr)$rangeType <- "window"
+    metadata(gr)$removedRanges <- removedRanges  # Keep for .switchToOrigin()
+    metadata(gr)$rangeType <- "region"
     gr
 
 }
 
 #' @keywords internal
-.switchToOrigins <- function(dar) {
+.switchToOrigin <- function(dar) {
 
-    ranges(dar) <- mcols(dar)$origin
-    mcols(dar) <- mcols(dar)[,c("dar", "dar_smooth")]
+    ranges(dar) <- mcols(dar)$origin_ranges
+    mcols(dar) <- mcols(dar)[,c("dar_origin", "dar_region")]
     dar <- c(dar, metadata(dar)$removedRanges)
     dar <- sort(dar)
     metadata(dar) <- metadata(dar)[c("rangeType", "winSize")]

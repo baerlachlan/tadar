@@ -2,6 +2,13 @@
 #'
 #' @description Calculate DAR between two sample groups
 #'
+#' @details DAR is calculated as the Euclidean distance between the allelic
+#' proportions (i.e. proportion of As, Cs, Gs and Ts) of two sample groups at
+#' a single nucleotide locus, scaled such that all values range inclusively
+#' between 0 and 1.
+#' A DAR value of 0 represents identical allelic representation between the
+#' two sample groups, while a DAR value of 1 represents complete diversity
+#'
 #' @param props A GRangesList containing a summary of normalised allele counts
 #' (i.e. as proportions) at each range.
 #' Each element of the list represents a distinct sample group
@@ -11,12 +18,25 @@
 #' (i.e. sample groups) to be contrasted.
 #' The two levels involved with each contrast should be specified with
 #' `1` and `-1`
-#' @param winSize integer specifying the number of ranges to include in the
-#' elastic sliding window used for smoothing the DAR metric
+#' @param winSize integer specifying the number of ranges to include
+#' in the elastic sliding window used for averaging DAR values within a region.
+#' Must be an odd integer in order to incorporate the origin locus and an
+#' equal number of loci either side
 #'
 #' @return A GRangesList containing DAR values at each overlapping range
 #' between the contrasted sample groups.
-#' Each element of the list represents a comparison between two sample groups.
+#' Two types of DAR values are reported in the metadata columns of each GRanges
+#' object:
+#'
+#' - dar_origin: The raw DAR values calculated at single nucleotide positions
+#' (the origin) between sample groups.
+#' - dar_region: The mean of raw DAR values in a region surrounding the origin.
+#' The size of the region is controlled using the `winSize` argument, which
+#' establishes an elastic sliding window to average the specified number
+#' of dar_origin values.
+#'
+#' Each element of the list represents a single contrast defined in the
+#' input contrast matrix
 #'
 #' @examples
 #' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
@@ -34,7 +54,7 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar(props, contrasts)
+#' dar(props, contrasts, winSize = 5)
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply mcols 'mcols<-' from to 'metadata<-'
@@ -60,9 +80,11 @@ setMethod(
             stop("`winSize` must be an odd integer greater than 0")
         grl <- .calcDar(props = props, contrasts = contrasts)
         grl <- .smoothDar(dar = grl, winSize = winSize)
+        grl
 
     }
 )
+
 #' @keywords internal
 .contrastsAsList <- function(contrasts) {
 
@@ -100,7 +122,7 @@ setMethod(
             as.numeric(dist)
         }, numeric(1))
         ## Convert to DAR
-        mcols(gr)$dar <- dist / sqrt(2)
+        mcols(gr)$dar_origin <- dist / sqrt(2)
         ## Remove seqlevels that may be lost due to no overlap
         seqlevels(gr) <- seqlevelsInUse(gr)
         ## Add rangeType to metadata for downstream use
@@ -125,10 +147,10 @@ setMethod(
                     "`winSize` greater than number of ranges for seqname ",
                     unique(seqnames(y)), call. = FALSE
                 )
-            mcols(y)$dar_smooth <- filter(
-                y$dar, rep(1 / winSize, winSize), sides = 2
+            mcols(y)$dar_region <- filter(
+                y$dar_origin, rep(1 / winSize, winSize), sides = 2
             )
-            mcols(y)$dar_smooth <- as.numeric(mcols(y)$dar_smooth)
+            mcols(y)$dar_region <- as.numeric(mcols(y)$dar_region)
             y
         })
         unlist(grl, use.names = FALSE)

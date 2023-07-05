@@ -17,7 +17,7 @@ contrasts <- matrix(
 test_that("dar returns expected mcols", {
     dar <- dar(props, contrasts)
     expect_equal(length(mcols(dar[[1]])), 2)
-    expect_equal(names(mcols(dar[[1]])), c("dar", "dar_smooth"))
+    expect_equal(names(mcols(dar[[1]])), c("dar_origin", "dar_region"))
 })
 
 test_that("dar returns GRangesList with same names set in contrasts", {
