@@ -10,24 +10,24 @@ dar(props, contrasts, winSize = 5)
 \S4method{dar}{GRangesList,matrix}(props, contrasts, winSize = 5)
 }
 \arguments{
-\item{props}{A GRangesList containing a summary of normalised allele counts
+\item{props}{\code{GRangesList} containing a summary of normalised allele counts
 (i.e. as proportions) at each range.
 Each element of the list represents a distinct sample group}
 
-\item{contrasts}{A contrast matrix specifying which sample groups to
+\item{contrasts}{Contrast \code{matrix} specifying which sample groups to
 to calculate DAR between.
 Each column must represent a single contrast, and rows represent the levels
 (i.e. sample groups) to be contrasted.
 The two levels involved with each contrast should be specified with
 \code{1} and \code{-1}}
 
-\item{winSize}{integer specifying the number of ranges to include
+\item{winSize}{\code{integer(1)} specifying the number of ranges to include
 in the elastic sliding window used for averaging DAR values within a region.
 Must be an odd integer in order to incorporate the origin locus and an
 equal number of loci either side}
 }
 \value{
-A GRangesList containing DAR values at each overlapping range
+\code{GRangesList} containing DAR values at each overlapping range
 between the contrasted sample groups.
 Two types of DAR values are reported in the metadata columns of each GRanges
 object:

@@ -2,12 +2,12 @@
 #'
 #' @description Plot the ECDF of DAR for each chromosome
 #'
-#' @param dar A GRanges object with metadata columns containing the desired
+#' @param dar `GRanges` object with metadata columns containing the desired
 #' DAR values to plot
-#' @param darVal A character specifying the whether to plot dar_origin or
+#' @param darVal `character(1)` specifying the whether to plot dar_origin or
 #' dar_region values.
 #' Options are "origin" and "region"
-#' @param highlight A character specifying the chromosome to highlight with
+#' @param highlight `character(1)` specifying the chromosome to highlight with
 #' a different colour
 #'
 #' @return A ggplot2 object

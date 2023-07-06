@@ -3,7 +3,7 @@
 #' @description Assign DAR values to genomic features of interest by
 #' averaging the DAR values of ranges that overlap the feature range
 #'
-#' @param dar A GRangesList with DAR values of the associated ranges contained
+#' @param dar `GRangesList` with DAR values of the associated ranges contained
 #' in metadata columns.
 #' Ranges that represent DAR regions are recommended to assign the greatest
 #' number of features with DAR values.
@@ -11,20 +11,19 @@
 #' feature.
 #' Alternatively, the use of DAR origin ranges results in an assigned average
 #' of DAR solely within the feature.
-#' Ranges can be converted between origins and regions with `convertRanges()`
-#' @param features A GRanges object specifying the features of interest
-#' @param darVal A character specifying the whether to use origin or region DAR
-#' values for the chosen ranges.
+#' Ranges can be converted between origins and regions with \link{convertRanges}
+#' @param features `GRanges` object specifying the features of interest
+#' @param darVal `character(1)` specifying the whether to use origin or region
+#' DAR values for the chosen ranges.
 #' Options are "origin" and "region".
 #' A warning will be produced if the chosen `darVal` does not match the
 #' ranges detected in the object provided to the `dar` argument, as this is
 #' likely unintended by the user
 #'
-#' @return A GRangesList with ranges representing features of interest that
+#' @return `GRangesList` with ranges representing features of interest that
 #' overlap at least one DAR range.
 #' Feature metadata columns are retained and an additional column is added
-#' for the assigned DAR value.
-#' Each element of the list represents a DAR analysis between two sample groups
+#' for the assigned DAR value
 #'
 #' @examples
 #' data("chr1_genes")

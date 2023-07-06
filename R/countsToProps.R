@@ -3,17 +3,17 @@
 #' @description Normalise allele-level counts across samples by converting to a
 #' proportion of total alleles in all samples.
 #' Optionally remove ranges using the default filtering criteria described
-#' in [darr::filterLoci()]
+#' in \link{filterLoci}
 #'
-#' @param counts A GRangesList containing a summary of allele counts at each
+#' @param counts `GRangesList` containing a summary of allele counts at each
 #' range.
 #' Each element of the list represents a distinct sample group
-#' @param filter A `logical` specifying if ranges should be filtered using
+#' @param filter `logical(1)` specifying if ranges should be filtered using
 #' default criteria.
 #' If filtering is not required, or if performed manually with
 #' [darr::filterLoci()], set this to `FALSE`
 #'
-#' @return A GRangesList containing a summary of normalised allele counts
+#' @return `GRangesList` containing a summary of normalised allele counts
 #' (i.e. as proportions) at each range.
 #' Each element of the list represents a distinct sample group
 #'

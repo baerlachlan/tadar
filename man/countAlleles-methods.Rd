@@ -10,14 +10,14 @@ countAlleles(genotypes, groups)
 \S4method{countAlleles}{GRanges,list}(genotypes, groups)
 }
 \arguments{
-\item{genotypes}{A GRanges object with metadata columns containing genotype
+\item{genotypes}{\code{GRanges} object with metadata columns containing genotype
 information for all samples}
 
-\item{groups}{A named list specifying the sample grouping structure, where
+\item{groups}{Named \code{list} specifying the sample grouping structure, where
 each element contains a character vector of sample names}
 }
 \value{
-A GRangesList containing a summary of allele counts at each range.
+\code{GRangesList} containing a summary of allele counts at each range.
 Each element of the list represents a distinct sample group
 }
 \description{

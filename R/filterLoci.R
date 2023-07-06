@@ -2,7 +2,7 @@
 #'
 #' @description Filter loci based on allele count criteria
 #'
-#' @param counts A GRangesList containing a summary of allele counts at each
+#' @param counts `GRangesList` containing a summary of allele counts at each
 #' range.
 #' Each element of the list represents a distinct sample group
 #' @param filter A logical expression indicating which rows to keep.
@@ -19,8 +19,8 @@
 #' Defaults to return loci where the number of samples containing allele
 #' information is greater than number samples with missing information
 #'
-#' @return A filtered GRangesList containing a summary of allele counts at each
-#' range.
+#' @return `GRangesList` containing a summary of allele counts at each range
+#' passing the filter criteria.
 #' Each element of the list represents a distinct sample group
 #'
 #' @examples

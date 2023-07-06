@@ -5,17 +5,17 @@
 #' This function can also be used to revert back to the original object
 #' containing origin ranges if desired
 #'
-#' @param dar A GRangesList with ranges representing single nucleotide (origin)
+#' @param dar `GRangesList` with ranges representing single nucleotide (origin)
 #' positions
-#' @param extendEdges A logical specifying if region DAR ranges at the edges of
-#' each chromosome should be extended to cover the entire chromosome.
+#' @param extendEdges `logical(1)` specifying if region DAR ranges at the edges
+#' of each chromosome should be extended to cover the entire chromosome.
 #' This argument is only considered when converting from origin DAR ranges to
 #' region DAR ranges.
 #' Useful for downstream assignment of DAR values to genomic features that
 #' exist at the 5' or 3' edges of the chromosome, which would have otherwise
 #' been missed
 #'
-#' @return A GRangesList with ranges that represent either DAR regions or
+#' @return `GRangesList` with ranges that represent either DAR regions or
 #' DAR origins, depending on the ranges of the input object.
 #'
 #' @examples

@@ -3,12 +3,12 @@
 #' @description Summarise the alleles from genotype calls at each single
 #' nucleotide locus within each sample group
 #'
-#' @param genotypes A GRanges object with metadata columns containing genotype
+#' @param genotypes `GRanges` object with metadata columns containing genotype
 #' information for all samples
-#' @param groups A named list specifying the sample grouping structure, where
+#' @param groups Named `list` specifying the sample grouping structure, where
 #' each element contains a character vector of sample names
 #'
-#' @return A GRangesList containing a summary of allele counts at each range.
+#' @return `GRangesList` containing a summary of allele counts at each range.
 #' Each element of the list represents a distinct sample group
 #'
 #' @examples

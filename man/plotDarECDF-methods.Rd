@@ -10,14 +10,14 @@ plotDarECDF(dar, darVal = c("origin", "region"), highlight = NULL)
 \S4method{plotDarECDF}{GRanges}(dar, darVal = c("origin", "region"), highlight = NULL)
 }
 \arguments{
-\item{dar}{A GRanges object with metadata columns containing the desired
+\item{dar}{\code{GRanges} object with metadata columns containing the desired
 DAR values to plot}
 
-\item{darVal}{A character specifying the whether to plot dar_origin or
+\item{darVal}{\code{character(1)} specifying the whether to plot dar_origin or
 dar_region values.
 Options are "origin" and "region"}
 
-\item{highlight}{A character specifying the chromosome to highlight with
+\item{highlight}{\code{character(1)} specifying the chromosome to highlight with
 a different colour}
 }
 \value{

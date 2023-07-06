@@ -14,13 +14,13 @@ readGenotypes(file, unphase = TRUE, ...)
 }
 \arguments{
 \item{file}{The file path of a VCF file containing genotype data.
-Alternatively, a \link[Rsamtools]{TabixFile} as described in
-\code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
+Alternatively, a \code{TabixFile} as described in
+\link[VariantAnnotation]{readVcf}}
 
 \item{unphase}{A \code{logical} specifying if phasing information should be
 removed from genotypes. This is recommended if proceeding with DAR analysis}
 
-\item{...}{Passed to \code{\link[VariantAnnotation:readVcf-methods]{VariantAnnotation::readVcf()}}}
+\item{...}{Passed to \link[VariantAnnotation]{readVcf}}
 }
 \value{
 A \code{GRanges} object constructed from the CHROM, POS, ID and REF

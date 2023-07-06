@@ -10,7 +10,7 @@ filterLoci(counts, filter = n_called > n_missing)
 \S4method{filterLoci}{GRangesList}(counts, filter = n_called > n_missing)
 }
 \arguments{
-\item{counts}{A GRangesList containing a summary of allele counts at each
+\item{counts}{\code{GRangesList} containing a summary of allele counts at each
 range.
 Each element of the list represents a distinct sample group}
 
@@ -30,8 +30,8 @@ Defaults to return loci where the number of samples containing allele
 information is greater than number samples with missing information}
 }
 \value{
-A filtered GRangesList containing a summary of allele counts at each
-range.
+\code{GRangesList} containing a summary of allele counts at each range
+passing the filter criteria.
 Each element of the list represents a distinct sample group
 }
 \description{

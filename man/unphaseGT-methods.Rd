@@ -13,10 +13,10 @@ unphaseGT(gt)
 \S4method{unphaseGT}{data.frame}(gt)
 }
 \arguments{
-\item{gt}{A matrix or data.frame containing only genotype information}
+\item{gt}{\code{matrix} or \code{data.frame} containing sample genotype information}
 }
 \value{
-A \link[base]{matrix} containing unphased genotype calls
+\code{matrix} containing unphased genotype calls
 }
 \description{
 Remove phasing information from genotype calls

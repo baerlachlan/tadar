@@ -9,21 +9,21 @@
 #' A DAR value of 0 represents identical allelic representation between the
 #' two sample groups, while a DAR value of 1 represents complete diversity
 #'
-#' @param props A GRangesList containing a summary of normalised allele counts
+#' @param props `GRangesList` containing a summary of normalised allele counts
 #' (i.e. as proportions) at each range.
 #' Each element of the list represents a distinct sample group
-#' @param contrasts A contrast matrix specifying which sample groups to
+#' @param contrasts Contrast `matrix` specifying which sample groups to
 #' to calculate DAR between.
 #' Each column must represent a single contrast, and rows represent the levels
 #' (i.e. sample groups) to be contrasted.
 #' The two levels involved with each contrast should be specified with
 #' `1` and `-1`
-#' @param winSize integer specifying the number of ranges to include
+#' @param winSize `integer(1)` specifying the number of ranges to include
 #' in the elastic sliding window used for averaging DAR values within a region.
 #' Must be an odd integer in order to incorporate the origin locus and an
 #' equal number of loci either side
 #'
-#' @return A GRangesList containing DAR values at each overlapping range
+#' @return `GRangesList` containing DAR values at each overlapping range
 #' between the contrasted sample groups.
 #' Two types of DAR values are reported in the metadata columns of each GRanges
 #' object:

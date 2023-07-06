@@ -8,11 +8,11 @@
 #' information for DAR analysis
 #'
 #' @param file The file path of a VCF file containing genotype data.
-#' Alternatively, a \link[Rsamtools]{TabixFile} as described in
-#' [VariantAnnotation::readVcf()]
+#' Alternatively, a `TabixFile` as described in
+#' \link[VariantAnnotation]{readVcf}
 #' @param unphase A `logical` specifying if phasing information should be
 #' removed from genotypes. This is recommended if proceeding with DAR analysis
-#' @param ... Passed to [VariantAnnotation::readVcf()]
+#' @param ... Passed to \link[VariantAnnotation]{readVcf}
 #'
 #' @return A `GRanges` object constructed from the CHROM, POS, ID and REF
 #' fields of the supplied `VCF` file. Genotype data for each sample present in
