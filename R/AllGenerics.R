@@ -57,6 +57,19 @@ setGeneric(
         standardGeneric("plotDarECDF")
 )
 
+#' @name plotChrDar
+#' @rdname plotChrDar-methods
+#' @export
+setGeneric(
+    "plotChrDar",
+    function(
+        dar, darVal = c("origin", "region"), chr,
+        foi, foi_anno, foi_highlight = TRUE,
+        features, features_anno, features_highlight = TRUE,
+        title = ""
+    ) standardGeneric("plotChrDar")
+)
+
 #' @name readGenotypes
 #' @rdname readGenotypes-methods
 #' @export

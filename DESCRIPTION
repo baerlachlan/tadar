@@ -35,8 +35,10 @@ Depends:
 Imports: 
     BiocGenerics,
     GenomeInfoDb,
+    Gviz,
     IRanges,
     MatrixGenerics,
+    methods,
     rlang,
     Rsamtools,
     S4Vectors,
@@ -45,6 +47,5 @@ Imports:
 Suggests: 
     covr,
     knitr,
-    methods,
     rmarkdown,
     testthat (>= 3.0.0)
