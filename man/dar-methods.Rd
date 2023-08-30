@@ -12,19 +12,19 @@ dar(props, contrasts, winSize = 5)
 \arguments{
 \item{props}{\code{GRangesList} containing a summary of normalised allele counts
 (i.e. as proportions) at each range.
-Each element of the list represents a distinct sample group}
+Each element of the list represents a distinct sample group.}
 
 \item{contrasts}{Contrast \code{matrix} specifying which sample groups to
 to calculate DAR between.
 Each column must represent a single contrast, and rows represent the levels
 (i.e. sample groups) to be contrasted.
 The two levels involved with each contrast should be specified with
-\code{1} and \code{-1}}
+\code{1} and \code{-1}.}
 
 \item{winSize}{\code{integer(1)} specifying the number of ranges to include
 in the elastic sliding window used for averaging DAR values within a region.
 Must be an odd integer in order to incorporate the origin locus and an
-equal number of loci either side}
+equal number of loci either side.}
 }
 \value{
 \code{GRangesList} containing DAR values at each overlapping range
@@ -41,10 +41,10 @@ of dar_origin values.
 }
 
 Each element of the list represents a single contrast defined in the
-input contrast matrix
+input contrast matrix.
 }
 \description{
-Calculate DAR between two sample groups
+Calculate DAR between two sample groups.
 }
 \details{
 DAR is calculated as the Euclidean distance between the allelic
@@ -52,7 +52,7 @@ proportions (i.e. proportion of As, Cs, Gs and Ts) of two sample groups at
 a single nucleotide locus, scaled such that all values range inclusively
 between 0 and 1.
 A DAR value of 0 represents identical allelic representation between the
-two sample groups, while a DAR value of 1 represents complete diversity
+two sample groups, while a DAR value of 1 represents complete diversity.
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")

@@ -3,17 +3,17 @@
 #' @description Convert the ranges element associated with origin DAR values
 #' to ranges associated with the region DAR values.
 #' This function can also be used to revert back to the original object
-#' containing origin ranges if desired
+#' containing origin ranges if desired.
 #'
 #' @param dar `GRangesList` with ranges representing single nucleotide (origin)
-#' positions
+#' positions.
 #' @param extendEdges `logical(1)` specifying if region DAR ranges at the edges
 #' of each chromosome should be extended to cover the entire chromosome.
 #' This argument is only considered when converting from origin DAR ranges to
 #' region DAR ranges.
 #' Useful for downstream assignment of DAR values to genomic features that
 #' exist at the 5' or 3' edges of the chromosome, which would have otherwise
-#' been missed
+#' been missed.
 #'
 #' @return `GRangesList` with ranges that represent either DAR regions or
 #' DAR origins, depending on the ranges of the input object.
@@ -45,9 +45,7 @@
 #' convertRanges(darRegions)
 #'
 #' @import GenomicRanges
-#' @importFrom IRanges IRanges ranges 'ranges<-'
-#' @importFrom S4Vectors endoapply metadata 'metadata<-' mcols 'mcols<-'
-#' @importFrom GenomeInfoDb seqnames seqinfo seqlengths
+#' @importFrom S4Vectors endoapply metadata
 #' @rdname convertRanges-methods
 #' @aliases convertRanges
 #' @export
@@ -68,6 +66,7 @@ setMethod(
 )
 
 #' @keywords internal
+#' @importFrom GenomeInfoDb seqnames seqlengths
 .extend <- function(regions, dar) {
     chr <- seqnames(dar)
     chr <- unique(chr)
@@ -84,6 +83,9 @@ setMethod(
 }
 
 #' @keywords internal
+#' @importFrom IRanges IRanges ranges 'ranges<-'
+#' @importFrom S4Vectors endoapply metadata 'metadata<-' 'mcols<-'
+#' @importFrom GenomeInfoDb seqnames
 .switchToRegion <- function(dar, extendEdges) {
 
     winSize <- metadata(dar)$winSize
@@ -118,6 +120,8 @@ setMethod(
 }
 
 #' @keywords internal
+#' @importFrom IRanges 'ranges<-'
+#' @importFrom S4Vectors metadata 'metadata<-' mcols 'mcols<-'
 .switchToOrigin <- function(dar) {
 
     ranges(dar) <- mcols(dar)$origin_ranges

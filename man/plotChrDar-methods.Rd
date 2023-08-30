@@ -83,7 +83,7 @@ A Gviz object
 }
 \description{
 Use \code{Gviz} to plot the trend in DAR across a chromosomal region
-with the option to add features of interest as separate tracks
+with the option to add features of interest as separate tracks.
 }
 \examples{
 set.seed(230822)

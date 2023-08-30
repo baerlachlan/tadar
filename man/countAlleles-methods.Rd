@@ -11,18 +11,18 @@ countAlleles(genotypes, groups)
 }
 \arguments{
 \item{genotypes}{\code{GRanges} object with metadata columns containing genotype
-information for all samples}
+information for all samples.}
 
 \item{groups}{Named \code{list} specifying the sample grouping structure, where
-each element contains a character vector of sample names}
+each element contains a character vector of sample names.}
 }
 \value{
 \code{GRangesList} containing a summary of allele counts at each range.
-Each element of the list represents a distinct sample group
+Each element of the list represents a distinct sample group.
 }
 \description{
 Summarise the alleles from genotype calls at each single
-nucleotide locus within each sample group
+nucleotide locus within each sample group.
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")

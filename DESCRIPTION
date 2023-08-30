@@ -5,10 +5,10 @@ Description: This package provides functions to standardise the analysis of
     Differential Allelic Representation (DAR). DAR analysis is intended to
     be performed on genotype calls from variant discovery software, resulting
     in a metric that represents the allelic diversity between groups of samples
-    at each SNP locus. The DAR metric provides a good proxy for the possibility
-    of expression quantitative trait loci differences between sample groups,
-    which may contribute to unexpected variability in Differential Expression
-    analysis.
+    at each SNP locus. The DAR metric provides a good estimate for the
+    possibility of expression quantitative trait loci differences between
+    sample groups, which may contribute to unexpected variability gene
+    expression and influence to results of Differential Expression analysis.
 Authors@R: 
     c(person("Lachlan", "Baer",
         email = "baerlachlan@gmail.com",

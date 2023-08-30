@@ -1,22 +1,22 @@
 #' @title Read genotypes from a VCF file
 #'
 #' @description Extract genotypes from a VCF file into a GRanges object for
-#' downstream DAR analysis
+#' downstream DAR analysis.
 #'
 #' @details
 #' Extract genotypes from a VCF file with the option to remove phasing
-#' information for DAR analysis
+#' information for DAR analysis.
 #'
 #' @param file The file path of a VCF file containing genotype data.
 #' Alternatively, a `TabixFile` as described in
-#' \link[VariantAnnotation]{readVcf}
+#' \link[VariantAnnotation]{readVcf}.
 #' @param unphase A `logical` specifying if phasing information should be
-#' removed from genotypes. This is recommended if proceeding with DAR analysis
-#' @param ... Passed to \link[VariantAnnotation]{readVcf}
+#' removed from genotypes. This is required if proceeding with DAR analysis.
+#' @param ... Passed to \link[VariantAnnotation]{readVcf}.
 #'
 #' @return A `GRanges` object constructed from the CHROM, POS, ID and REF
 #' fields of the supplied `VCF` file. Genotype data for each sample present in
-#' the `VCF` file is added to the metadata columns
+#' the `VCF` file is added to the metadata columns.
 #'
 #' @examples
 #' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")

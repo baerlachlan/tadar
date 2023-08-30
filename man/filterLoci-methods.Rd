@@ -12,30 +12,30 @@ filterLoci(counts, filter = n_called > n_missing)
 \arguments{
 \item{counts}{\code{GRangesList} containing a summary of allele counts at each
 range.
-Each element of the list represents a distinct sample group}
+Each element of the list represents a distinct sample group.}
 
 \item{filter}{A logical expression indicating which rows to keep.
 Possible values include:
 \itemize{
 \item \code{n_called}
-The number of total alleles called
+The number of total alleles called.
 \item \code{n_missing}
-The number of total alleles not reported
+The number of total alleles not reported.
 \item \code{n_0}, \code{n_1}, \code{n_2}, \code{n_3}
-The number of ref, alt1, alt2 and alt3 alleles respectively
+The number of ref, alt1, alt2 and alt3 alleles respectively.
 }
 
 All values represent the sum of counts across all samples within the group.
 Defaults to return loci where the number of samples containing allele
-information is greater than number samples with missing information}
+information is greater than number samples with missing information.}
 }
 \value{
 \code{GRangesList} containing a summary of allele counts at each range
 passing the filter criteria.
-Each element of the list represents a distinct sample group
+Each element of the list represents a distinct sample group.
 }
 \description{
-Filter loci based on allele count criteria
+Filter loci based on allele count criteria.
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")

@@ -1,13 +1,13 @@
 #' @title Unphase genotypes
 #'
-#' @description Remove phasing information from genotype calls
+#' @description Remove phasing information from genotype calls.
 #'
 #' @details Phasing information is not required for a simple DAR analysis.
 #' Removing this enables easy counting of alleles from genotype calls.
 #'
-#' @param gt `matrix` or `data.frame` containing sample genotype information
+#' @param gt `matrix` or `data.frame` containing sample genotype information.
 #'
-#' @return `matrix` containing unphased genotype calls
+#' @return `matrix` containing unphased genotype calls.
 #'
 #' @examples
 #' library(VariantAnnotation)

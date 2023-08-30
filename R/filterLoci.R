@@ -1,27 +1,27 @@
 #' @title Filter loci
 #'
-#' @description Filter loci based on allele count criteria
+#' @description Filter loci based on allele count criteria.
 #'
 #' @param counts `GRangesList` containing a summary of allele counts at each
 #' range.
-#' Each element of the list represents a distinct sample group
+#' Each element of the list represents a distinct sample group.
 #' @param filter A logical expression indicating which rows to keep.
 #' Possible values include:
 #'
-#' * `n_called`
-#' The number of total alleles called
-#' * `n_missing`
-#' The number of total alleles not reported
-#' * `n_0`, `n_1`, `n_2`, `n_3`
-#' The number of ref, alt1, alt2 and alt3 alleles respectively
+#' - `n_called`
+#' The number of total alleles called.
+#' - `n_missing`
+#' The number of total alleles not reported.
+#' - `n_0`, `n_1`, `n_2`, `n_3`
+#' The number of ref, alt1, alt2 and alt3 alleles respectively.
 #'
 #' All values represent the sum of counts across all samples within the group.
 #' Defaults to return loci where the number of samples containing allele
-#' information is greater than number samples with missing information
+#' information is greater than number samples with missing information.
 #'
 #' @return `GRangesList` containing a summary of allele counts at each range
 #' passing the filter criteria.
-#' Each element of the list represents a distinct sample group
+#' Each element of the list represents a distinct sample group.
 #'
 #' @examples
 #' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")

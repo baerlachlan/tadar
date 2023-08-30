@@ -11,20 +11,20 @@ plotDarECDF(dar, darVal = c("origin", "region"), highlight = NULL)
 }
 \arguments{
 \item{dar}{\code{GRanges} object with metadata columns containing the desired
-DAR values to plot}
+DAR values to plot.}
 
 \item{darVal}{\code{character(1)} specifying the whether to plot dar_origin or
 dar_region values.
-Options are "origin" and "region"}
+Options are "origin" and "region".}
 
 \item{highlight}{\code{character(1)} specifying the chromosome to highlight with
-a different colour}
+a different colour.}
 }
 \value{
-A ggplot2 object
+A ggplot2 object.
 }
 \description{
-Plot the ECDF of DAR for each chromosome
+Plot the ECDF of DAR for each chromosome.
 }
 \examples{
 set.seed(230704)

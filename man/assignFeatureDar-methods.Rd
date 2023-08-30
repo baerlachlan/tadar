@@ -10,7 +10,7 @@ assignFeatureDar(features, dar, darVal = c("origin", "region"))
 \S4method{assignFeatureDar}{GRanges,GRangesList}(features, dar, darVal = c("origin", "region"))
 }
 \arguments{
-\item{features}{\code{GRanges} object specifying the features of interest}
+\item{features}{\code{GRanges} object specifying the features of interest.}
 
 \item{dar}{\code{GRangesList} with DAR values of the associated ranges contained
 in metadata columns.
@@ -20,24 +20,25 @@ This results in an assigned estimate of DAR in the region surrounding the
 feature.
 Alternatively, the use of DAR origin ranges results in an assigned average
 of DAR solely within the feature.
-Ranges can be converted between origins and regions with \link{convertRanges}}
+Ranges can be converted between origins and regions with
+\link{convertRanges}.}
 
 \item{darVal}{\code{character(1)} specifying the whether to use origin or region
 DAR values for the chosen ranges.
 Options are "origin" and "region".
 A warning will be produced if the chosen \code{darVal} does not match the
 ranges detected in the object provided to the \code{dar} argument, as this is
-likely unintended by the user}
+likely unintended by the user.}
 }
 \value{
 \code{GRangesList} with ranges representing features of interest that
 overlap at least one DAR range.
 Feature metadata columns are retained and an additional column is added
-for the assigned DAR value
+for the assigned DAR value.
 }
 \description{
 Assign DAR values to genomic features of interest by
-averaging the DAR values of ranges that overlap the feature range
+averaging the DAR values of ranges that overlap the feature range.
 }
 \examples{
 data("chr1_genes")

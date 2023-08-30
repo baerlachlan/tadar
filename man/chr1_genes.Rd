@@ -5,10 +5,10 @@
 \alias{chr1_genes}
 \title{Genomic feature example data}
 \format{
-GRanges object with 1456 ranges and 2 metadata columns
+GRanges object with 1456 ranges and 2 metadata columns.
 \describe{
 \item{chr1_genes}{Ranges represent gene features for chromosome 1 of
-zebrafish GRCz11 genome}
+zebrafish GRCz11 genome.}
 }
 }
 \source{
@@ -19,6 +19,6 @@ data(chr1_genes)
 }
 \description{
 Gene features for example usage. Generation of this data is
-documented in \code{system.file("data-raw/chr1_genes.R", package = "darr")}
+documented in \code{system.file("data-raw/chr1_genes.R", package = "darr")}.
 }
 \keyword{datasets}

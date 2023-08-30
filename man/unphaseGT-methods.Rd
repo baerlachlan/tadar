@@ -13,13 +13,13 @@ unphaseGT(gt)
 \S4method{unphaseGT}{data.frame}(gt)
 }
 \arguments{
-\item{gt}{\code{matrix} or \code{data.frame} containing sample genotype information}
+\item{gt}{\code{matrix} or \code{data.frame} containing sample genotype information.}
 }
 \value{
-\code{matrix} containing unphased genotype calls
+\code{matrix} containing unphased genotype calls.
 }
 \description{
-Remove phasing information from genotype calls
+Remove phasing information from genotype calls.
 }
 \details{
 Phasing information is not required for a simple DAR analysis.

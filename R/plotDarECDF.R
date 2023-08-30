@@ -1,16 +1,16 @@
 #' @title Plot the Empirical Cumulative Distribution Function of DAR
 #'
-#' @description Plot the ECDF of DAR for each chromosome
+#' @description Plot the ECDF of DAR for each chromosome.
 #'
 #' @param dar `GRanges` object with metadata columns containing the desired
-#' DAR values to plot
+#' DAR values to plot.
 #' @param darVal `character(1)` specifying the whether to plot dar_origin or
 #' dar_region values.
-#' Options are "origin" and "region"
+#' Options are "origin" and "region".
 #' @param highlight `character(1)` specifying the chromosome to highlight with
-#' a different colour
+#' a different colour.
 #'
-#' @return A ggplot2 object
+#' @return A ggplot2 object.
 #'
 #' @examples
 #' set.seed(230704)

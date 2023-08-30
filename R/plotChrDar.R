@@ -1,7 +1,7 @@
 #' @title Plot DAR across a chromosome
 #'
 #' @description Use `Gviz` to plot the trend in DAR across a chromosomal region
-#' with the option to add features of interest as separate tracks
+#' with the option to add features of interest as separate tracks.
 #'
 #' @param dar `GRanges` with DAR values of associated ranges contained
 #' in metadata columns.
@@ -104,6 +104,7 @@ setMethod(
 )
 
 #' @keywords internal
+#' @importFrom GenomeInfoDb seqnames
 #' @importFrom S4Vectors mcols
 #' @importFrom Gviz AnnotationTrack
 .foiTrack <- function(chr, foi, foi_anno) {
@@ -133,6 +134,7 @@ setMethod(
 
 #' @keywords internal
 #' @importFrom Gviz GenomeAxisTrack HighlightTrack
+#' @importFrom GenomeInfoDb seqnames
 .axisTrack <- function(chr, foi) {
 
     track_name <- ""  # Defaults to empty string if `chr` not provided
@@ -154,6 +156,7 @@ setMethod(
 }
 
 #' @keywords internal
+#' @importFrom GenomeInfoDb seqnames
 #' @importFrom S4Vectors mcols
 #' @importFrom Gviz AnnotationTrack
 .featuresTrack <- function(chr, features, features_anno) {
@@ -291,7 +294,7 @@ setMethod(
     ## already checks that `chr %in% seqs` for each GRanges object
     if (!missing(chr)) return(msg)
 
-    seqs <- c(character(0))
+    seqs <- c()
     if (length(unique(seqnames(dar))) == 1)  # .checkGRanges will catch if FALSE
         seqs <- c(seqs, as.character(unique(seqnames(dar))))
     if (!missing(foi))

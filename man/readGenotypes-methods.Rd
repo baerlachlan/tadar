@@ -15,25 +15,25 @@ readGenotypes(file, unphase = TRUE, ...)
 \arguments{
 \item{file}{The file path of a VCF file containing genotype data.
 Alternatively, a \code{TabixFile} as described in
-\link[VariantAnnotation]{readVcf}}
+\link[VariantAnnotation]{readVcf}.}
 
 \item{unphase}{A \code{logical} specifying if phasing information should be
-removed from genotypes. This is recommended if proceeding with DAR analysis}
+removed from genotypes. This is required if proceeding with DAR analysis.}
 
-\item{...}{Passed to \link[VariantAnnotation]{readVcf}}
+\item{...}{Passed to \link[VariantAnnotation]{readVcf}.}
 }
 \value{
 A \code{GRanges} object constructed from the CHROM, POS, ID and REF
 fields of the supplied \code{VCF} file. Genotype data for each sample present in
-the \code{VCF} file is added to the metadata columns
+the \code{VCF} file is added to the metadata columns.
 }
 \description{
 Extract genotypes from a VCF file into a GRanges object for
-downstream DAR analysis
+downstream DAR analysis.
 }
 \details{
 Extract genotypes from a VCF file with the option to remove phasing
-information for DAR analysis
+information for DAR analysis.
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")

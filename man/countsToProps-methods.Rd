@@ -12,23 +12,23 @@ countsToProps(counts, filter = TRUE)
 \arguments{
 \item{counts}{\code{GRangesList} containing a summary of allele counts at each
 range.
-Each element of the list represents a distinct sample group}
+Each element of the list represents a distinct sample group.}
 
 \item{filter}{\code{logical(1)} specifying if ranges should be filtered using
 default criteria.
 If filtering is not required, or if performed manually with
-\code{\link[=filterLoci]{filterLoci()}}, set this to \code{FALSE}}
+\link{filterLoci}, set this to \code{FALSE}.}
 }
 \value{
 \code{GRangesList} containing a summary of normalised allele counts
 (i.e. as proportions) at each range.
-Each element of the list represents a distinct sample group
+Each element of the list represents a distinct sample group.
 }
 \description{
 Normalise allele-level counts across samples by converting to a
 proportion of total alleles in all samples.
 Optionally remove ranges using the default filtering criteria described
-in \link{filterLoci}
+in \link{filterLoci}.
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
