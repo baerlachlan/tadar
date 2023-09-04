@@ -14,7 +14,7 @@ Authors@R:
         email = "baerlachlan@gmail.com",
         role = c("aut", "cre"),
         comment = c(ORCID = "0000-0001-5213-3401")),
-    person("Stephen", "Pederson",
+    person("Stevie", "Pederson",
         email = "stephen.pederson.au@gmail.com",
         role = "aut",
         comment = c(ORCID = "0000-0001-8197-3303")))
@@ -45,6 +45,7 @@ Imports:
     stats,
     VariantAnnotation
 Suggests: 
+    BiocStyle,
     covr,
     knitr,
     rmarkdown,
