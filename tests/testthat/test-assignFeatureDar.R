@@ -19,34 +19,34 @@ darRegions <- flipRanges(dar)
 darRegions_ex <- flipRanges(dar, extendEdges = TRUE)
 
 test_that("assignFeatureDar returns the expected output", {
-    geneDar_origin <- assignFeatureDar(chr1_genes, dar, darVal = "origin")
+    geneDar_origin <- assignFeatureDar(dar, chr1_genes, darVal = "origin")
     expect_equal(length(geneDar_origin$group1v2), 820)
-    geneDar_region <- assignFeatureDar(chr1_genes, darRegions, darVal = "region")
+    geneDar_region <- assignFeatureDar(darRegions, chr1_genes, darVal = "region")
     expect_equal(length(geneDar_region$group1v2), 1455)
-    geneDar_ex <- assignFeatureDar(chr1_genes, darRegions_ex, darVal = "region")
+    geneDar_ex <- assignFeatureDar(darRegions_ex, chr1_genes, darVal = "region")
     expect_equal(length(geneDar_ex$group1v2), 1456)
 })
 
 test_that("assignFeatureDar errors when expected", {
     dar <- endoapply(dar, function(x) x[,c()])
     expect_error(
-        assignFeatureDar(chr1_genes, dar, darVal = "origin"),
+        assignFeatureDar(dar, chr1_genes, darVal = "origin"),
         "No dar_origin values detected"
     )
     darRegions <- endoapply(darRegions, function(x) x[,c()])
     expect_error(
-        assignFeatureDar(chr1_genes, darRegions, darVal = "region"),
+        assignFeatureDar(darRegions, chr1_genes, darVal = "region"),
         "No dar_region values detected"
     )
 })
 
 test_that("assignFeatureDar gives warnings when expected", {
     expect_warning(
-        assignFeatureDar(chr1_genes, dar, darVal = "region"),
+        assignFeatureDar(dar, chr1_genes, darVal = "region"),
         "Range\\(s\\) detected with width == 1"
     )
     expect_warning(
-        assignFeatureDar(chr1_genes, darRegions, darVal = "origin"),
+        assignFeatureDar(darRegions, chr1_genes, darVal = "origin"),
         "Range\\(s\\) detected with width > 1"
     )
 })

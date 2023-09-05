@@ -3,7 +3,7 @@
 #' @export
 setGeneric(
     "assignFeatureDar",
-    function(features, dar, darVal = c("origin", "region"))
+    function(dar, features, darVal = c("origin", "region"))
         standardGeneric("assignFeatureDar")
 )
 

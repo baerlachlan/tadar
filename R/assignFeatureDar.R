@@ -44,10 +44,10 @@
 #'     )
 #' )
 #' dar <- dar(props, contrasts)
-#' assignFeatureDar(chr1_genes, dar, darVal = "origin")
+#' assignFeatureDar(dar, chr1_genes, darVal = "origin")
 #'
 #' darRegions <- flipRanges(dar, extendEdges = TRUE)
-#' assignFeatureDar(chr1_genes, darRegions, darVal = "region")
+#' assignFeatureDar(darRegions, chr1_genes, darVal = "region")
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply from to
@@ -57,7 +57,7 @@
 setMethod(
     "assignFeatureDar",
     signature = signature(dar = "GRangesList", features = "GRanges"),
-    function(features, dar, darVal) {
+    function(dar, features, darVal) {
 
         darVal <- match.arg(darVal)
         endoapply(dar, function(x){

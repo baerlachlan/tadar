@@ -2,16 +2,14 @@
 % Please edit documentation in R/AllGenerics.R, R/assignFeatureDar.R
 \name{assignFeatureDar}
 \alias{assignFeatureDar}
-\alias{assignFeatureDar,GRanges,GRangesList-method}
+\alias{assignFeatureDar,GRangesList,GRanges-method}
 \title{Assign DAR values to genomic features}
 \usage{
-assignFeatureDar(features, dar, darVal = c("origin", "region"))
+assignFeatureDar(dar, features, darVal = c("origin", "region"))
 
-\S4method{assignFeatureDar}{GRanges,GRangesList}(features, dar, darVal = c("origin", "region"))
+\S4method{assignFeatureDar}{GRangesList,GRanges}(dar, features, darVal = c("origin", "region"))
 }
 \arguments{
-\item{features}{\code{GRanges} object specifying the features of interest.}
-
 \item{dar}{\code{GRangesList} with DAR values of the associated ranges contained
 in metadata columns.
 Ranges that represent DAR regions are recommended to assign the greatest
@@ -22,6 +20,8 @@ Alternatively, the use of DAR origin ranges results in an assigned average
 of DAR solely within the feature.
 Ranges can be converted between origins and regions with
 \link{flipRanges}.}
+
+\item{features}{\code{GRanges} object specifying the features of interest.}
 
 \item{darVal}{\code{character(1)} specifying the whether to use origin or region
 DAR values for the chosen ranges.
@@ -58,9 +58,9 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts)
-assignFeatureDar(chr1_genes, dar, darVal = "origin")
+assignFeatureDar(dar, chr1_genes, darVal = "origin")
 
 darRegions <- flipRanges(dar, extendEdges = TRUE)
-assignFeatureDar(chr1_genes, darRegions, darVal = "region")
+assignFeatureDar(darRegions, chr1_genes, darVal = "region")
 
 }
