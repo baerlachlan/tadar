@@ -8,5 +8,5 @@
 Package description to go here
 }
 \author{
-Lachlan Baer, Stephen Pederson
+Lachlan Baer, Stevie Pederson
 }

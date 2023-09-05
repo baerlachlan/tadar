@@ -12,7 +12,7 @@
 #' Alternatively, the use of DAR origin ranges results in an assigned average
 #' of DAR solely within the feature.
 #' Ranges can be converted between origins and regions with
-#' \link{convertRanges}.
+#' \link{flipRanges}.
 #' @param features `GRanges` object specifying the features of interest.
 #' @param darVal `character(1)` specifying the whether to use origin or region
 #' DAR values for the chosen ranges.
@@ -46,7 +46,7 @@
 #' dar <- dar(props, contrasts)
 #' assignFeatureDar(chr1_genes, dar, darVal = "origin")
 #'
-#' darRegions <- convertRanges(dar, extendEdges = TRUE)
+#' darRegions <- flipRanges(dar, extendEdges = TRUE)
 #' assignFeatureDar(chr1_genes, darRegions, darVal = "region")
 #'
 #' @import GenomicRanges

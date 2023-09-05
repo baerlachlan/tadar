@@ -21,7 +21,7 @@ feature.
 Alternatively, the use of DAR origin ranges results in an assigned average
 of DAR solely within the feature.
 Ranges can be converted between origins and regions with
-\link{convertRanges}.}
+\link{flipRanges}.}
 
 \item{darVal}{\code{character(1)} specifying the whether to use origin or region
 DAR values for the chosen ranges.
@@ -60,7 +60,7 @@ contrasts <- matrix(
 dar <- dar(props, contrasts)
 assignFeatureDar(chr1_genes, dar, darVal = "origin")
 
-darRegions <- convertRanges(dar, extendEdges = TRUE)
+darRegions <- flipRanges(dar, extendEdges = TRUE)
 assignFeatureDar(chr1_genes, darRegions, darVal = "region")
 
 }

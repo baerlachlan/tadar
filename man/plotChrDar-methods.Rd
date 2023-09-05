@@ -36,7 +36,7 @@ plotChrDar(
 in metadata columns.
 Used to build the DataTrack showing the trend in DAR across the chromosome.
 If ranges of the input object span regions (i.e. post application of
-\link{convertRanges}), data points are plotted at the midpoint of the region.}
+\link{flipRanges}), data points are plotted at the midpoint of the region.}
 
 \item{darVal}{\code{character(1)} specifying the whether to use origin or region
 DAR values for the chosen ranges.

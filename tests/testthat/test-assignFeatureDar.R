@@ -15,8 +15,8 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts)
-darRegions <- convertRanges(dar)
-darRegions_ex <- convertRanges(dar, extendEdges = TRUE)
+darRegions <- flipRanges(dar)
+darRegions_ex <- flipRanges(dar, extendEdges = TRUE)
 
 test_that("assignFeatureDar returns the expected output", {
     geneDar_origin <- assignFeatureDar(chr1_genes, dar, darVal = "origin")

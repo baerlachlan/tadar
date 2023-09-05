@@ -7,12 +7,12 @@ setGeneric(
         standardGeneric("assignFeatureDar")
 )
 
-#' @name convertRanges
-#' @rdname convertRanges-methods
+#' @name flipRanges
+#' @rdname flipRanges-methods
 #' @export
 setGeneric(
-    "convertRanges",
-    function(dar, extendEdges = FALSE) standardGeneric("convertRanges")
+    "flipRanges",
+    function(dar, extendEdges = FALSE) standardGeneric("flipRanges")
 )
 
 #' @name countAlleles

@@ -36,21 +36,21 @@
 #' )
 #' dar <- dar(props, contrasts, winSize = 5)
 #' ## Convert ranges to regions associated with dar_region values
-#' convertRanges(dar)
+#' flipRanges(dar)
 #' ## Extend the outer regions the cover the entire chromosome
-#' convertRanges(dar, extendEdges = TRUE)
+#' flipRanges(dar, extendEdges = TRUE)
 #'
 #' ## Convert back to origin ranges associated with dar_origin values
-#' darRegions <- convertRanges(dar)
-#' convertRanges(darRegions)
+#' darRegions <- flipRanges(dar)
+#' flipRanges(darRegions)
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply metadata
-#' @rdname convertRanges-methods
-#' @aliases convertRanges
+#' @rdname flipRanges-methods
+#' @aliases flipRanges
 #' @export
 setMethod(
-    "convertRanges",
+    "flipRanges",
     signature = signature(dar = "GRangesList"),
     function(dar, extendEdges) {
 
@@ -92,7 +92,7 @@ setMethod(
     if (is.null(winSize)) {
         stop(
             "No winSize detected. Use `dar()` before ",
-            "`convertRanges()`", call. = FALSE
+            "`flipRanges()`", call. = FALSE
         )
     }
     removedRanges <- dar[is.na(dar$dar_region),]

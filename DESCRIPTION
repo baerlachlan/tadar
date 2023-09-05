@@ -49,5 +49,7 @@ Suggests:
     BiocStyle,
     covr,
     knitr,
+    limma,
     rmarkdown,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    tidyverse

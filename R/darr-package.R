@@ -5,7 +5,7 @@
 #' Package description to go here
 #'
 #' @author
-#' Lachlan Baer, Stephen Pederson
+#' Lachlan Baer, Stevie Pederson
 #'
 #' @docType package
 #' @name darr-package
