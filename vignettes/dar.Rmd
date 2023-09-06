@@ -13,15 +13,23 @@ author:
   email: stephen.pederson.au@gmail.com
 package: darr
 output:
-  BiocStyle::html_document
+  BiocStyle::html_document:
+    toc: true
+    toc_float: true
+    css: custom.css
+bibliography: references.bib
 vignette: >
   %\VignetteIndexEntry{DAR analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r chunk-opts, include = FALSE}
-knitr::opts_chunk$set(collapse = TRUE, comment = "#>", message = FALSE)
+```{r global-opts, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE, comment = "#>", message = FALSE, crop = NULL
+)
+if (!interactive())
+  options(width=999) # Wide chunk output will horizontal scroll instead of wrap
 ```
 
 # Introduction
@@ -39,7 +47,7 @@ This is often due to random chance when selecting group composition, however, ma
 When unequally-represented polymorphic alleles are also expression quantitative trait loci (eQTLs), expression differences between experimental groups are observed similarly to that of a functional response to an experimental condition (Figure&nbsp;\@ref(fig:ase-example)).
 Analysis of gene expression in absence of the consideration of DAR is problematic as the source of differential expression is not clear.
 
-```{r ase-example, echo = FALSE, fig.cap = 'Two confounding scenarios that result in differential gene expression between experimental groups when samples are not isogenic. *Experimental grouping is illustrated as mutant vs wild-type control (where this situation is often amplified through group selection based on genotype at a single locus), but is also applicable for other experimental designs (e.g. treatment vs control). The key aspect here is that polymorphic regions of the homologous chromosomes differ between the experimental groups. **A)** Functional differential expression. The experimental factor (genotype of the gene-of-interest, GOI) has a functional interaction with a bystander gene (LG), resulting in expression differences between the experimental groups. This is the assumed mechanism when inferring differential expression outcomes. However, a lack of between-group isogenicity complicates this assumption. **B)** eQTL-driven differential expression. A polymorphism in the promoter region of mutant samples, for example, causes expression differences between mutant and wild-type groups in the absence of a functional interaction between GOI and LG. This may incorrectly be inferred as differential expression due to the experimental condition.*'}
+```{r ase-example, echo = FALSE, fig.wide=TRUE, fig.cap = 'Two confounding scenarios that result in differential gene expression between experimental groups when samples are not isogenic. *Experimental grouping is illustrated as mutant vs wild-type control, but is also applicable for other experimental designs (e.g. treatment vs control). The key aspect here is that polymorphic regions of the homologous chromosomes differ between the experimental groups. **A)** Functional differential expression. The experimental factor (genotype of the gene-of-interest, GOI) has a functional interaction with a bystander gene (LG), resulting in expression differences between the experimental groups. This is the assumed mechanism when inferring differential expression outcomes. However, a lack of between-group isogenicity complicates this assumption. **B)** eQTL-driven differential expression. A polymorphism in the promoter region of mutant samples, for example, causes expression differences between mutant and wild-type groups in the absence of a functional interaction between GOI and LG. This may incorrectly be inferred as differential expression due to the experimental condition.*'}
 if (!interactive())
   knitr::include_graphics("figs/ase.png")
 ```
@@ -49,7 +57,7 @@ In studies that select experimental groups from a common sample pool, for exampl
 However, in studies involving the selection of groups based on a genetic feature, for example "mutant vs wild-type", the presence of DAR is often intensified on the chromosome(s) containing the determining feature.
 This is because the selection criteria also drives selection for alleles linked to the determining feature (Figure&nbsp;\@ref(fig:selection-driven-dar)).
 
-```{r selection-driven-dar, echo = FALSE, fig.cap = 'DAR is frequently encountered in studies that involve experimental group selection based on the presence of a genetic feature. *Explanation. **A)** Description. **B)** Description.*'}
+```{r selection-driven-dar, echo = FALSE, fig.wide=TRUE, fig.cap = 'DAR is frequently encountered in studies that involve experimental group selection based on the presence of a genetic feature, and is intensified on the chromosome containing the feature. *This figure illustrates the scenario where experimental sample groups are selected based on the presence of a mutant locus. Zebrafish are used as an example to signify that the model organism is not isogenic. **A)** A common breeding scheme for an intrafamily homozygous mutant vs wild-type transcriptome comparison. As a result of selection across multiple generations for the mutant chromosome (indicated in red), which originates from a single F~0~ fish (not pictured), homozygous mutant F~y~ fish posess two exact copies of the chromosome harbouring the mutation, disregarding recombination. However, wild-type F~y~ fish likely posses two different wild-type chromosomes (shaded using different stripe pattterns to indicate they are not isogenic). **B)** Experimental selection of progeny homozygous for a mutant allele involves increased homozygosity for alleles of genes linked to that mutation (i.e. on the same chromosome). High DAR is observed at the eQTL location, resulting in expression differences between the groups that are unrelated to the impact of the mutation. Moderate DAR is observed at the polymorphic locus, due to one of the wild-type chromosomes posessing the same polymorphism. If this polymorphism was also an eQTL, expression differences would be observed to a lesser extent.*'}
 if (!interactive())
   knitr::include_graphics("figs/selection-driven-dar.png")
 ```
@@ -58,9 +66,9 @@ DAR analysis results in an easy-to-interpret value between 0 and 1 for each gene
 
 ## Further reading
 
-The methodologies of this package were developed and described in [Baer et al. 2023](https://www.biorxiv.org/content/10.1101/2023.03.02.530865v3). 
+The methodologies of this package were developed and described in @baer2023. 
 
-This phenomenon was flagged as problematic in [White et al. 2022](https://elifesciences.org/articles/72825).
+This phenomenon was flagged as problematic in @white2022.
 
 # Setup
 
@@ -72,7 +80,7 @@ This phenomenon was flagged as problematic in [White et al. 2022](https://elifes
 ```{r install-pkgs, eval=FALSE}
 if (!"BiocManager" %in% rownames(installed.packages()))
   install.packages("BiocManager")
-pkgs <- c("tidyverse", "darr", "limma")
+pkgs <- c("tidyverse", "limma", "darr")
 BiocManager::install(pkgs, update = FALSE)
 ```
 
@@ -90,9 +98,9 @@ The example data used in this vignette is contained within the `darr` package.
 
 The `VCF` file `chr1.vcf.bgz` contains multi-sample genotype calls produced from raw RNA-seq `FASTQ` data.
 The data originates from zebrafish (*Danio rerio*) brain transcriptomes, and further information can be found in the associated [manuscript](Zebrafish models of Mucopolysaccharidosis types IIIA, B, & C show hyperactivity and changes in oligodendrocyte state) (Gerken et al. 2023).
-The `VCF` has been modified to remove headers and information that are not required for example purposes, and has been subset to a single chromosome (Chromosome 1).
+The `VCF` has been modified to remove headers and other data that are not essential for example purposes, and has been subset to a single chromosome (Chromosome 1).
 
-The `GRanges` object `chr1_genes` contains gene feature information from the Ensembl release 101 database <ref> for *Danio rerio* Chromosome 1.
+The `GRanges` object `chr1_genes` contains gene feature information from the Ensembl database (release version 101) for *Danio rerio* Chromosome 1 (@cunningham2022).
 
 ```{r load-data}
 vcf <- system.file("extdata", "chr1.vcf.bgz", package="darr")
@@ -107,7 +115,7 @@ Ultimately, we require a multi-sample `VCF` file with each entry representing th
 
 The functions contained in this package are intended to be implemented as a sequential workflow, with each function addressing a discrete step in the analysis/processing procedure.
 Please follow the the steps in order as outlined by this vignette.
-For example purposes we will use the `VCF` file loaded above.
+The following examples will use the `VCF` file loaded above.
 
 ## Loading genotype data
 
@@ -140,8 +148,8 @@ First we define our sample grouping structure as a `list`, where each element co
 
 ```{r groups}
 groups <- list(
-  group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
-  group2 = c("S3", "S6", "S11", "S12", "S15", "S16", "S18")
+  group1 = paste0("sample", 1:6),
+  group2 = paste0("sample", 7:13)
 )
 ```
 
@@ -153,7 +161,7 @@ counts <- countAlleles(genotypes = genotypes, groups = groups)
 ```
 
 ```{r head-counts, echo=FALSE}
-head(endoapply(counts, `[`, , 1:4))
+head(counts)
 ```
 
 ## Normalisation of allele counts
@@ -167,7 +175,7 @@ props <- countsToProps(counts = counts)
 ```
 
 ```{r head-props, echo=FALSE}
-head(endoapply(props, `[`, , 1:2))
+head(props)
 ```
 
 ## Calculating DAR
@@ -186,7 +194,7 @@ contrasts <- matrix(
 )
 ```
 
-Alternatively, this can be simplified with the `makeContrasts()` function from the `limma` package. <ref>
+Alternatively, this can be simplified with the `makeContrasts()` function from the `limma` package (@ritchie2015).
 
 ```{r makeContrasts}
 contrasts <- makeContrasts(
@@ -208,9 +216,9 @@ The size of the region is controlled using the `winSize` argument, which establi
 This represents a DAR estimate for the genomic region surrounding the origin locus.
 
 The default `winSize` is 5, however its choice is arbitrary.
-We utilise the `dar_region` values as DAR estimates spanning across the genome.
+`dar_region` values are utilised as DAR estimates spanning across the genome.
 This is primarily useful for assigning DAR values to genome features that do not contain a variant locus.
-If this is not intended, `dar_region` values are not essential and can be ignored.
+If this use case is not intended, `dar_region` values are not essential and can be ignored.
 
 ```{r winSize}
 winSize <- 5
@@ -254,7 +262,8 @@ head(geneDar)
 ```
 
 However, eQTLs don't necessarily exist within a feature itself, so we can opt to use the region DAR values (`dar_region` metadata column in the `dar` object) to assign DAR from the regions surrounding a feature.
-The extent of this region is controlled with the `winSize` argument in the `dar()` function, which we previously set as `r winSize`.
+The size of this region is controlled with the `winSize` argument in the `dar()` function, which we previously set as `r winSize`.
+
 To assign DAR values based on regions, we must firstly utilise the `flipRanges()` function.
 We can also specify set the `extendEdges` option to extend the outermost ranges of each chromosome to encompass the entire chromosome.
 This is useful for ensuring the assignment of DAR values to all features. 
@@ -276,7 +285,7 @@ identical(dar, flipRanges(dar_regions))
 
 Now we can assign DAR values to features based on their surrounding region, by supplying our new ranges and selecting `darVal = region`.
 A warning will be produced if the ranges don't match the selected `darVal`, as this is likely unintended by the user.
-However, use cases may exist and can be ignored if this is intended.
+However, use cases may exist and the warning can be ignored if this is intended.
 
 ```{r assignFeatureDar-region}
 geneDar_regions <- assignFeatureDar(
@@ -301,9 +310,9 @@ length(chr1_genes) == length(geneDar_regions$group1v2)
 The functions in this package have been designed to enable DAR analysis with minimal effort.
 The steps above can be performed in several lines of code as follows.
 
-Firstly load the required packages.
+First load the required packages.
 
-```{r load-pkgs-pipe}
+```{r load-pkgs-pipe, eval=FALSE}
 library(tidyverse)
 library(limma)
 library(darr)
@@ -311,12 +320,12 @@ library(darr)
 
 Then define the input objects.
 
-```{r objects-pipe}
+```{r objects-pipe, eval=FALSE}
 vcf <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 data("chr1_genes")
 groups <- list(
-  group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
-  group2 = c("S3", "S6", "S11", "S12", "S15", "S16", "S18")
+  group1 = paste0("sample", 1:6),
+  group2 = paste0("sample", 7:13)
 )
 contrasts <- makeContrasts(
   group1v2 = group1 - group2,
@@ -327,7 +336,7 @@ winSize <- 5
 
 Now use the `magrittr` pipe to assign DAR values to genes based on their surrounding region.
 
-```{r magrittr-pipe}
+```{r magrittr-pipe, eval=FALSE}
 geneDar <- readGenotypes(vcf) %>%
   countAlleles(groups = groups) %>%
   countsToProps() %>%
@@ -338,7 +347,7 @@ geneDar <- readGenotypes(vcf) %>%
 
 Or we can use the `base` pipe to achieve the same result.
 
-```{r base-pipe}
+```{r base-pipe, eval=FALSE}
 geneDar <- readGenotypes(vcf) |>
   countAlleles(groups = groups) |>
   countsToProps() |>
@@ -349,14 +358,64 @@ geneDar <- readGenotypes(vcf) |>
 
 # Visualisation
 
+## The trend in DAR along a chromosome
 
+The `plotChrDar()` function produces a localised visualisation of the trend in DAR along a chromosomal axis with the option to overlay the positions of features of interest.
+This allows us to compare DAR between regions and/or chromosomes, and visually assess if features may be prone eQTL artefacts.
+`plotChrDar()` is a convenience function that returns a `GViz` plot consisting of an optional number of tracks.
+To produce a minimal plot, this function requires the `dar` argument, expecting a `GRanges` object with DAR values in the metadata columns, and the `darVal` argument as a character string to select the appropriate DAR values from either the `dar_origin` or `dar_region` metadata columns.
+These arguments form the `DataTrack` displaying the trend in DAR.
+Features of interest (e.g. a mutation locus) can be passed to the `foi` argument as a `GRanges` object and will be plotted along the `GenomeAxisTrack`.
+Additional features (e.g. DE genes) can similarly be passed to the `features` argument to be plotted as a separate `AnnotationTrack`.
+The `*_anno` and `*_highlight` arguments are used to select the metadata column containing feature labels, and to choose if their positions should be highlighted over the `DataTrack` displaying the trend in DAR respectively.
+We can also add a title with the `title`  argument.
+`GViz` requires that any `GRanges` objects consist of ranges on a single chromosome, however these can be internally subset using the `chr` argument (which will also control the title of the `GenomeAxisTrack`).
+
+```{r plotChrDar, fig.wide=TRUE}
+set.seed(230822)
+foi <- sample(chr1_genes, 1)
+features <- sample(chr1_genes, 20)
+plotChrDar(
+  dar = dar$group1v2, darVal = "region", chr = "1",
+  foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
+  features = features, features_anno = "gene_name", features_highlight = TRUE,
+  title = "Example plot of DAR along Chromosome 1"
+)
+```
+
+## Comparing DAR between chromosomes
+
+It may be of use to quickly assess whether a particular chromosome is affected by high DAR more so than other chromosomes.
+This is particularly relevant when a study's experimental design causes increased DAR on a particular chromosome.
+The `plotDarECDF()` function facilitates this purpose by plotting the Empirical Cumulative Distribution Function (ECDF) of DAR for each chromosome.
+This function returns a `ggplot2` object, allowing us add our own styling.
+For this example we will use simulated data.
+
+```{r plotDarECDF}
+set.seed(230704)
+gr <- GRanges(
+  paste0(rep(seq(1,25), each = 100), ":", seq(1,100)),
+  dar_origin = runif(2500, 0, 1)
+)
+plotDarECDF(dar = gr, darVal = "origin") +
+  theme_bw()
+```
+
+We can also choose to highlight a particular chromosome of interest with the `highlight` argument.
+
+```{r plotDarECDF_highlight}
+plotDarECDF(dar = gr, darVal = "origin", highlight = "25") +
+  scale_colour_manual(values = c("red", "grey")) +
+  theme_bw()
+```
 
 # Bibliography
 
-
+<div id="refs"></div>
 
 # Session information
 
-```{r sessionInfo}
+```{r sessionInfo, echo=FALSE}
+options(width = 80) # Revert to default to allow this output to wrap
 sessionInfo()
 ```
