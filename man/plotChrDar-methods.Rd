@@ -93,8 +93,8 @@ features <- sample(chr1_genes, 20)
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 genotypes <- readGenotypes(fl)
 groups <- list(
-    group1 = c("S2", "S7", "S9", "S10", "S19", "S20"),
-    group2 = c("S3", "S6", "S11", "S12", "S15", "S16", "S18")
+    group1 = paste0("sample", 1:6),
+    group2 = paste0("sample", 7:13)
 )
 counts <- countAlleles(genotypes, groups)
 props <- countsToProps(counts)
