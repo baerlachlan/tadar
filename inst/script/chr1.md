@@ -40,7 +40,7 @@ vcf <- vcf[seqnames(rowRanges(vcf)) == "1"]
 seqlevels(vcf) <- seqlevelsInUse(vcf)
 dimnames(vcf) <- list(
     NULL,
-    str_remove_all(dimnames(vcf)[[2]], "22.+_")
+    paste0("sample", 1:13) # Rename samples
 )
 header(vcf)@header$contig <- NULL
 header(vcf)@header$GATKCommandLine <- NULL

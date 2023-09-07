@@ -47,7 +47,7 @@ This is often due to random chance when selecting group composition, however, ma
 When unequally-represented polymorphic alleles are also expression quantitative trait loci (eQTLs), expression differences between experimental groups are observed similarly to that of a functional response to an experimental condition (Figure&nbsp;\@ref(fig:ase-example)).
 Analysis of gene expression in absence of the consideration of DAR is problematic as the source of differential expression is not clear.
 
-```{r ase-example, echo = FALSE, fig.wide=TRUE, fig.cap = 'Two confounding scenarios that result in differential gene expression between experimental groups when samples are not isogenic. *Experimental grouping is illustrated as mutant vs wild-type control, but is also applicable for other experimental designs (e.g. treatment vs control). The key aspect here is that polymorphic regions of the homologous chromosomes differ between the experimental groups. **A)** Functional differential expression. The experimental factor (genotype of the gene-of-interest, GOI) has a functional interaction with a bystander gene (LG), resulting in expression differences between the experimental groups. This is the assumed mechanism when inferring differential expression outcomes. However, a lack of between-group isogenicity complicates this assumption. **B)** eQTL-driven differential expression. A polymorphism in the promoter region of mutant samples, for example, causes expression differences between mutant and wild-type groups in the absence of a functional interaction between GOI and LG. This may incorrectly be inferred as differential expression due to the experimental condition.*'}
+```{r ase-example, echo = FALSE, fig.wide=TRUE, fig.cap = 'Two confounding scenarios that result in differential gene expression between experimental groups when samples are not isogenic. *Experimental grouping is illustrated as mutant vs wild-type control, but is also applicable for other experimental designs (e.g. treatment vs control). The key aspect here is that polymorphic regions of the homologous chromosomes differ between the experimental groups. **A)** Functional differential expression. The experimental factor (genotype of the gene-of-interest, GOI) has a functional interaction with a bystander gene (linked gene, LG), resulting in expression differences between the experimental groups. This is the assumed mechanism when inferring differential expression outcomes. However, a lack of between-group isogenicity complicates this assumption. **B)** eQTL-driven differential expression. A polymorphism in the promoter region of mutant samples, for example, causes expression differences between mutant and wild-type groups in the absence of a functional interaction between GOI and LG. This may incorrectly be inferred as differential expression due to the experimental condition.*'}
 if (!interactive())
   knitr::include_graphics("figs/ase.png")
 ```
@@ -74,7 +74,7 @@ This phenomenon was flagged as problematic in @white2022.
 
 ## Installation
 
-`BiocManager` is recommended for the installation of packages required for this vignette.
+`BiocManager` is recommended for the installation of packages required in this vignette.
 `BiocManager` handles the installation of packages from both the CRAN and Bioconductor repositories.
 
 ```{r install-pkgs, eval=FALSE}
@@ -97,7 +97,7 @@ library(darr)
 The example data used in this vignette is contained within the `darr` package.
 
 The `VCF` file `chr1.vcf.bgz` contains multi-sample genotype calls produced from raw RNA-seq `FASTQ` data.
-The data originates from zebrafish (*Danio rerio*) brain transcriptomes, and further information can be found in the associated [manuscript](Zebrafish models of Mucopolysaccharidosis types IIIA, B, & C show hyperactivity and changes in oligodendrocyte state) (Gerken et al. 2023).
+The data originates from zebrafish (*Danio rerio*) brain transcriptomes, and further information can be found in the associated manuscript by @gerken2023.
 The `VCF` has been modified to remove headers and other data that are not essential for example purposes, and has been subset to a single chromosome (Chromosome 1).
 
 The `GRanges` object `chr1_genes` contains gene feature information from the Ensembl database (release version 101) for *Danio rerio* Chromosome 1 (@cunningham2022).
@@ -113,19 +113,19 @@ DAR analysis is performed on single nucleotide-level genotype calls from variant
 We recommend the GATK best practices workflow for [RNAseq short variant discovery (SNPs + Indels)](https://gatk.broadinstitute.org/hc/en-us/articles/360035531192-RNAseq-short-variant-discovery-SNPs-Indels-) as a reference for the generation of data required to begin DAR analysis.
 Ultimately, we require a multi-sample `VCF` file with each entry representing the genomic location of a single nucleotide polymorphism (SNP) that differs from the reference genome in at least one sample.
 
-The functions contained in this package are intended to be implemented as a sequential workflow, with each function addressing a discrete step in the analysis/processing procedure.
-Please follow the the steps in order as outlined by this vignette.
-The following examples will use the `VCF` file loaded above.
+The functions contained in this package are intended to be implemented as a sequential workflow, with each function addressing a discrete step in the data processing/analysis procedure.
+Please follow the steps in order as outlined below.
 
 ## Loading genotype data
 
-Genotype data from the `VCF` file is parsed into a `GRanges` class object using the `readGenotypes()` function.
+Genotype data from a `VCF` file is parsed into a `GRanges` object using the `readGenotypes()` function.
 This function is essentially a wrapper to `VariantAnnotation::readVcf()`, but only loads the data required for DAR analysis.
 By default, phasing information is removed as it is not required for DAR analysis and complicates downstream processing.
-This simply converts genotype calls represented as (for example) `0|1` to `0/1`, and is required if proceeding with the DAR analysis workflow.
+This simply converts genotype calls represented as, for example `0|1` to `0/1`, and is required if proceeding with the DAR analysis workflow.
 This can optionally be turned off with the `unphase` argument if this function is intended to be used for alternative purposes.
 The `genome` option is also available to override the genome automatically detected from the `VCF`.
 We intend to work with multiple `GRanges` objects and keeping the genome consistent avoids downstream errors.
+Additional arguments will be passed directly to `VariantAnnotation::readVcf()`.
 
 ```{r readGenotypes}
 genotypes <- readGenotypes(file = vcf)
@@ -136,7 +136,8 @@ head(genotypes)
 ```
 
 Genotypes are reported as numeric indices.
-`0` indicates the reference allele, `1` is the first alternate allele, `2` is the second alternate allele, and so on.
+`0` indicates the reference allele, `1` is the first alternate allele, `2` is the second alternate allele, and `3` is the third alternate allele.
+Even though we are working with a diploid organism, four alleles are theoretically possible as the VCF consists of multiple samples.
 Genotypes that could not be determined by the variant calling software are reported as `./.`.
 We work directly with the indices as they are consistent across all samples for a single variant position.
 
@@ -168,14 +169,24 @@ head(counts)
 
 Not all samples have genotype calls, so we normalise by converting the allele counts into a proportion of total counts at each locus.
 We also filter variant loci independently within each sample group with the default criterion: number of samples with called genotypes > number of samples with missing genotypes.
-If users intend to use their own filtering criteria, this can be achieved by setting the `filter` option to false, and using the `filterLoci()` function prior to applying `countsToProps()`.
 
 ```{r countsToProps}
-props <- countsToProps(counts = counts)
+props <- countsToProps(counts = counts, filter = TRUE)
 ```
 
 ```{r head-props, echo=FALSE}
 head(props)
+```
+
+If users intend to specify their own filtering criteria, this can be achieved by using the `filterLoci()` function prior to applying `countsToProps()`, and then setting the `filter` option to false.
+
+```{r props_filt}
+counts_filt <- filterLoci(counts = counts, filter = n_called > 10)
+props_filt <- countsToProps(counts = counts_filt, filter = FALSE)
+```
+
+```{r head-props_filt, echo=FALSE}
+head(props_filt)
 ```
 
 ## Calculating DAR
@@ -265,9 +276,9 @@ However, eQTLs don't necessarily exist within a feature itself, so we can opt to
 The size of this region is controlled with the `winSize` argument in the `dar()` function, which we previously set as `r winSize`.
 
 To assign DAR values based on regions, we must firstly utilise the `flipRanges()` function.
-We can also specify set the `extendEdges` option to extend the outermost ranges of each chromosome to encompass the entire chromosome.
+We can also specify the `extendEdges` option to extend the outermost ranges of each chromosome to encompass the entire chromosome.
 This is useful for ensuring the assignment of DAR values to all features. 
-However, precaution must now be taken with the features that exist towards the edges of a chromosome as the assigned DAR may be less accurate.
+However, precaution must now be taken with the features that exist toward the edges of a chromosome as the assigned DAR may be less accurate.
 
 ```{r flipRanges}
 dar_regions <- flipRanges(dar = dar, extendEdges = TRUE)
@@ -388,7 +399,7 @@ plotChrDar(
 It may be of use to quickly assess whether a particular chromosome is affected by high DAR more so than other chromosomes.
 This is particularly relevant when a study's experimental design causes increased DAR on a particular chromosome.
 The `plotDarECDF()` function facilitates this purpose by plotting the Empirical Cumulative Distribution Function (ECDF) of DAR for each chromosome.
-This function returns a `ggplot2` object, allowing us add our own styling.
+This function returns a `ggplot2` object, allowing us to add our own styling.
 For this example we will use simulated data.
 
 ```{r plotDarECDF}
