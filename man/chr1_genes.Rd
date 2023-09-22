@@ -5,17 +5,20 @@
 \alias{chr1_genes}
 \title{Genomic feature example data}
 \format{
-GRanges object with 1456 ranges and 2 metadata columns.
-\describe{
-\item{chr1_genes}{Ranges represent gene features for chromosome 1 of
-zebrafish GRCz11 genome.}
-}
+An object of class \code{GRanges} of length 1456.
 }
 \source{
 \url{https://www.ensembl.org}
 }
 \usage{
 data(chr1_genes)
+}
+\value{
+GRanges object with 1456 ranges and 2 metadata columns.
+\describe{
+\item{chr1_genes}{Ranges represent gene features for chromosome 1 of
+zebrafish GRCz11 genome.}
+}
 }
 \description{
 Gene features for example usage. Generation of this data is

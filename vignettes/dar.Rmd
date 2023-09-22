@@ -26,10 +26,10 @@ vignette: >
 
 ```{r global-opts, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE, comment = "#>", message = FALSE, crop = NULL
+    collapse = TRUE, comment = "#>", message = FALSE, crop = NULL
 )
 if (!interactive())
-  options(width = 999) # Wide chunk output will horizontal scroll instead of wrap
+    options(width = 999) # Wide chunk output will horizontal scroll instead of wrap
 ```
 
 # Introduction
@@ -49,7 +49,7 @@ Analysis of gene expression in absence of the consideration of DAR is problemati
 
 ```{r ase-example, echo = FALSE, fig.wide=TRUE, fig.cap = 'Two confounding scenarios that result in differential gene expression between experimental groups when samples are not isogenic. *Experimental grouping is illustrated as mutant vs wild-type control, but is also applicable for other experimental designs (e.g. treatment vs control). The key aspect here is that polymorphic regions of the homologous chromosomes differ between the experimental groups. **A)** Functional differential expression. The experimental factor (genotype of the gene-of-interest, GOI) has a functional interaction with a bystander gene (linked gene, LG), resulting in expression differences between the experimental groups. This is the assumed mechanism when inferring differential expression outcomes. However, a lack of between-group isogenicity complicates this assumption. **B)** eQTL-driven differential expression. A polymorphism in the promoter region of mutant samples, for example, causes expression differences between mutant and wild-type groups in the absence of a functional interaction between GOI and LG. This may incorrectly be inferred as differential expression due to the experimental condition.*'}
 if (!interactive())
-  knitr::include_graphics("figs/ase.png")
+    knitr::include_graphics("figs/ase.png")
 ```
 
 The presence of DAR is influenced by the nature of an experiment's design.
@@ -59,7 +59,7 @@ This is because the selection criteria also drives selection for alleles linked 
 
 ```{r selection-driven-dar, echo = FALSE, fig.wide=TRUE, fig.cap = 'DAR is frequently encountered in studies that involve experimental group selection based on the presence of a genetic feature, and is intensified on the chromosome containing the feature. *This figure illustrates the scenario where experimental sample groups are selected based on the presence of a mutant locus. Zebrafish are used as an example to signify that the model organism is not isogenic. **A)** A common breeding scheme for an intrafamily homozygous mutant vs wild-type transcriptome comparison. As a result of selection across multiple generations for the mutant chromosome (indicated in red), which originates from a single F~0~ fish (not pictured), homozygous mutant F~y~ fish posess two exact copies of the chromosome harbouring the mutation, disregarding recombination. However, wild-type F~y~ fish likely posses two different wild-type chromosomes (shaded using different stripe pattterns to indicate they are not isogenic). **B)** Experimental selection of progeny homozygous for a mutant allele involves increased homozygosity for alleles of genes linked to that mutation (i.e. on the same chromosome). High DAR is observed at the eQTL location, resulting in expression differences between the groups that are unrelated to the impact of the mutation. Moderate DAR is observed at the polymorphic locus, due to one of the wild-type chromosomes posessing the same polymorphism. If this polymorphism was also an eQTL, expression differences would be observed to a lesser extent.*'}
 if (!interactive())
-  knitr::include_graphics("figs/selection-driven-dar.png")
+    knitr::include_graphics("figs/selection-driven-dar.png")
 ```
 
 DAR analysis results in an easy-to-interpret value between 0 and 1 for each genetic feature of interest, where 0 represents identical allelic representation and 1 represents complete diversity. This metric can be used to identify features prone to false-positive calls in Differential Expression analysis, and can be leveraged with statistical methods to alleviate the impact of such artefacts on RNA-seq data.
@@ -78,7 +78,7 @@ DAR analysis results in an easy-to-interpret value between 0 and 1 for each gene
 
 ```{r install-pkgs, eval=FALSE}
 if (!"BiocManager" %in% rownames(installed.packages()))
-  install.packages("BiocManager")
+    install.packages("BiocManager")
 pkgs <- c("tidyverse", "limma", "darr")
 BiocManager::install(pkgs, update = FALSE)
 ```
@@ -149,8 +149,8 @@ First we define our sample grouping structure as a `list`, where each element co
 
 ```{r groups}
 groups <- list(
-  group1 = paste0("sample", 1:6),
-  group2 = paste0("sample", 7:13)
+    group1 = paste0("sample", 1:6),
+    group2 = paste0("sample", 7:13)
 )
 ```
 
@@ -198,11 +198,11 @@ We define these comparisons as a contrast `matrix`.
 
 ```{r contrasts}
 contrasts <- matrix(
-  data = c(1, -1),
-  dimnames = list(
-    Levels = c("group1", "group2"),
-    Contrasts = c("group1v2")
-  )
+    data = c(1, -1),
+    dimnames = list(
+        Levels = c("group1", "group2"),
+        Contrasts = c("group1v2")
+    )
 )
 ```
 
@@ -210,8 +210,8 @@ Alternatively, this can be simplified with the `makeContrasts()` function from t
 
 ```{r makeContrasts}
 contrasts <- makeContrasts(
-  group1v2 = group1 - group2,
-  levels = names(groups)
+    group1v2 = group1 - group2,
+    levels = names(groups)
 )
 ```
 
@@ -263,9 +263,9 @@ With this configuration, it means the resulting assigned DAR values represent th
 
 ```{r assignFeatureDar-origin}
 gene_dar <- assignFeatureDar(
-  dar = dar,
-  features = chr1_genes,
-  dar_val = "origin"
+    dar = dar,
+    features = chr1_genes,
+    dar_val = "origin"
 )
 ```
 
@@ -302,9 +302,9 @@ However, use cases may exist and the warning can be ignored if this is intended.
 
 ```{r assignFeatureDar-region}
 gene_dar_regions <- assignFeatureDar(
-  dar = dar_regions,
-  features = chr1_genes,
-  dar_val = "region"
+    dar = dar_regions,
+    features = chr1_genes,
+    dar_val = "region"
 )
 ```
 
@@ -337,12 +337,12 @@ Then define the input objects.
 vcf <- system.file("extdata", "chr1.vcf.bgz", package="darr")
 data("chr1_genes")
 groups <- list(
-  group1 = paste0("sample", 1:6),
-  group2 = paste0("sample", 7:13)
+    group1 = paste0("sample", 1:6),
+    group2 = paste0("sample", 7:13)
 )
 contrasts <- makeContrasts(
-  group1v2 = group1 - group2,
-  levels = names(groups)
+    group1v2 = group1 - group2,
+    levels = names(groups)
 )
 win_size <- 5
 ```
@@ -351,11 +351,11 @@ Now use the `base` pipe to assign DAR values to genes based on their surrounding
 
 ```{r base-pipe, eval=FALSE}
 gene_dar <- readGenotypes(vcf) |>
-  countAlleles(groups = groups) |>
-  countsToProps() |>
-  dar(contrasts = contrasts, win_size = win_size) |>
-  flipRanges(extend_edges = TRUE) |>
-  assignFeatureDar(features = chr1_genes, dar_val = "region")
+    countAlleles(groups = groups) |>
+    countsToProps() |>
+    dar(contrasts = contrasts, win_size = win_size) |>
+    flipRanges(extend_edges = TRUE) |>
+    assignFeatureDar(features = chr1_genes, dar_val = "region")
 ```
 
 # Visualisation
@@ -378,10 +378,10 @@ set.seed(230822)
 foi <- sample(chr1_genes, 1)
 features <- sample(chr1_genes, 20)
 plotChrDar(
-  dar = dar$group1v2, dar_val = "region", chr = "1",
-  foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
-  features = features, features_anno = "gene_name", features_highlight = TRUE,
-  title = "Example plot of DAR along Chromosome 1"
+    dar = dar$group1v2, dar_val = "region", chr = "1",
+    foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
+    features = features, features_anno = "gene_name", features_highlight = TRUE,
+    title = "Example plot of DAR along Chromosome 1"
 )
 ```
 
@@ -396,19 +396,19 @@ For this example we will use simulated data.
 ```{r plotDarECDF}
 set.seed(230704)
 gr <- GRanges(
-  paste0(rep(seq(1,25), each = 100), ":", seq(1,100)),
-  dar_origin = runif(2500, 0, 1)
+    paste0(rep(seq(1,25), each = 100), ":", seq(1,100)),
+    dar_origin = runif(2500, 0, 1)
 )
 plotDarECDF(dar = gr, dar_val = "origin") +
-  theme_bw()
+    theme_bw()
 ```
 
 We can also choose to highlight a particular chromosome of interest with the `highlight` argument.
 
 ```{r plotDarECDF_highlight}
 plotDarECDF(dar = gr, dar_val = "origin", highlight = "25") +
-  scale_colour_manual(values = c("red", "grey")) +
-  theme_bw()
+    scale_colour_manual(values = c("red", "grey")) +
+    theme_bw()
 ```
 
 # Bibliography

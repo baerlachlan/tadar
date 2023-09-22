@@ -80,8 +80,10 @@
 setMethod(
     "plotChrDar",
     signature = signature(dar = "GRanges"),
-    function(dar, dar_val, chr, foi, foi_anno, foi_highlight,
-             features, features_anno, features_highlight, title) {
+    function(
+        dar, dar_val, chr, foi, foi_anno, foi_highlight,
+        features, features_anno, features_highlight, title
+    ) {
 
         dar_val <- match.arg(dar_val)
         .plotChrDar_checks(
