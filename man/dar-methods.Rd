@@ -5,9 +5,9 @@
 \alias{dar,GRangesList,matrix-method}
 \title{Calculate Differential Allelic Representation (DAR)}
 \usage{
-dar(props, contrasts, winSize = 5)
+dar(props, contrasts, win_size = 5)
 
-\S4method{dar}{GRangesList,matrix}(props, contrasts, winSize = 5)
+\S4method{dar}{GRangesList,matrix}(props, contrasts, win_size = 5)
 }
 \arguments{
 \item{props}{\code{GRangesList} containing a summary of normalised allele counts
@@ -21,7 +21,7 @@ Each column must represent a single contrast, and rows represent the levels
 The two levels involved with each contrast should be specified with
 \code{1} and \code{-1}.}
 
-\item{winSize}{\code{integer(1)} specifying the number of ranges to include
+\item{win_size}{\code{integer(1)} specifying the number of ranges to include
 in the elastic sliding window used for averaging DAR values within a region.
 Must be an odd integer in order to incorporate the origin locus and an
 equal number of loci either side.}
@@ -35,7 +35,7 @@ object:
 \item dar_origin: The raw DAR values calculated at single nucleotide positions
 (the origin) between sample groups.
 \item dar_region: The mean of raw DAR values in a region surrounding the origin.
-The size of the region is controlled using the \code{winSize} argument, which
+The size of the region is controlled using the \code{win_size} argument, which
 establishes an elastic sliding window to average the specified number
 of dar_origin values.
 }
@@ -70,6 +70,6 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar(props, contrasts, winSize = 5)
+dar(props, contrasts, win_size = 5)
 
 }

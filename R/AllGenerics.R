@@ -3,7 +3,7 @@
 #' @export
 setGeneric(
     "assignFeatureDar",
-    function(dar, features, darVal = c("origin", "region"))
+    function(dar, features, dar_val = c("origin", "region"))
         standardGeneric("assignFeatureDar")
 )
 
@@ -12,7 +12,7 @@ setGeneric(
 #' @export
 setGeneric(
     "flipRanges",
-    function(dar, extendEdges = FALSE) standardGeneric("flipRanges")
+    function(dar, extend_edges = FALSE) standardGeneric("flipRanges")
 )
 
 #' @name countAlleles
@@ -36,7 +36,7 @@ setGeneric(
 #' @export
 setGeneric(
     "dar",
-    function(props, contrasts, winSize = 5) standardGeneric("dar")
+    function(props, contrasts, win_size = 5) standardGeneric("dar")
 )
 
 #' @name filterLoci
@@ -53,7 +53,7 @@ setGeneric(
 #' @export
 setGeneric(
     "plotDarECDF",
-    function(dar, darVal = c("origin", "region"), highlight = NULL)
+    function(dar, dar_val = c("origin", "region"), highlight = NULL)
         standardGeneric("plotDarECDF")
 )
 
@@ -63,7 +63,7 @@ setGeneric(
 setGeneric(
     "plotChrDar",
     function(
-        dar, darVal = c("origin", "region"), chr,
+        dar, dar_val = c("origin", "region"), chr,
         foi, foi_anno, foi_highlight = TRUE,
         features, features_anno, features_highlight = TRUE,
         title = ""

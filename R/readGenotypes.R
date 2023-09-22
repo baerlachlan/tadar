@@ -56,19 +56,19 @@ setMethod(
 .readGenotypes <- function(file, unphase, ...) {
 
     stopifnot(is.logical(unphase))
-    dotArgs <- list(...)
+    dot_args <- list(...)
     ## Define a minimal ScanVcfParam object for fast loading
-    if (!exists("param", where = dotArgs)) dotArgs$param <- ScanVcfParam(
+    if (!exists("param", where = dot_args)) dot_args$param <- ScanVcfParam(
         fixed = NA, info = NA, geno = "GT"
     )
-    genoParam <- vcfGeno(dotArgs$param)
-    svpChecks <- c(
+    geno_param <- vcfGeno(dot_args$param)
+    svp_checks <- c(
         ## Check for GT field if user-specified param
-        "GT" %in% genoParam,
+        "GT" %in% geno_param,
         ## Or if no geno specified, this will also return GT field
-        is.character(genoParam) & length(genoParam) == 0
+        is.character(geno_param) & length(geno_param) == 0
     )
-    stopifnot(any(svpChecks))
+    stopifnot(any(svp_checks))
     vcf <- readVcf(file, ...)
     gt <- geno(vcf)$GT
     stopifnot(!is.null(gt))

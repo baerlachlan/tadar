@@ -35,10 +35,10 @@ setMethod(
         stopifnot(is.character(genotypes))
         grl <- lapply(groups, function(x) {
             stopifnot(is.character(x))
-            gtInGroup <- genotypes[,x]
+            gt_in_group <- genotypes[,x]
             ## Split so we can lapply()
-            gtInGroup <- split(gtInGroup, seq(nrow(gtInGroup)))
-            counts <- lapply(gtInGroup, function(y) {
+            gt_in_group <- split(gt_in_group, seq(nrow(gt_in_group)))
+            counts <- lapply(gt_in_group, function(y) {
                 alleles <- strsplit(y, "/")
                 alleles <- unlist(alleles)
                 n_called <- sum(alleles != ".")

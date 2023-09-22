@@ -48,11 +48,13 @@ setMethod(
         ## Defuse filter expression
         filter <- enquo(filter)
         endoapply(counts, function(x){
-            checkNames <- c("n_called", "n_missing", "n_0", "n_1", "n_2", "n_3")
-            if (!all(names(mcols(x)) == checkNames))
+            check_names <- c(
+                "n_called", "n_missing", "n_0", "n_1", "n_2", "n_3"
+            )
+            if (!all(names(mcols(x)) == check_names))
                 stop(
                     'Names of metadata columns must equal c("',
-                    paste(checkNames, collapse = '", "'),
+                    paste(check_names, collapse = '", "'),
                     '")'
                 )
             df <- as.data.frame(mcols(x))

@@ -14,10 +14,10 @@
 #' Ranges can be converted between origins and regions with
 #' \link{flipRanges}.
 #' @param features `GRanges` object specifying the features of interest.
-#' @param darVal `character(1)` specifying the whether to use origin or region
+#' @param dar_val `character(1)` specifying the whether to use origin or region
 #' DAR values for the chosen ranges.
 #' Options are "origin" and "region".
-#' A warning will be produced if the chosen `darVal` does not match the
+#' A warning will be produced if the chosen `dar_val` does not match the
 #' ranges detected in the object provided to the `dar` argument, as this is
 #' likely unintended by the user.
 #'
@@ -44,10 +44,10 @@
 #'     )
 #' )
 #' dar <- dar(props, contrasts)
-#' assignFeatureDar(dar, chr1_genes, darVal = "origin")
+#' assignFeatureDar(dar, chr1_genes, dar_val = "origin")
 #'
-#' darRegions <- flipRanges(dar, extendEdges = TRUE)
-#' assignFeatureDar(darRegions, chr1_genes, darVal = "region")
+#' darRegions <- flipRanges(dar, extend_edges = TRUE)
+#' assignFeatureDar(darRegions, chr1_genes, dar_val = "region")
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply from to
@@ -57,22 +57,22 @@
 setMethod(
     "assignFeatureDar",
     signature = signature(dar = "GRangesList", features = "GRanges"),
-    function(dar, features, darVal) {
+    function(dar, features, dar_val) {
 
-        darVal <- match.arg(darVal)
+        dar_val <- match.arg(dar_val)
         endoapply(dar, function(x){
-            .assignFeatureDar_checks(x, darVal)
+            .assignFeatureDar_checks(x, dar_val)
             hits <- findOverlaps(features, x)
             queries <- from(hits)
             queries <- unique(queries)
-            darMean <- vapply(queries, function(y){
+            dar_mean <- vapply(queries, function(y){
                 subjects <- to(hits)[from(hits) == y]
-                if (darVal == "origin") featureDar <- x$dar_origin[subjects]
-                if (darVal == "region") featureDar <- x$dar_region[subjects]
+                if (dar_val == "origin") featureDar <- x$dar_origin[subjects]
+                if (dar_val == "region") featureDar <- x$dar_region[subjects]
                 mean(featureDar)
             }, numeric(1))
             features <- features[queries]
-            features$dar <- darMean
+            features$dar <- dar_mean
             features
         })
 
@@ -82,23 +82,23 @@ setMethod(
 #' @keywords internal
 #' @importFrom S4Vectors mcols
 #' @importFrom BiocGenerics width
-.assignFeatureDar_checks <- function(dar, darVal) {
+.assignFeatureDar_checks <- function(dar, dar_val) {
     widths <- width(dar)
-    if (darVal == "region") {
+    if (dar_val == "region") {
         if (!"dar_region" %in% names(mcols(dar)))
             stop("No dar_region values detected", call. = FALSE)
         if (min(widths) == 1)
             warning(
-                "Range(s) detected with width == 1 but darVal = region. ",
+                "Range(s) detected with width == 1 but dar_val = region. ",
                 "See ?assignGeneDar", call. = FALSE
             )
     }
-    if (darVal == "origin") {
+    if (dar_val == "origin") {
         if (!"dar_origin" %in% names(mcols(dar)))
             stop("No dar_origin values detected", call. = FALSE)
         if (max(widths) > 1)
             warning(
-                "Range(s) detected with width > 1 but darVal = origin. ",
+                "Range(s) detected with width > 1 but dar_val = origin. ",
                 "See ?assignGeneDar", call. = FALSE
             )
     }

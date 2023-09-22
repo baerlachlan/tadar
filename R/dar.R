@@ -18,7 +18,7 @@
 #' (i.e. sample groups) to be contrasted.
 #' The two levels involved with each contrast should be specified with
 #' `1` and `-1`.
-#' @param winSize `integer(1)` specifying the number of ranges to include
+#' @param win_size `integer(1)` specifying the number of ranges to include
 #' in the elastic sliding window used for averaging DAR values within a region.
 #' Must be an odd integer in order to incorporate the origin locus and an
 #' equal number of loci either side.
@@ -31,7 +31,7 @@
 #' - dar_origin: The raw DAR values calculated at single nucleotide positions
 #' (the origin) between sample groups.
 #' - dar_region: The mean of raw DAR values in a region surrounding the origin.
-#' The size of the region is controlled using the `winSize` argument, which
+#' The size of the region is controlled using the `win_size` argument, which
 #' establishes an elastic sliding window to average the specified number
 #' of dar_origin values.
 #'
@@ -54,7 +54,7 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar(props, contrasts, winSize = 5)
+#' dar(props, contrasts, win_size = 5)
 #'
 #' @import GenomicRanges
 #' @rdname dar-methods
@@ -63,7 +63,7 @@
 setMethod(
     "dar",
     signature = signature(props = "GRangesList", contrasts = "matrix"),
-    function(props, contrasts, winSize) {
+    function(props, contrasts, win_size) {
 
         lvls <- dimnames(contrasts)[[1]]
         conts <- dimnames(contrasts)[[2]]
@@ -72,10 +72,10 @@ setMethod(
         if (!all(lvls %in% names(props)))
             stop("Levels of `contrasts` must match names of `props`")
         contrasts <- .contrastsAsList(contrasts)
-        if (winSize < 1 || winSize %% 2 != 1)
-            stop("`winSize` must be an odd integer greater than 0")
+        if (win_size < 1 || win_size %% 2 != 1)
+            stop("`win_size` must be an odd integer greater than 0")
         grl <- .calcDar(props = props, contrasts = contrasts)
-        grl <- .smoothDar(dar = grl, winSize = winSize)
+        grl <- .smoothDar(dar = grl, win_size = win_size)
         grl
 
     }
@@ -85,15 +85,15 @@ setMethod(
 .contrastsAsList <- function(contrasts) {
 
     cols <- seq(ncol(contrasts))
-    contrastsList <- lapply(cols, function(i){
+    contrasts_list <- lapply(cols, function(i){
         grp1 <- names(which(contrasts[,i] == 1))
         grp2 <- names(which(contrasts[,i] == -1))
         if (!all(length(grp1) == 1, length(grp2) == 1))
             stop("`contrasts` defined incorrectly")
         c(grp1, grp2)
     })
-    names(contrastsList) <- colnames(contrasts)
-    contrastsList
+    names(contrasts_list) <- colnames(contrasts)
+    contrasts_list
 
 }
 
@@ -124,8 +124,8 @@ setMethod(
         mcols(gr)$dar_origin <- dist / sqrt(2)
         ## Remove seqlevels that may be lost due to no overlap
         seqlevels(gr) <- seqlevelsInUse(gr)
-        ## Add rangeType to metadata for downstream use
-        metadata(gr)$rangeType <- "origin"
+        ## Add range_type to metadata for downstream use
+        metadata(gr)$range_type <- "origin"
         gr
     })
     GRangesList(grl)
@@ -136,21 +136,21 @@ setMethod(
 #' @importFrom S4Vectors endoapply mcols 'mcols<-' 'metadata<-'
 #' @importFrom GenomeInfoDb seqnames
 #' @importFrom stats filter
-.smoothDar <- function(dar, winSize) {
+.smoothDar <- function(dar, win_size) {
 
     endoapply(dar, function(x){
-        ## Add winSize to metadata for downstream use
-        metadata(x)$winSize <- winSize
+        ## Add win_size to metadata for downstream use
+        metadata(x)$win_size <- win_size
         grl <- split(x, f = seqnames(x))
         grl <- endoapply(grl, function(y){
             ## Throw a more informative error than filter() would
-            if (winSize > NROW(y))
+            if (win_size > NROW(y))
                 stop(
-                    "`winSize` greater than number of ranges for seqname ",
+                    "`win_size` greater than number of ranges for seqname ",
                     unique(seqnames(y)), call. = FALSE
                 )
             mcols(y)$dar_region <- filter(
-                y$dar_origin, rep(1 / winSize, winSize), sides = 2
+                y$dar_origin, rep(1 / win_size, win_size), sides = 2
             )
             mcols(y)$dar_region <- as.numeric(mcols(y)$dar_region)
             y

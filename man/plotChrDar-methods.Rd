@@ -7,7 +7,7 @@
 \usage{
 plotChrDar(
   dar,
-  darVal = c("origin", "region"),
+  dar_val = c("origin", "region"),
   chr,
   foi,
   foi_anno,
@@ -20,7 +20,7 @@ plotChrDar(
 
 \S4method{plotChrDar}{GRanges}(
   dar,
-  darVal = c("origin", "region"),
+  dar_val = c("origin", "region"),
   chr,
   foi,
   foi_anno,
@@ -38,7 +38,7 @@ Used to build the DataTrack showing the trend in DAR across the chromosome.
 If ranges of the input object span regions (i.e. post application of
 \link{flipRanges}), data points are plotted at the midpoint of the region.}
 
-\item{darVal}{\code{character(1)} specifying the whether to use origin or region
+\item{dar_val}{\code{character(1)} specifying the whether to use origin or region
 DAR values for the chosen ranges.
 Options are "origin" and "region".
 The default ("region") represents averaged DAR values across a region and
@@ -107,7 +107,7 @@ contrasts <- matrix(
 )
 dar <- dar(props, contrasts)
 plotChrDar(
-    dar = dar$group1v2, darVal = "region", chr = "1",
+    dar = dar$group1v2, dar_val = "region", chr = "1",
     foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
     features = features, features_anno = "gene_name",
     features_highlight = TRUE,

@@ -13,7 +13,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, winSize = 5)
+dar <- dar(props, contrasts, win_size = 5)
 
 test_that("flipRanges returns regions", {
     darRegions <- flipRanges(dar)
@@ -22,26 +22,26 @@ test_that("flipRanges returns regions", {
 })
 
 test_that("flipRanges extends ranges", {
-    darRegions <- flipRanges(dar, extendEdges = TRUE)
+    darRegions <- flipRanges(dar, extend_edges = TRUE)
     expect_equal(min(start(darRegions$group1v2)), 1)
     expect_equal(max(end(darRegions$group1v2)), 59578282)
 })
 
-test_that("flipRanges errors when no winSize in metadata", {
+test_that("flipRanges errors when no win_size in metadata", {
     dar <- endoapply(dar, function(x){
-        metadata(x) <- metadata(x)[!(names(metadata(x)) %in% "winSize")]
+        metadata(x) <- metadata(x)[!(names(metadata(x)) %in% "win_size")]
         x
     })
-    expect_error(flipRanges(dar), "No winSize detected\\.")
+    expect_error(flipRanges(dar), "No win_size detected\\.")
 })
 
-test_that("flipRanges errors when no seqlengths and extendEdges = TRUE", {
+test_that("flipRanges errors when no seqlengths and extend_edges = TRUE", {
     dar <- endoapply(dar, function(x){
         seqinfo(x) <- Seqinfo(seqnames = "1")
         x
     })
     expect_error(
-        flipRanges(dar, extendEdges = TRUE),
+        flipRanges(dar, extend_edges = TRUE),
         "Cannot extend edges\\."
     )
 })
@@ -49,6 +49,6 @@ test_that("flipRanges errors when no seqlengths and extendEdges = TRUE", {
 test_that("flipRanges can revert back to output of dar()", {
     darRegions <- flipRanges(dar)
     expect_identical(flipRanges(darRegions), dar)
-    darRegions <- flipRanges(dar, extendEdges = TRUE)
+    darRegions <- flipRanges(dar, extend_edges = TRUE)
     expect_identical(flipRanges(darRegions), dar)
 })

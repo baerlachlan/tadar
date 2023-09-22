@@ -5,15 +5,15 @@
 \alias{plotDarECDF,GRanges-method}
 \title{Plot the Empirical Cumulative Distribution Function of DAR}
 \usage{
-plotDarECDF(dar, darVal = c("origin", "region"), highlight = NULL)
+plotDarECDF(dar, dar_val = c("origin", "region"), highlight = NULL)
 
-\S4method{plotDarECDF}{GRanges}(dar, darVal = c("origin", "region"), highlight = NULL)
+\S4method{plotDarECDF}{GRanges}(dar, dar_val = c("origin", "region"), highlight = NULL)
 }
 \arguments{
 \item{dar}{\code{GRanges} object with metadata columns containing the desired
 DAR values to plot.}
 
-\item{darVal}{\code{character(1)} specifying the whether to plot dar_origin or
+\item{dar_val}{\code{character(1)} specifying the whether to plot dar_origin or
 dar_region values.
 Options are "origin" and "region".}
 
@@ -33,11 +33,11 @@ gr <- GRanges(
     dar_origin = runif(2500, 0, 1)
 )
 ## No highlighting, all chromosomes will be given individual colours
-plotDarECDF(gr, darVal = "origin") +
+plotDarECDF(gr, dar_val = "origin") +
 theme_bw()
 
 ## With highlighting
-plotDarECDF(gr, darVal = "origin", highlight = "25") +
+plotDarECDF(gr, dar_val = "origin", highlight = "25") +
 scale_colour_manual(values = c("red", "grey")) +
 theme_bw()
 

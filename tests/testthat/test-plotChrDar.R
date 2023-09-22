@@ -87,7 +87,7 @@ test_that("plotChrDar_checks errors when passed incorrect arguments", {
 test_that("dar_track is created with correct attributes", {
     ## Data
     dar_track <- .darTrack(
-        dar = dar, darVal = "region", chr = "1",
+        dar = dar, dar_val = "region", chr = "1",
         foi_highlight = TRUE, features_highlight = TRUE
     )
     expect_true(is(dar_track@trackList[[1]], "DataTrack"))
@@ -102,7 +102,7 @@ test_that("dar_track is created with correct attributes", {
     expect_equal(dar_track@trackList[[1]]@dp@pars$rotation.title, 90)
     ## Highlight
     dar_track <- .darTrack(
-        dar = dar, darVal = "region", chr = "1",
+        dar = dar, dar_val = "region", chr = "1",
         foi = foi, foi_highlight = TRUE,
         features = features, features_highlight = TRUE
     )
@@ -167,7 +167,7 @@ test_that("features_track is created with correct attributes", {
 
 test_that("Final plot is created as expected", {
     plot <- plotChrDar(
-        dar = dar, darVal = "region", chr = "1",
+        dar = dar, dar_val = "region", chr = "1",
         foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
         features = features, features_anno = "gene_name",
         features_highlight = TRUE,

@@ -5,15 +5,15 @@
 \alias{flipRanges,GRangesList-method}
 \title{Convert DAR origin ranges to DAR region ranges, or vice versa}
 \usage{
-flipRanges(dar, extendEdges = FALSE)
+flipRanges(dar, extend_edges = FALSE)
 
-\S4method{flipRanges}{GRangesList}(dar, extendEdges = FALSE)
+\S4method{flipRanges}{GRangesList}(dar, extend_edges = FALSE)
 }
 \arguments{
 \item{dar}{\code{GRangesList} with ranges representing single nucleotide (origin)
 positions.}
 
-\item{extendEdges}{\code{logical(1)} specifying if region DAR ranges at the edges
+\item{extend_edges}{\code{logical(1)} specifying if region DAR ranges at the edges
 of each chromosome should be extended to cover the entire chromosome.
 This argument is only considered when converting from origin DAR ranges to
 region DAR ranges.
@@ -47,11 +47,11 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, winSize = 5)
+dar <- dar(props, contrasts, win_size = 5)
 ## Convert ranges to regions associated with dar_region values
 flipRanges(dar)
 ## Extend the outer regions the cover the entire chromosome
-flipRanges(dar, extendEdges = TRUE)
+flipRanges(dar, extend_edges = TRUE)
 
 ## Convert back to origin ranges associated with dar_origin values
 darRegions <- flipRanges(dar)

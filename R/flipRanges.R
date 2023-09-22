@@ -7,7 +7,7 @@
 #'
 #' @param dar `GRangesList` with ranges representing single nucleotide (origin)
 #' positions.
-#' @param extendEdges `logical(1)` specifying if region DAR ranges at the edges
+#' @param extend_edges `logical(1)` specifying if region DAR ranges at the edges
 #' of each chromosome should be extended to cover the entire chromosome.
 #' This argument is only considered when converting from origin DAR ranges to
 #' region DAR ranges.
@@ -34,11 +34,11 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar <- dar(props, contrasts, winSize = 5)
+#' dar <- dar(props, contrasts, win_size = 5)
 #' ## Convert ranges to regions associated with dar_region values
 #' flipRanges(dar)
 #' ## Extend the outer regions the cover the entire chromosome
-#' flipRanges(dar, extendEdges = TRUE)
+#' flipRanges(dar, extend_edges = TRUE)
 #'
 #' ## Convert back to origin ranges associated with dar_origin values
 #' darRegions <- flipRanges(dar)
@@ -52,13 +52,13 @@
 setMethod(
     "flipRanges",
     signature = signature(dar = "GRangesList"),
-    function(dar, extendEdges) {
+    function(dar, extend_edges) {
 
 
         endoapply(dar, function(x){
-            if (metadata(x)$rangeType == "origin")
-                .switchToRegion(x, extendEdges)
-            else if (metadata(x)$rangeType == "region")
+            if (metadata(x)$range_type == "origin")
+                .switchToRegion(x, extend_edges)
+            else if (metadata(x)$range_type == "region")
                 .switchToOrigin(x)
         })
 
@@ -86,35 +86,35 @@ setMethod(
 #' @importFrom IRanges IRanges ranges 'ranges<-'
 #' @importFrom S4Vectors endoapply metadata 'metadata<-' 'mcols<-'
 #' @importFrom GenomeInfoDb seqnames
-.switchToRegion <- function(dar, extendEdges) {
+.switchToRegion <- function(dar, extend_edges) {
 
-    winSize <- metadata(dar)$winSize
-    if (is.null(winSize)) {
+    win_size <- metadata(dar)$win_size
+    if (is.null(win_size)) {
         stop(
-            "No winSize detected. Use `dar()` before ",
+            "No win_size detected. Use `dar()` before ",
             "`flipRanges()`", call. = FALSE
         )
     }
-    removedRanges <- dar[is.na(dar$dar_region),]
+    removed_ranges <- dar[is.na(dar$dar_region),]
     grl <- split(dar, f = seqnames(dar))
     grl <- endoapply(grl, function(x){
-        isNA <- is.na(x$dar_region)
-        nNA <- sum(isNA)
+        is_NA <- is.na(x$dar_region)
+        n_NA <- sum(is_NA)
         n <- NROW(x)
         ## Construct regions while accounting for NA removal
         regions <- IRanges(
-            start = start(x)[seq_len(n - nNA)],
-            end = end(x)[winSize:n]
+            start = start(x)[seq_len(n - n_NA)],
+            end = end(x)[win_size:n]
         )
-        if (extendEdges) regions <- .extend(regions, x)
-        x <- x[!isNA,]
+        if (extend_edges) regions <- .extend(regions, x)
+        x <- x[!is_NA,]
         mcols(x)$origin_ranges <- ranges(x)
         ranges(x) <- regions
         x
     })
     gr <- unlist(grl,)
-    metadata(gr)$removedRanges <- removedRanges  # Keep for .switchToOrigin()
-    metadata(gr)$rangeType <- "region"
+    metadata(gr)$removed_ranges <- removed_ranges  # Keep for .switchToOrigin()
+    metadata(gr)$range_type <- "region"
     gr
 
 }
@@ -126,10 +126,10 @@ setMethod(
 
     ranges(dar) <- mcols(dar)$origin_ranges
     mcols(dar) <- mcols(dar)[,c("dar_origin", "dar_region")]
-    dar <- c(dar, metadata(dar)$removedRanges)
+    dar <- c(dar, metadata(dar)$removed_ranges)
     dar <- sort(dar)
-    metadata(dar) <- metadata(dar)[c("rangeType", "winSize")]
-    metadata(dar)$rangeType <- "origin"
+    metadata(dar) <- metadata(dar)[c("range_type", "win_size")]
+    metadata(dar)$range_type <- "origin"
     dar
 
 }

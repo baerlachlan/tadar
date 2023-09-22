@@ -8,7 +8,7 @@
 #' Used to build the DataTrack showing the trend in DAR across the chromosome.
 #' If ranges of the input object span regions (i.e. post application of
 #' \link{flipRanges}), data points are plotted at the midpoint of the region.
-#' @param darVal `character(1)` specifying the whether to use origin or region
+#' @param dar_val `character(1)` specifying the whether to use origin or region
 #' DAR values for the chosen ranges.
 #' Options are "origin" and "region".
 #' The default ("region") represents averaged DAR values across a region and
@@ -65,7 +65,7 @@
 #' )
 #' dar <- dar(props, contrasts)
 #' plotChrDar(
-#'     dar = dar$group1v2, darVal = "region", chr = "1",
+#'     dar = dar$group1v2, dar_val = "region", chr = "1",
 #'     foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
 #'     features = features, features_anno = "gene_name",
 #'     features_highlight = TRUE,
@@ -80,10 +80,10 @@
 setMethod(
     "plotChrDar",
     signature = signature(dar = "GRanges"),
-    function(dar, darVal, chr, foi, foi_anno, foi_highlight,
+    function(dar, dar_val, chr, foi, foi_anno, foi_highlight,
              features, features_anno, features_highlight, title) {
 
-        darVal <- match.arg(darVal)
+        dar_val <- match.arg(dar_val)
         .plotChrDar_checks(
             dar, chr, foi, foi_anno, foi_highlight,
             features, features_anno, features_highlight
@@ -92,7 +92,7 @@ setMethod(
         axis_track <- .axisTrack(chr, foi)
         features_track <- .featuresTrack(chr, features, features_anno)
         dar_track <- .darTrack(
-            dar, darVal, chr, foi, foi_highlight, features, features_highlight
+            dar, dar_val, chr, foi, foi_highlight, features, features_highlight
         )
         tracks <- c(foi_track, axis_track, features_track, dar_track)
         plotTracks(
@@ -187,10 +187,10 @@ setMethod(
 #' @importFrom GenomeInfoDb seqnames
 #' @importFrom Gviz DataTrack HighlightTrack
 .darTrack <- function(
-        dar, darVal, chr, foi, foi_highlight, features, features_highlight
+        dar, dar_val, chr, foi, foi_highlight, features, features_highlight
 ) {
 
-    dar <- dar[, paste0("dar_", darVal)]
+    dar <- dar[, paste0("dar_", dar_val)]
     if (!missing(chr))
         dar <- dar[seqnames(dar) == chr]
     dar_track <- DataTrack(
@@ -254,12 +254,12 @@ setMethod(
 #' @keywords internal
 #' @importFrom GenomeInfoDb seqnames
 #' @importFrom methods is
-.checkGRanges <- function(msg, gr, chr, argName = deparse(substitute(gr))) {
+.checkGRanges <- function(msg, gr, chr, arg_name = deparse(substitute(gr))) {
 
     if (missing(gr)) return(msg)
 
     if (!is(gr, "GRanges")) {
-        msg <- c(msg, paste0("`", argName, "` must be a GRanges object\n"))
+        msg <- c(msg, paste0("`", arg_name, "` must be a GRanges object\n"))
     } else {
         seqs <- as.character(unique(seqnames(gr)))
         if (missing(chr)) {
@@ -267,7 +267,7 @@ setMethod(
                 msg <- c(
                     msg,
                     paste0(
-                        "All ranges of `", argName,
+                        "All ranges of `", arg_name,
                         "` must exist on the same chromosome\n"
                     )
                 )
@@ -277,7 +277,7 @@ setMethod(
                     msg,
                     paste0(
                         "Chromosome '", chr, "' not found in ranges of `",
-                        argName, "`\n"
+                        arg_name, "`\n"
                     )
                 )
         }
@@ -322,7 +322,7 @@ setMethod(
 #' @importFrom S4Vectors mcols
 #' @importFrom methods is
 .checkAnnotations <- function(
-        msg, gr, anno, argName = deparse(substitute(gr))
+        msg, gr, anno, arg_name = deparse(substitute(gr))
 ) {
 
     if (any(missing(gr), missing(anno))) return(msg)
@@ -331,7 +331,7 @@ setMethod(
         msg <- c(
             msg,
             paste0(
-                "Annotation column for `", argName, "` must be a character\n"
+                "Annotation column for `", arg_name, "` must be a character\n"
             )
         )
     } else {
@@ -340,7 +340,7 @@ setMethod(
                 msg,
                 paste0(
                     "Column '", anno, "' not found in mcols of `",
-                    argName, "`\n"
+                    arg_name, "`\n"
                 )
             )
     }

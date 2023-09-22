@@ -4,7 +4,7 @@
 #'
 #' @param dar `GRanges` object with metadata columns containing the desired
 #' DAR values to plot.
-#' @param darVal `character(1)` specifying the whether to plot dar_origin or
+#' @param dar_val `character(1)` specifying the whether to plot dar_origin or
 #' dar_region values.
 #' Options are "origin" and "region".
 #' @param highlight `character(1)` specifying the chromosome to highlight with
@@ -19,11 +19,11 @@
 #'     dar_origin = runif(2500, 0, 1)
 #' )
 #' ## No highlighting, all chromosomes will be given individual colours
-#' plotDarECDF(gr, darVal = "origin") +
+#' plotDarECDF(gr, dar_val = "origin") +
 #' theme_bw()
 #'
 #' ## With highlighting
-#' plotDarECDF(gr, darVal = "origin", highlight = "25") +
+#' plotDarECDF(gr, dar_val = "origin", highlight = "25") +
 #' scale_colour_manual(values = c("red", "grey")) +
 #' theme_bw()
 #'
@@ -35,11 +35,11 @@
 setMethod(
     "plotDarECDF",
     signature = signature(dar = "GRanges"),
-    function(dar, darVal, highlight) {
+    function(dar, dar_val, highlight) {
 
-        darVal <- match.arg(darVal)
-        if (darVal == "origin") plot_x <- dar$dar_origin
-        if (darVal == "region") plot_x <- dar$dar_region
+        dar_val <- match.arg(dar_val)
+        if (dar_val == "origin") plot_x <- dar$dar_origin
+        if (dar_val == "region") plot_x <- dar$dar_region
         chr <- seqnames(dar)
         chr <- factor(chr)
         if (!is.null(highlight)) {
