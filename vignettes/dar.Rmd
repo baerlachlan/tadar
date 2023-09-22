@@ -29,23 +29,23 @@ knitr::opts_chunk$set(
   collapse = TRUE, comment = "#>", message = FALSE, crop = NULL
 )
 if (!interactive())
-  options(width=999) # Wide chunk output will horizontal scroll instead of wrap
+  options(width = 999) # Wide chunk output will horizontal scroll instead of wrap
 ```
 
 # Introduction
 
 ## Background
 
-Differential Allelic Representation (DAR) describes a situation commonly encountered in RNA-seq experiments involving organisms that are not isogenic.
-DAR comprises the integrity of Differential Expression analysis results, as it influences the classification of features (e.g. genes) as being differentially expressed (DE).
-The concern does not lie within the statistical measures for detecting differential expression, because the underlying biology of the problematic features does indeed result in differential expression.
-However, without DAR analysis, the impacts of DAR are confounded with the experimental condition of interest and features can be incorrectly inferred as DE when they are actually an artefact of DAR.
-DAR analysis is therefore recommended as a complementary technique alongside Differential Expression analysis.
+Differential Allelic Representation (DAR) describes a situation commonly encountered in RNA-seq experiments involving organisms that are not isogenic, and where modern techniques such as CRISPR have been used for generation of individual organisms.
+DAR comprises the integrity of Differential Expression analysis results as it can bias expression, influencing the classification of genes (or transcripts) as being differentially expressed (DE).
+The concern does not lie within the statistical measures for detecting differential expression, because the underlying biology does indeed result in differential expression.
+However, without DAR analysis, the impacts of DAR are confounded with the experimental condition of interest and features can be incorrectly inferred as DE in response to the experimental condition, when they are actually an artefact of DAR.
+DAR analysis is therefore recommended as a complementary technique alongside Differential Expression analysis where non-isogenic conditions are present.
 
 DAR occurs when the construction of experimental sample groups unexpectedly results in an unequal distribution of polymorphic alleles between the groups.
 This is often due to random chance when selecting group composition, however, may also be compounded by a study's experimental design (described further below).
 When unequally-represented polymorphic alleles are also expression quantitative trait loci (eQTLs), expression differences between experimental groups are observed similarly to that of a functional response to an experimental condition (Figure&nbsp;\@ref(fig:ase-example)).
-Analysis of gene expression in absence of the consideration of DAR is problematic as the source of differential expression is not clear.
+Analysis of gene expression in absence of the consideration of DAR is problematic as the source of differential expression will be unclear.
 
 ```{r ase-example, echo = FALSE, fig.wide=TRUE, fig.cap = 'Two confounding scenarios that result in differential gene expression between experimental groups when samples are not isogenic. *Experimental grouping is illustrated as mutant vs wild-type control, but is also applicable for other experimental designs (e.g. treatment vs control). The key aspect here is that polymorphic regions of the homologous chromosomes differ between the experimental groups. **A)** Functional differential expression. The experimental factor (genotype of the gene-of-interest, GOI) has a functional interaction with a bystander gene (linked gene, LG), resulting in expression differences between the experimental groups. This is the assumed mechanism when inferring differential expression outcomes. However, a lack of between-group isogenicity complicates this assumption. **B)** eQTL-driven differential expression. A polymorphism in the promoter region of mutant samples, for example, causes expression differences between mutant and wild-type groups in the absence of a functional interaction between GOI and LG. This may incorrectly be inferred as differential expression due to the experimental condition.*'}
 if (!interactive())
@@ -66,9 +66,8 @@ DAR analysis results in an easy-to-interpret value between 0 and 1 for each gene
 
 ## Further reading
 
-The methodologies of this package were developed and described in @baer2023. 
-
-This phenomenon was flagged as problematic in @white2022.
+- The methodologies of this package were developed and described in @baer2023. 
+- This phenomenon was flagged as problematic in @white2022.
 
 # Setup
 
@@ -94,7 +93,7 @@ library(darr)
 
 ## Data
 
-The example data used in this vignette is contained within the `darr` package.
+The example data used in this vignette is provided within the `darr` package.
 
 The `VCF` file `chr1.vcf.bgz` contains multi-sample genotype calls produced from raw RNA-seq `FASTQ` data.
 The data originates from zebrafish (*Danio rerio*) brain transcriptomes, and further information can be found in the associated manuscript by @gerken2023.
@@ -103,14 +102,15 @@ The `VCF` has been modified to remove headers and other data that are not essent
 The `GRanges` object `chr1_genes` contains gene feature information from the Ensembl database (release version 101) for *Danio rerio* Chromosome 1 (@cunningham2022).
 
 ```{r load-data}
-vcf <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+vcf <- system.file("extdata", "chr1.vcf.bgz", package = "darr")
 data("chr1_genes")
 ```
 
 # DAR analysis
 
-DAR analysis is performed on single nucleotide-level genotype calls from variant calling software.
+DAR analysis is performed by incorporating single nucleotide-level genotype calls from variant calling software.
 We recommend the GATK best practices workflow for [RNAseq short variant discovery (SNPs + Indels)](https://gatk.broadinstitute.org/hc/en-us/articles/360035531192-RNAseq-short-variant-discovery-SNPs-Indels-) as a reference for the generation of data required to begin DAR analysis.
+However, should individual genomes be also available for the experimental samples, these can add significant important information.
 Ultimately, we require a multi-sample `VCF` file with each entry representing the genomic location of a single nucleotide polymorphism (SNP) that differs from the reference genome in at least one sample.
 
 The functions contained in this package are intended to be implemented as a sequential workflow, with each function addressing a discrete step in the data processing/analysis procedure.
@@ -156,6 +156,7 @@ groups <- list(
 
 Now at each locus we can count the number of alleles that exist within each group with `countAlleles()`.
 This returns a `GRangesList` with each element corresponding to a different sample group.
+Columns indicate how many samples had called alleles, how many were missing and the counts of reference allele, followed by alternate alleles `n_1`, `n_2` and `n_3` ensuring multi-allelic sites are retained
 
 ```{r countAlleles}
 counts <- countAlleles(genotypes = genotypes, groups = groups)
@@ -223,7 +224,7 @@ Two types of DAR values are reported by the `dar()` function as metadata columns
 - `dar_origin`: The raw DAR values calculated at single nucleotide positions (the origin) between sample groups.
 This represents a DAR estimate at a precise locus.
 - `dar_region`: The mean of raw DAR values in a region surrounding the origin. 
-The size of the region is controlled using the `winSize` argument, which establishes an elastic sliding window to average the specified number of dar_origin values.
+The size of the region is controlled using the `winSize` argument, which establishes an elastic sliding window to average the specified number of `dar_origin` values, such that this number of values are included, noting that whilst the number of points around the central value may be equal, the genomic distances may not be.
 This represents a DAR estimate for the genomic region surrounding the origin locus.
 
 The default `winSize` is 5, however its choice is arbitrary.
@@ -232,13 +233,13 @@ This is primarily useful for assigning DAR values to genome features that do not
 If this use case is not intended, `dar_region` values are not essential and can be ignored.
 
 ```{r winSize}
-winSize <- 5
+win_size <- 5
 ```
 
-With a chosen elastic window size of `r winSize` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (winSize - 1) / 2` loci either side.
+With a chosen elastic window size of `r win_size` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (win_size - 1) / 2` loci either side.
 
 ```{r dar}
-dar <- dar(props = props, contrasts = contrasts, winSize = winSize)
+dar <- dar(props = props, contrasts = contrasts, winSize = win_size)
 ```
 
 ```{r head-dar, echo=FALSE}
@@ -251,7 +252,7 @@ Each element of the resulting `GRangesList` object represents a single contrast 
 ## Assigning DAR values to features
 
 The final step of DAR analysis involves assigning DAR values to features of interest.
-It makes sense to select features that were tested for differential expression, because this step provides us with an estimate of the potential for eQTL impacts on a feature's expression.
+It makes sense to select features that were tested for differential expression, because this step provides an estimate of the potential for eQTL impacts on a feature's expression.
 This is performed with the `assignFeatureDar()` function, passing the features of interest as a `GRanges` object.
 In this example we use the genes contained in `chr1_genes`, which was loaded earlier.
 
@@ -261,7 +262,7 @@ For each feature, `assignFeatureDar()` takes the mean of DAR values for any asso
 With this configuration, it means the resulting assigned DAR values represent the average DAR that exists solely within the feature.
 
 ```{r assignFeatureDar-origin}
-geneDar <- assignFeatureDar(
+gene_dar <- assignFeatureDar(
   dar = dar,
   features = chr1_genes,
   darVal = "origin"
@@ -269,16 +270,17 @@ geneDar <- assignFeatureDar(
 ```
 
 ```{r head-assignFeatureDar-origin, echo=FALSE}
-head(geneDar)
+head(gene_dar)
 ```
 
-However, eQTLs don't necessarily exist within a feature itself, so we can opt to use the region DAR values (`dar_region` metadata column in the `dar` object) to assign DAR from the regions surrounding a feature.
-The size of this region is controlled with the `winSize` argument in the `dar()` function, which we previously set as `r winSize`.
+Whilst eQTLs don't necessarily exist within a feature itself, smoothed values within a feature may still be representative of the surrounding region as inheritied haplotypes. 
+Additionally, we can opt to use the region DAR values (`dar_region` metadata column in the `dar` object) to assign DAR from the regions surrounding a feature to increase the amount of smoothing.
+The size of this region is controlled with the `winSize` argument in the `dar()` function, which we previously set as `r win_size`.
 
 To assign DAR values based on regions, we must firstly utilise the `flipRanges()` function.
 We can also specify the `extendEdges` option to extend the outermost ranges of each chromosome to encompass the entire chromosome.
 This is useful for ensuring the assignment of DAR values to all features. 
-However, precaution must now be taken with the features that exist toward the edges of a chromosome as the assigned DAR may be less accurate.
+However, caution should be taken with features that exist toward the edges of a chromosome as any assigned DAR values may be less accurate.
 
 ```{r flipRanges}
 dar_regions <- flipRanges(dar = dar, extendEdges = TRUE)
@@ -299,21 +301,21 @@ A warning will be produced if the ranges don't match the selected `darVal`, as t
 However, use cases may exist and the warning can be ignored if this is intended.
 
 ```{r assignFeatureDar-region}
-geneDar_regions <- assignFeatureDar(
+gene_dar_regions <- assignFeatureDar(
   dar = dar_regions,
   features = chr1_genes,
   darVal = "region"
 )
 ```
 
-```{r head-geneDar_regions, echo=FALSE}
-head(geneDar_regions)
+```{r head-gene-dar-regions, echo=FALSE}
+head(gene_dar_regions)
 ```
 
 Note that because regions were defined with a sliding window approach, and `extendEdges` was set to `TRUE`, all genes in `chr1_genes` now have an assigned DAR value.
 
 ```{r all-genes-assigned-dar}
-length(chr1_genes) == length(geneDar_regions$group1v2)
+length(chr1_genes) == length(gene_dar_regions$group1v2)
 ```
 
 ## DAR analysis using the pipe operator
@@ -342,27 +344,16 @@ contrasts <- makeContrasts(
   group1v2 = group1 - group2,
   levels = names(groups)
 )
-winSize <- 5
+win_size <- 5
 ```
 
-Now use the `magrittr` pipe to assign DAR values to genes based on their surrounding region.
-
-```{r magrittr-pipe, eval=FALSE}
-geneDar <- readGenotypes(vcf) %>%
-  countAlleles(groups = groups) %>%
-  countsToProps() %>%
-  dar(contrasts = contrasts, winSize = winSize) %>%
-  flipRanges(extendEdges = TRUE) %>%
-  assignFeatureDar(features = chr1_genes, darVal = "region")
-```
-
-Or we can use the `base` pipe to achieve the same result.
+Now use the `base` pipe to assign DAR values to genes based on their surrounding region.
 
 ```{r base-pipe, eval=FALSE}
-geneDar <- readGenotypes(vcf) |>
+gene_dar <- readGenotypes(vcf) |>
   countAlleles(groups = groups) |>
   countsToProps() |>
-  dar(contrasts = contrasts, winSize = winSize) |>
+  dar(contrasts = contrasts, winSize = win_size) |>
   flipRanges(extendEdges = TRUE) |>
   assignFeatureDar(features = chr1_genes, darVal = "region")
 ```
