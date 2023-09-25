@@ -26,7 +26,8 @@
 #'     group2 = paste0("sample", 7:13)
 #' )
 #' counts <- countAlleles(genotypes, groups)
-#' props <- countsToProps(counts)
+#' counts_filt <- filterLoci(counts)
+#' props <- countsToProps(counts_filt)
 #' contrasts <- matrix(
 #'     data = c(1, -1),
 #'     dimnames = list(

@@ -5,9 +5,10 @@ groups <- list(
     group2 = paste0("sample", 7:13)
 )
 counts <- countAlleles(genotypes, groups)
+counts_filt <- filterLoci(counts)
 
 test_that("countsToProps returns proportions", {
-    props <- countsToProps(counts)
+    props <- countsToProps(counts_filt)
     rowsums <- lapply(props, function(x){
         x <- mcols(x)
         x <- as.matrix(x)
@@ -17,33 +18,23 @@ test_that("countsToProps returns proportions", {
     expect_equal(unique(unlist(rowsums)), 1)
 })
 
-test_that("countsToProps retains all ranges when `filter = FALSE`", {
-    counts <- filterLoci(counts)
-    props <- countsToProps(counts, filter = FALSE)
-    expect_equal(granges(counts$group1), granges(props$group1))
-})
-
-test_that("countsToProps errors when counts are incorrectly filtered", {
+test_that("countsToProps errors when counts are not filtered", {
     expect_error(
-        countsToProps(counts, filter = FALSE),
+        countsToProps(counts),
         "Detected range\\(s\\) with no counts.+"
     )
 })
 
 test_that("countsToProps errors when metadata columns are named incorrectly", {
-    ## Need to filter before changing names so we can set filter = FALSE
-    ##  for countsToProps(). Otherwise the equivalent name check in filterLoci()
-    ##  throws the error instead of countsToProps()
-    counts <- filterLoci(counts)
-    counts <- lapply(counts, function(x) {
+    counts_filt <- lapply(counts_filt, function(x) {
         mc <- mcols(x)
         names(mc) <- c("n_called", "n_missing", "n_1", "n_2", "n_3", "n_0")
         mcols(x) <- mc
         x
     })
-    counts <- GRangesList(counts)
+    counts_filt <- GRangesList(counts_filt)
     expect_error(
-        countsToProps(counts, filter = FALSE),
+        countsToProps(counts_filt),
         'Names of metadata columns must equal c(.+)'
     )
 })

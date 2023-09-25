@@ -28,7 +28,7 @@ setGeneric(
 #' @export
 setGeneric(
     "countsToProps",
-    function(counts, filter = TRUE) standardGeneric("countsToProps")
+    function(counts) standardGeneric("countsToProps")
 )
 
 #' @name dar

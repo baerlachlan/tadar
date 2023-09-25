@@ -166,28 +166,49 @@ counts <- countAlleles(genotypes = genotypes, groups = groups)
 head(counts)
 ```
 
+## Removing undesired loci
+
+Not all samples were assigned genotypes during the variant calling procedure.
+Loci with a large number of assigned genotypes across all samples possess information that can be used to more accurately determine differences in allelic representation between experimental groups.
+We can remove the less informative data by filtering variant loci independently within each sample group with the `filterLoci()` function.
+The `filter` argument controls the criterion for selection of loci that we want to keep, by providing a logical expression using the metadata column names of our `counts` object (i.e. `n_called`, `n_missing`, `n_0`, `n_1`, `n_2` and `n_3`).
+By default, `filterLoci()` keeps loci that satisfy the criterion: number of samples with called genotypes > number of samples with missing genotypes.
+
+```{r counts_filt}
+counts_filt <- filterLoci(counts = counts)
+```
+
+```{r head-counts_filt, echo=FALSE}
+head(counts_filt)
+```
+
+Specifying a filter with high stringency will result in greater removal of loci, but more accurate downstream results.
+For example, we can remove all loci where at least one sample does not possess a genotype call, resulting in complete information of allelic representation in each sample group.
+
+```{r counts_filt_2}
+counts_filt_2 <- filterLoci(counts = counts, filter = n_missing == 0)
+```
+
+```{r head-counts_filt_2, echo=FALSE}
+head(counts_filt_2)
+```
+
+Note that because the filter is applied within each experimental sample group, we now have loci that are present in one group but not the other.
+This allows greater flexibility for more complex experimental designs that involve multiple comparisons between a greater number of sample groups than provided in this example.
+Ultimately, comparisons of allelic representation will be performed only on the intersection of loci present in each sample group.
+
 ## Normalisation of allele counts
 
-Not all samples have genotype calls, so we normalise by converting the allele counts into a proportion of total counts at each locus.
-We also filter variant loci independently within each sample group with the default criterion: number of samples with called genotypes > number of samples with missing genotypes.
+Depending on the stringency of the previously applied filter, it's still possible that not every sample will have a genotype call.
+One experimental group may also contain more samples than another, which is the case in this example, where group1 contains `r length(groups$group1)` samples and group2 contains `r length(groups$group2)` samples.
+We account for this by normalising the allele counts as a proportion of total counts at each locus.
 
 ```{r countsToProps}
-props <- countsToProps(counts = counts, filter = TRUE)
+props <- countsToProps(counts = counts_filt)
 ```
 
 ```{r head-props, echo=FALSE}
 head(props)
-```
-
-If users intend to specify their own filtering criteria, this can be achieved by using the `filterLoci()` function prior to applying `countsToProps()`, and then setting the `filter` option to false.
-
-```{r props_filt}
-counts_filt <- filterLoci(counts = counts, filter = n_called > 10)
-props_filt <- countsToProps(counts = counts_filt, filter = FALSE)
-```
-
-```{r head-props_filt, echo=FALSE}
-head(props_filt)
 ```
 
 ## Calculating DAR
@@ -352,6 +373,7 @@ Now use the `base` pipe to assign DAR values to genes based on their surrounding
 ```{r base-pipe, eval=FALSE}
 gene_dar <- readGenotypes(vcf) |>
     countAlleles(groups = groups) |>
+    filterLoci() |>
     countsToProps() |>
     dar(contrasts = contrasts, win_size = win_size) |>
     flipRanges(extend_edges = TRUE) |>
@@ -391,23 +413,30 @@ It may be of use to quickly assess whether a particular chromosome is affected b
 This is particularly relevant when a study's experimental design causes increased DAR on a particular chromosome.
 The `plotDarECDF()` function facilitates this purpose by plotting the Empirical Cumulative Distribution Function (ECDF) of DAR for each chromosome.
 This function returns a `ggplot2` object, allowing us to add our own styling.
-For this example we will use simulated data.
+For this example we use simulated data that results in a visualisation commonly observed when experimental sample groups have been constructed based on the presence/absence of a genetic feature of interest (e.g. a mutant locus).
 
 ```{r plotDarECDF}
 set.seed(230704)
+simulate_dar <- function(n, mean) {
+    vapply(
+        rnorm(n = n, mean = mean),
+        function(x) exp(x) / (1 + exp(x)),
+        numeric(1)
+    )
+}
 gr <- GRanges(
     paste0(rep(seq(1,25), each = 100), ":", seq(1,100)),
-    dar_origin = runif(2500, 0, 1)
+    dar_origin = c(simulate_dar(2400, -2), simulate_dar(100, 0.5))
 )
 plotDarECDF(dar = gr, dar_val = "origin") +
     theme_bw()
 ```
 
-We can also choose to highlight a particular chromosome of interest with the `highlight` argument.
+We can also choose to highlight the chromosome of interest with the `highlight` argument.
 
 ```{r plotDarECDF_highlight}
 plotDarECDF(dar = gr, dar_val = "origin", highlight = "25") +
-    scale_colour_manual(values = c("red", "grey")) +
+    scale_colour_manual(values = c("TRUE" = "red", "FALSE" = "grey")) +
     theme_bw()
 ```
 

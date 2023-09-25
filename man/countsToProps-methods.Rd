@@ -5,19 +5,14 @@
 \alias{countsToProps,GRangesList-method}
 \title{Convert allele counts to proportions}
 \usage{
-countsToProps(counts, filter = TRUE)
+countsToProps(counts)
 
-\S4method{countsToProps}{GRangesList}(counts, filter = TRUE)
+\S4method{countsToProps}{GRangesList}(counts)
 }
 \arguments{
 \item{counts}{\code{GRangesList} containing a summary of allele counts at each
 range.
 Each element of the list represents a distinct sample group.}
-
-\item{filter}{\code{logical(1)} specifying if ranges should be filtered using
-default criteria.
-If filtering is not required, or if performed manually with
-\link{filterLoci}, set this to \code{FALSE}.}
 }
 \value{
 \code{GRangesList} containing a summary of normalised allele counts
@@ -27,8 +22,6 @@ Each element of the list represents a distinct sample group.
 \description{
 Normalise allele-level counts across samples by converting to a
 proportion of total alleles in all samples.
-Optionally remove ranges using the default filtering criteria described
-in \link{filterLoci}.
 }
 \examples{
 fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
@@ -38,6 +31,7 @@ groups <- list(
     group2 = paste0("sample", 7:13)
 )
 counts <- countAlleles(genotypes, groups)
-countsToProps(counts)
+counts_filt <- filterLoci(counts)
+countsToProps(counts_filt)
 
 }

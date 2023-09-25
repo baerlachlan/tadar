@@ -14,18 +14,26 @@
 #'
 #' @examples
 #' set.seed(230704)
+#' ## Use simulated data that illustrates a commonly encountered scenario
+#' simulate_dar <- function(n, mean) {
+#'     vapply(
+#'         rnorm(n = n, mean = mean),
+#'         function(x) exp(x) / (1 + exp(x)),
+#'         numeric(1)
+#'     )
+#' }
 #' gr <- GRanges(
 #'     paste0(rep(seq(1,25), each = 100), ":", seq(1,100)),
-#'     dar_origin = runif(2500, 0, 1)
+#'     dar_origin = c(simulate_dar(2400, -2), simulate_dar(100, 0.5))
 #' )
 #' ## No highlighting, all chromosomes will be given individual colours
 #' plotDarECDF(gr, dar_val = "origin") +
-#' theme_bw()
+#'     theme_bw()
 #'
 #' ## With highlighting
 #' plotDarECDF(gr, dar_val = "origin", highlight = "25") +
-#' scale_colour_manual(values = c("red", "grey")) +
-#' theme_bw()
+#'     scale_colour_manual(values = c("TRUE" = "red", "FALSE" = "grey")) +
+#'     theme_bw()
 #'
 #' @import GenomicRanges ggplot2
 #' @importFrom GenomeInfoDb seqnames
