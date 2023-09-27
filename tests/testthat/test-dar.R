@@ -16,19 +16,26 @@ contrasts <- matrix(
 )
 
 test_that("dar returns expected mcols", {
-    dar <- dar(props, contrasts)
+    dar <- dar(props, contrasts, win_loci = 5)
     expect_equal(length(mcols(dar[[1]])), 2)
     expect_equal(names(mcols(dar[[1]])), c("dar_origin", "dar_region"))
+
+    dar <- dar(props, contrasts)
+    expect_equal(length(mcols(dar[[1]])), 1)
+    expect_equal(names(mcols(dar[[1]])), "dar_origin")
 })
 
 test_that("dar returns GRangesList with same names set in contrasts", {
-    expect_equal(names(dar(props, contrasts)), dimnames(contrasts)[[2]])
+    expect_equal(
+        names(dar(props, contrasts, win_loci = 5)),
+        dimnames(contrasts)[[2]]
+    )
 })
 
 test_that("dar errors when matrix has incorrect structure", {
     contrasts <- t(contrasts)
     expect_error(
-        dar(props, contrasts),
+        dar(props, contrasts, win_loci = 5),
         "Levels of `contrasts` must match names of `props`"
     )
 })
@@ -36,12 +43,12 @@ test_that("dar errors when matrix has incorrect structure", {
 test_that("dar errors when contrasts are labelled incorrectly", {
     dimnames(contrasts) <- list(Levels = c(), Contrasts = c("group1v2"))
     expect_error(
-        dar(props, contrasts),
+        dar(props, contrasts, win_loci = 5),
         "Dimnames of `contrasts` must be labelled"
     )
     dimnames(contrasts) <- list(Levels = c("group1", "group2"), Contrasts = c())
     expect_error(
-        dar(props, contrasts),
+        dar(props, contrasts, win_loci = 5),
         "Dimnames of `contrasts` must be labelled"
     )
 })
@@ -55,7 +62,7 @@ test_that("dar errors when contrasts are defined incorrectly", {
         )
     )
     expect_error(
-        dar(props, contrasts),
+        dar(props, contrasts, win_loci = 5),
         "`contrasts` defined incorrectly"
     )
 })
@@ -75,9 +82,29 @@ test_that("dar errors with incorrect win_loci", {
     )
 })
 
-test_that("dar adds win_loci to metadata", {
+test_that("dar errors with incorrect win_loci", {
+    expect_error(
+        dar(props, contrasts, win_fixed = 0),
+        "`win_fixed` must be an integer greater than 0"
+    )
+    expect_error(
+        dar(props, contrasts, win_fixed = -1),
+        "`win_fixed` must be an integer greater than 0"
+    )
+})
+
+test_that("dar adds window info to metadata", {
     win_loci <- 5
     dar <- dar(props, contrasts, win_loci = win_loci)
-    winMeta <- metadata(dar[[1]])$win_loci
-    expect_equal(win_loci, winMeta)
+    win_size <- metadata(dar[[1]])$win_size
+    win_type <- metadata(dar[[1]])$win_type
+    expect_equal(win_loci, win_size)
+    expect_equal(win_type, "elastic")
+
+    win_fixed <- 100
+    dar <- dar(props, contrasts, win_fixed = win_fixed)
+    win_size <- metadata(dar[[1]])$win_size
+    win_type <- metadata(dar[[1]])$win_type
+    expect_equal(win_fixed, win_size)
+    expect_equal(win_type, "fixed")
 })

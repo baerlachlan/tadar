@@ -20,6 +20,8 @@
 #' A warning will be produced if the chosen `dar_val` does not match the
 #' ranges detected in the object provided to the `dar` argument, as this is
 #' likely unintended by the user.
+#' @param fill_missing The DAR value to assign features with no overlaps.
+#' Defaults to `NA`.
 #'
 #' @return `GRangesList` with ranges representing features of interest that
 #' overlap at least one DAR range.
@@ -44,11 +46,11 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar <- dar(props, contrasts)
+#' dar <- dar(props, contrasts, win_loci = 5)
 #' assignFeatureDar(dar, chr1_genes, dar_val = "origin")
 #'
-#' darRegions <- flipRanges(dar, extend_edges = TRUE)
-#' assignFeatureDar(darRegions, chr1_genes, dar_val = "region")
+#' dar_regions <- flipRanges(dar, extend_edges = TRUE)
+#' assignFeatureDar(dar_regions, chr1_genes, dar_val = "region")
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply from to
@@ -58,7 +60,7 @@
 setMethod(
     "assignFeatureDar",
     signature = signature(dar = "GRangesList", features = "GRanges"),
-    function(dar, features, dar_val) {
+    function(dar, features, dar_val, fill_missing) {
 
         dar_val <- match.arg(dar_val)
         endoapply(dar, function(x){
@@ -72,8 +74,8 @@ setMethod(
                 if (dar_val == "region") featureDar <- x$dar_region[subjects]
                 mean(featureDar)
             }, numeric(1))
-            features <- features[queries]
-            features$dar <- dar_mean
+            features$dar <- fill_missing
+            features[queries]$dar <- dar_mean
             features
         })
 

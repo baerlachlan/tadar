@@ -3,7 +3,8 @@
 The data in `chr1.vcf.bgz` is a subset of variant calls resulting from processed RNA-seq data.
 `chr1.vcf.bgz.tbi` is the accompanying index file.
 
-The raw data can be found in `FASTQ` format under GEO accession [GSE1111111](www.path.to.geo.com).
+<!--- Update GEO accession and link when GEO submission accepted --->
+The raw data can be found in `FASTQ` format under GEO accession [GSE#######](www.path.to.geo.com). 
 
 Further information on the biology and generation of the RNA-seq data currently exists as a pre-print: [Zebrafish models of Mucopolysaccharidosis types IIIA, B, & C show hyperactivity and changes in oligodendrocyte state](https://www.biorxiv.org/content/10.1101/2023.08.02.550904v1).
 

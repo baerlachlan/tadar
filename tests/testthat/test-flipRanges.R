@@ -15,25 +15,37 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts, win_loci = 5)
+dar_fixed <- dar(props, contrasts, win_fixed = 101)
 
 test_that("flipRanges returns regions", {
-    darRegions <- flipRanges(dar)
-    widths <- width(darRegions$group1v2)
+    dar_regions <- flipRanges(dar)
+    widths <- width(dar_regions$group1v2)
     expect_true(max(widths) > 1)
+
+    dar_regions <- flipRanges(dar_fixed)
+    widths <- width(dar_regions$group1v2)
+    expect_true(max(widths) == 101)
 })
 
 test_that("flipRanges extends ranges", {
-    darRegions <- flipRanges(dar, extend_edges = TRUE)
-    expect_equal(min(start(darRegions$group1v2)), 1)
-    expect_equal(max(end(darRegions$group1v2)), 59578282)
+    dar_regions <- flipRanges(dar, extend_edges = TRUE)
+    expect_equal(min(start(dar_regions$group1v2)), 1)
+    expect_equal(max(end(dar_regions$group1v2)), 59578282)
 })
 
-test_that("flipRanges errors when no win_loci in metadata", {
+test_that("flipRanges errors when missing metadata", {
     dar <- endoapply(dar, function(x){
-        metadata(x) <- metadata(x)[!(names(metadata(x)) %in% "win_loci")]
+        metadata(x) <- list()
         x
     })
-    expect_error(flipRanges(dar), "No win_loci detected\\.")
+    expect_error(
+        flipRanges(dar),
+        paste0(
+            "Required metadata not detected\\. Use `dar\\(\\)` with ",
+            "either `win_fixed` or `win_loci` arguments specified ",
+            "before `flipRanges\\(\\)`"
+        )
+    )
 })
 
 test_that("flipRanges errors when no seqlengths and extend_edges = TRUE", {
@@ -48,8 +60,8 @@ test_that("flipRanges errors when no seqlengths and extend_edges = TRUE", {
 })
 
 test_that("flipRanges can revert back to output of dar()", {
-    darRegions <- flipRanges(dar)
-    expect_identical(flipRanges(darRegions), dar)
-    darRegions <- flipRanges(dar, extend_edges = TRUE)
-    expect_identical(flipRanges(darRegions), dar)
+    dar_regions <- flipRanges(dar)
+    expect_identical(flipRanges(dar_regions), dar)
+    dar_regions <- flipRanges(dar, extend_edges = TRUE)
+    expect_identical(flipRanges(dar_regions), dar)
 })

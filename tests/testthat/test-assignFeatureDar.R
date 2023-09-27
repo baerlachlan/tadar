@@ -15,17 +15,20 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts)
+dar <- dar(props, contrasts, win_loci = 5)
 darRegions <- flipRanges(dar)
 darRegions_ex <- flipRanges(dar, extend_edges = TRUE)
 
 test_that("assignFeatureDar returns the expected output", {
     geneDar_origin <- assignFeatureDar(dar, chr1_genes, dar_val = "origin")
-    expect_equal(length(geneDar_origin$group1v2), 820)
+    expect_equal(length(geneDar_origin$group1v2), 1456)
+    expect_equal(sum(!is.na(geneDar_origin$group1v2$dar)), 820)
     geneDar_region <- assignFeatureDar(darRegions, chr1_genes, dar_val = "region")
-    expect_equal(length(geneDar_region$group1v2), 1455)
+    expect_equal(length(geneDar_region$group1v2), 1456)
+    expect_equal(sum(!is.na(geneDar_region$group1v2$dar)), 1455)
     geneDar_ex <- assignFeatureDar(darRegions_ex, chr1_genes, dar_val = "region")
     expect_equal(length(geneDar_ex$group1v2), 1456)
+    expect_equal(sum(!is.na(geneDar_ex$group1v2$dar)), 1456)
 })
 
 test_that("assignFeatureDar errors when expected", {

@@ -18,10 +18,16 @@
 #' (i.e. sample groups) to be contrasted.
 #' The two levels involved with each contrast should be specified with
 #' `1` and `-1`.
+#' @param win_fixed `integer(1)` specifying the width (in base pairs) of a
+#' fixed sliding window used for averaging DAR values within a region, which is
+#' centralised around the origin.
+#' Must be an integer greater than 1.
+#' This argument takes precedence over `win_loci`.
 #' @param win_loci `integer(1)` specifying the number of loci to include
-#' in the elastic sliding window used for averaging DAR values within a region.
+#' in an elastic sliding window used for averaging DAR values within a region.
 #' Must be an odd integer in order to incorporate the origin locus and an
 #' equal number of loci either side.
+#' Only used when `win_fixed` is NULL.
 #'
 #' @return `GRangesList` containing DAR values at each overlapping range
 #' between the contrasted sample groups.
@@ -31,9 +37,11 @@
 #' - dar_origin: The raw DAR values calculated at single nucleotide positions
 #' (the origin) between sample groups.
 #' - dar_region: The mean of raw DAR values in a region surrounding the origin.
-#' The size of the region is controlled using the `win_loci` argument, which
-#' establishes an elastic sliding window to average the specified number
-#' of dar_origin values.
+#' The size of the region is controlled using either the `win_fixed` or
+#' `win_loci` arguments, which establishes a fixed or elastic sliding window
+#' respectively.
+#' Any dar_origin values located within the window are averaged to produce the
+#' resulting dar_region values.
 #'
 #' Each element of the list represents a single contrast defined in the
 #' input contrast matrix.
@@ -64,7 +72,7 @@
 setMethod(
     "dar",
     signature = signature(props = "GRangesList", contrasts = "matrix"),
-    function(props, contrasts, win_loci) {
+    function(props, contrasts, win_fixed, win_loci) {
 
         lvls <- dimnames(contrasts)[[1]]
         conts <- dimnames(contrasts)[[2]]
@@ -73,10 +81,12 @@ setMethod(
         if (!all(lvls %in% names(props)))
             stop("Levels of `contrasts` must match names of `props`")
         contrasts <- .contrastsAsList(contrasts)
-        if (win_loci < 1 || win_loci %% 2 != 1)
-            stop("`win_loci` must be an odd integer greater than 0")
         grl <- .calcDar(props = props, contrasts = contrasts)
-        grl <- .smoothDar(dar = grl, win_loci = win_loci)
+        if (!is.null(win_fixed)) {
+            grl <- .smoothAcrossFixed(dar = grl, win_fixed = win_fixed)
+        } else if (!is.null(win_loci)) {
+            grl <- .smoothAcrossLoci(dar = grl, win_loci = win_loci)
+        }
         grl
 
     }
@@ -134,14 +144,46 @@ setMethod(
 }
 
 #' @keywords internal
+#' @importFrom S4Vectors endoapply 'mcols<-' 'metadata<-' from to
+.smoothAcrossFixed <- function(dar, win_fixed) {
+
+    if (win_fixed < 1)
+        stop("`win_fixed` must be an integer greater than 0")
+    endoapply(dar, function(x){
+        ## Add window info to metadata for downstream use
+        metadata(x)$win_type <- "fixed"
+        metadata(x)$win_size <- win_fixed
+        ## Resize ranges to have width = win_fixed
+        ## Suppress warnings for out-of-bound ranges because we trim these
+        regions <- suppressWarnings(resize(x, win_fixed, fix = "center"))
+        regions <- trim(regions)
+        ## Find origin ranges that overlap our regions/windows
+        hits <- findOverlaps(regions, x)
+        queries <- from(hits)
+        queries <- unique(queries)
+        ## Now average any origin dar values contained within the regions
+        dar_region <- vapply(queries, function(y){
+            subjects <- to(hits)[from(hits) == y]
+            mean(x$dar_origin[subjects])
+        }, numeric(1))
+        mcols(x)$dar_region <- dar_region
+        x
+    })
+
+}
+
+#' @keywords internal
 #' @importFrom S4Vectors endoapply mcols 'mcols<-' 'metadata<-'
 #' @importFrom GenomeInfoDb seqnames
 #' @importFrom stats filter
-.smoothDar <- function(dar, win_loci) {
+.smoothAcrossLoci <- function(dar, win_loci) {
 
+    if (win_loci < 1 || win_loci %% 2 != 1)
+        stop("`win_loci` must be an odd integer greater than 0")
     endoapply(dar, function(x){
-        ## Add win_loci to metadata for downstream use
-        metadata(x)$win_loci <- win_loci
+        ## Add window info to metadata for downstream use
+        metadata(x)$win_type <- "elastic"
+        metadata(x)$win_size <- win_loci
         grl <- split(x, f = seqnames(x))
         grl <- endoapply(grl, function(y){
             ## Throw a more informative error than filter() would

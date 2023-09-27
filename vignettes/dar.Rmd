@@ -244,21 +244,30 @@ This is handled within the `dar()` function by passing our allelic proportions a
 Two types of DAR values are reported by the `dar()` function as metadata columns of the resulting `GRanges` objects:
 
 - `dar_origin`: The raw DAR values calculated at single nucleotide positions (the origin) between sample groups.
-This represents a DAR estimate at a precise locus.
-- `dar_region`: The mean of raw DAR values in a region surrounding the origin. 
-The size of the region is controlled using the `win_loci` argument, which establishes an elastic sliding window to average the specified number of `dar_origin` values, such that this number of values are included, noting that whilst the number of points around the central value may be equal, the genomic distances may not be.
-This represents a DAR estimate for the genomic region surrounding the origin locus.
+These values represent DAR estimates at a precise locus.
+- `dar_region`: The mean of raw DAR values in a specified region surrounding the origin.
+This is optionally returned using either of the `win_fixed` or `win_loci` arguments, which control the strategy and size for establishing regions (more information below).
+This option exists because eQTLs don't necessarily confer their effects on genes in close proximity.
+Therefore, DAR estimates that are representative of regions may be more suitable for downstream assignment DAR values to genomic features.
 
-The default `win_loci` is 5, however its choice is arbitrary.
-`dar_region` values are utilised as DAR estimates spanning across the genome.
-This is primarily useful for assigning DAR values to genome features that do not contain a variant locus.
-If this use case is not intended, `dar_region` values are not essential and can be ignored.
+`win_fixed` and `win_loci` are optional arguments that offer users `dar_region` values in conjunction with `dar_origin` values.
+While only one of these two arguments is required, if both are provided, `win_fixed` takes precedence.
+Understanding the distinctions in how each option defines regions around an origin is important, as their selection carries subjective implications downstream.
+
+- `win_fixed`: Establishes a region with a fixed size around the origin.
+The total region size is defined in base pairs, meaning that the region will extend `win_fixed / 2` base pairs either side of the origin.
+For example if `win_fixed = 101` is specified, an origin at position 500 will have an associated region spanning positions 400-600.
+- `win_loci`: Establishes an elastic region to average the specified number of loci with `dar_origin` values, such that this number of values are included.
+Note that whilst the number of points around the central value may be equal, the genomic distances may not be.
+In contrast to `win_fixed`, `win_loci` results in DAR estimates that cover a substantial proportion of each chromosome (i.e from the first locus to the last), which is useful for downstream assignment of DAR values to a greater number of genomic features.
+
+The remainder of this vignette uses examples produced from specifying the `win_loci` argument.
 
 ```{r win_loci}
 win_loci <- 5
 ```
 
-With a chosen elastic window size of `r win_loci` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (win_loci - 1) / 2` loci either side.
+With a chosen elastic region size of `r win_loci` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (win_loci - 1) / 2` loci either side.
 
 ```{r dar}
 dar <- dar(props = props, contrasts = contrasts, win_loci = win_loci)
@@ -279,15 +288,19 @@ This is performed with the `assignFeatureDar()` function, passing the features o
 In this example we use the genes contained in `chr1_genes`, which was loaded earlier.
 
 The `dar_val` argument controls whether origin or region DAR values are used when assigned to features.
-In the code below we specify `dar_val = "origin"`, as the ranges of our `GRanges` objects held in `dar` currently represent those associated with origin DAR values (read further to see an alternative scenario).
+In the code below we specify `dar_val = "origin"`, as the ranges of our `GRanges` objects held in `dar` currently represent those associated with origin DAR values (read further to see the alternative scenario).
+The `fill_missing` argument controls what value is assigned to features with no overlaps.
+This defaults to `NA` for easy filtering of features with unassigned DAR values.
+
 For each feature, `assignFeatureDar()` takes the mean of DAR values for any associated ranges that overlap the feature range.
-With this configuration, it means the resulting assigned DAR values represent the average DAR that exists solely within the feature.
+With the following configuration, it means the resulting assigned DAR values represent the average DAR that exists solely within the feature.
 
 ```{r assignFeatureDar-origin}
 gene_dar <- assignFeatureDar(
     dar = dar,
     features = chr1_genes,
-    dar_val = "origin"
+    dar_val = "origin",
+    fill_missing = NA
 )
 ```
 
@@ -334,7 +347,7 @@ gene_dar_regions <- assignFeatureDar(
 head(gene_dar_regions)
 ```
 
-Note that because regions were defined with a sliding window approach, and `extend_edges` was set to `TRUE`, all genes in `chr1_genes` now have an assigned DAR value.
+Note that because elastic regions were defined, and `extend_edges` was set to `TRUE`, all genes in `chr1_genes` now have an assigned DAR value.
 
 ```{r all-genes-assigned-dar}
 length(chr1_genes) == length(gene_dar_regions$group1v2)

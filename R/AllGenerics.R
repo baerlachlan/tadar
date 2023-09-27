@@ -3,16 +3,8 @@
 #' @export
 setGeneric(
     "assignFeatureDar",
-    function(dar, features, dar_val = c("origin", "region"))
+    function(dar, features, dar_val = c("origin", "region"), fill_missing = NA)
         standardGeneric("assignFeatureDar")
-)
-
-#' @name flipRanges
-#' @rdname flipRanges-methods
-#' @export
-setGeneric(
-    "flipRanges",
-    function(dar, extend_edges = FALSE) standardGeneric("flipRanges")
 )
 
 #' @name countAlleles
@@ -36,7 +28,8 @@ setGeneric(
 #' @export
 setGeneric(
     "dar",
-    function(props, contrasts, win_loci = 5) standardGeneric("dar")
+    function(props, contrasts, win_fixed = NULL, win_loci = NULL)
+        standardGeneric("dar")
 )
 
 #' @name filterLoci
@@ -46,6 +39,14 @@ setGeneric(
     "filterLoci",
     function(counts, filter = n_called > n_missing)
         standardGeneric("filterLoci")
+)
+
+#' @name flipRanges
+#' @rdname flipRanges-methods
+#' @export
+setGeneric(
+    "flipRanges",
+    function(dar, extend_edges = FALSE) standardGeneric("flipRanges")
 )
 
 #' @name plotDarECDF

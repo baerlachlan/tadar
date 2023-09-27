@@ -5,9 +5,19 @@
 \alias{assignFeatureDar,GRangesList,GRanges-method}
 \title{Assign DAR values to genomic features}
 \usage{
-assignFeatureDar(dar, features, dar_val = c("origin", "region"))
+assignFeatureDar(
+  dar,
+  features,
+  dar_val = c("origin", "region"),
+  fill_missing = NA
+)
 
-\S4method{assignFeatureDar}{GRangesList,GRanges}(dar, features, dar_val = c("origin", "region"))
+\S4method{assignFeatureDar}{GRangesList,GRanges}(
+  dar,
+  features,
+  dar_val = c("origin", "region"),
+  fill_missing = NA
+)
 }
 \arguments{
 \item{dar}{\code{GRangesList} with DAR values of the associated ranges contained
@@ -29,6 +39,9 @@ Options are "origin" and "region".
 A warning will be produced if the chosen \code{dar_val} does not match the
 ranges detected in the object provided to the \code{dar} argument, as this is
 likely unintended by the user.}
+
+\item{fill_missing}{The DAR value to assign features with no overlaps.
+Defaults to \code{NA}.}
 }
 \value{
 \code{GRangesList} with ranges representing features of interest that
@@ -58,10 +71,10 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts)
+dar <- dar(props, contrasts, win_loci = 5)
 assignFeatureDar(dar, chr1_genes, dar_val = "origin")
 
-darRegions <- flipRanges(dar, extend_edges = TRUE)
-assignFeatureDar(darRegions, chr1_genes, dar_val = "region")
+dar_regions <- flipRanges(dar, extend_edges = TRUE)
+assignFeatureDar(dar_regions, chr1_genes, dar_val = "region")
 
 }

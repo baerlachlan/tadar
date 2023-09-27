@@ -5,9 +5,9 @@
 \alias{dar,GRangesList,matrix-method}
 \title{Calculate Differential Allelic Representation (DAR)}
 \usage{
-dar(props, contrasts, win_loci = 5)
+dar(props, contrasts, win_fixed = NULL, win_loci = NULL)
 
-\S4method{dar}{GRangesList,matrix}(props, contrasts, win_loci = 5)
+\S4method{dar}{GRangesList,matrix}(props, contrasts, win_fixed = NULL, win_loci = NULL)
 }
 \arguments{
 \item{props}{\code{GRangesList} containing a summary of normalised allele counts
@@ -21,10 +21,17 @@ Each column must represent a single contrast, and rows represent the levels
 The two levels involved with each contrast should be specified with
 \code{1} and \code{-1}.}
 
+\item{win_fixed}{\code{integer(1)} specifying the width (in base pairs) of a
+fixed sliding window used for averaging DAR values within a region, which is
+centralised around the origin.
+Must be an integer greater than 1.
+This argument takes precedence over \code{win_loci}.}
+
 \item{win_loci}{\code{integer(1)} specifying the number of loci to include
-in the elastic sliding window used for averaging DAR values within a region.
+in an elastic sliding window used for averaging DAR values within a region.
 Must be an odd integer in order to incorporate the origin locus and an
-equal number of loci either side.}
+equal number of loci either side.
+Only used when \code{win_fixed} is NULL.}
 }
 \value{
 \code{GRangesList} containing DAR values at each overlapping range
@@ -35,9 +42,11 @@ object:
 \item dar_origin: The raw DAR values calculated at single nucleotide positions
 (the origin) between sample groups.
 \item dar_region: The mean of raw DAR values in a region surrounding the origin.
-The size of the region is controlled using the \code{win_loci} argument, which
-establishes an elastic sliding window to average the specified number
-of dar_origin values.
+The size of the region is controlled using either the \code{win_fixed} or
+\code{win_loci} arguments, which establishes a fixed or elastic sliding window
+respectively.
+Any dar_origin values located within the window are averaged to produce the
+resulting dar_region values.
 }
 
 Each element of the list represents a single contrast defined in the

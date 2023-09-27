@@ -18,7 +18,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts)$group1v2
+dar <- dar(props, contrasts, win_loci = 5)$group1v2
 
 test_that("plotChrDar_checks errors when passed incorrect arguments", {
     expect_error(plotChrDar(dar = NULL))

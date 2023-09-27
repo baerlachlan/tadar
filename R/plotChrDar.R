@@ -7,7 +7,7 @@
 #' in metadata columns.
 #' Used to build the DataTrack showing the trend in DAR across the chromosome.
 #' If ranges of the input object span regions (i.e. post application of
-#' \link{flipRanges}), data points are plotted at the midpoint of the region.
+#' [flipRanges()]), data points are plotted at the midpoint of the region.
 #' @param dar_val `character(1)` specifying the whether to use origin or region
 #' DAR values for the chosen ranges.
 #' Options are "origin" and "region".
@@ -64,7 +64,7 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar <- dar(props, contrasts)
+#' dar <- dar(props, contrasts, win_loci = 5)
 #' plotChrDar(
 #'     dar = dar$group1v2, dar_val = "region", chr = "1",
 #'     foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,
