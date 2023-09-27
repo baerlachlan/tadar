@@ -35,7 +35,7 @@
 #'         Contrasts = c("group1v2")
 #'     )
 #' )
-#' dar <- dar(props, contrasts, win_size = 5)
+#' dar <- dar(props, contrasts, win_loci = 5)
 #' ## Convert ranges to regions associated with dar_region values
 #' flipRanges(dar)
 #' ## Extend the outer regions the cover the entire chromosome
@@ -89,10 +89,10 @@ setMethod(
 #' @importFrom GenomeInfoDb seqnames
 .switchToRegion <- function(dar, extend_edges) {
 
-    win_size <- metadata(dar)$win_size
-    if (is.null(win_size)) {
+    win_loci <- metadata(dar)$win_loci
+    if (is.null(win_loci)) {
         stop(
-            "No win_size detected. Use `dar()` before ",
+            "No win_loci detected. Use `dar()` before ",
             "`flipRanges()`", call. = FALSE
         )
     }
@@ -105,7 +105,7 @@ setMethod(
         ## Construct regions while accounting for NA removal
         regions <- IRanges(
             start = start(x)[seq_len(n - n_NA)],
-            end = end(x)[win_size:n]
+            end = end(x)[win_loci:n]
         )
         if (extend_edges) regions <- .extend(regions, x)
         x <- x[!is_NA,]
@@ -129,7 +129,7 @@ setMethod(
     mcols(dar) <- mcols(dar)[,c("dar_origin", "dar_region")]
     dar <- c(dar, metadata(dar)$removed_ranges)
     dar <- sort(dar)
-    metadata(dar) <- metadata(dar)[c("range_type", "win_size")]
+    metadata(dar) <- metadata(dar)[c("range_type", "win_loci")]
     metadata(dar)$range_type <- "origin"
     dar
 

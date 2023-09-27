@@ -12,14 +12,13 @@
 #' object containing only the data that is required for DAR analysis.
 #' 2. [countAlleles()] summarises the alleles from genotype data at each range
 #' for each sample group.
-#' 3. [countsToProps()] normalises the allele counts and filters ranges based
-#' on default criteria.
-#'     - Optionally, the user can specify their own custom filter with
-#'     [filterLoci()]
-#' 4. [dar()] calculates the DAR between two sample groups.
-#' 5. [flipRanges()] is an optional step that enables the conversion of ranges
+#' 3. [filterLoci()] removes ranges that do not match a specified criterion.
+#' 4. [countsToProps()] normalises the allele counts to account for missing
+#' data and sample groups of different sizes.
+#' 5. [dar()] calculates the DAR between two sample groups.
+#' 6. [flipRanges()] is an optional step that enables the conversion of ranges
 #' output by [dar()] from origins to regions, or vice versa.
-#' 6. [assignFeatureDar()] assigns DAR values to features of interest.
+#' 7. [assignFeatureDar()] assigns DAR values to features of interest.
 #'
 #' `darr` also provides visualisation functions that allow quick inspection
 #' of DAR within the dataset:

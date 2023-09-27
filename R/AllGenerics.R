@@ -36,7 +36,7 @@ setGeneric(
 #' @export
 setGeneric(
     "dar",
-    function(props, contrasts, win_size = 5) standardGeneric("dar")
+    function(props, contrasts, win_loci = 5) standardGeneric("dar")
 )
 
 #' @name filterLoci

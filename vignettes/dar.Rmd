@@ -62,7 +62,8 @@ if (!interactive())
     knitr::include_graphics("figs/selection-driven-dar.png")
 ```
 
-DAR analysis results in an easy-to-interpret value between 0 and 1 for each genetic feature of interest, where 0 represents identical allelic representation and 1 represents complete diversity. This metric can be used to identify features prone to false-positive calls in Differential Expression analysis, and can be leveraged with statistical methods to alleviate the impact of such artefacts on RNA-seq data.
+DAR analysis results in an easy-to-interpret value between 0 and 1 for each genetic feature of interest, where 0 represents identical allelic representation and 1 represents complete diversity.
+This metric can be used to identify features prone to false-positive calls in Differential Expression analysis, and can be leveraged with statistical methods to alleviate the impact of such artefacts on RNA-seq data.
 
 ## Further reading
 
@@ -245,22 +246,22 @@ Two types of DAR values are reported by the `dar()` function as metadata columns
 - `dar_origin`: The raw DAR values calculated at single nucleotide positions (the origin) between sample groups.
 This represents a DAR estimate at a precise locus.
 - `dar_region`: The mean of raw DAR values in a region surrounding the origin. 
-The size of the region is controlled using the `win_size` argument, which establishes an elastic sliding window to average the specified number of `dar_origin` values, such that this number of values are included, noting that whilst the number of points around the central value may be equal, the genomic distances may not be.
+The size of the region is controlled using the `win_loci` argument, which establishes an elastic sliding window to average the specified number of `dar_origin` values, such that this number of values are included, noting that whilst the number of points around the central value may be equal, the genomic distances may not be.
 This represents a DAR estimate for the genomic region surrounding the origin locus.
 
-The default `win_size` is 5, however its choice is arbitrary.
+The default `win_loci` is 5, however its choice is arbitrary.
 `dar_region` values are utilised as DAR estimates spanning across the genome.
 This is primarily useful for assigning DAR values to genome features that do not contain a variant locus.
 If this use case is not intended, `dar_region` values are not essential and can be ignored.
 
-```{r win_size}
-win_size <- 5
+```{r win_loci}
+win_loci <- 5
 ```
 
-With a chosen elastic window size of `r win_size` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (win_size - 1) / 2` loci either side.
+With a chosen elastic window size of `r win_loci` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (win_loci - 1) / 2` loci either side.
 
 ```{r dar}
-dar <- dar(props = props, contrasts = contrasts, win_size = win_size)
+dar <- dar(props = props, contrasts = contrasts, win_loci = win_loci)
 ```
 
 ```{r head-dar, echo=FALSE}
@@ -296,7 +297,7 @@ head(gene_dar)
 
 Whilst eQTLs don't necessarily exist within a feature itself, smoothed values within a feature may still be representative of the surrounding region as inheritied haplotypes. 
 Additionally, we can opt to use the region DAR values (`dar_region` metadata column in the `dar` object) to assign DAR from the regions surrounding a feature to increase the amount of smoothing.
-The size of this region is controlled with the `win_size` argument in the `dar()` function, which we previously set as `r win_size`.
+The size of this region is controlled with the `win_loci` argument in the `dar()` function, which we previously set as `r win_loci`.
 
 To assign DAR values based on regions, we must firstly utilise the `flipRanges()` function.
 We can also specify the `extend_edges` option to extend the outermost ranges of each chromosome to encompass the entire chromosome.
@@ -365,7 +366,7 @@ contrasts <- makeContrasts(
     group1v2 = group1 - group2,
     levels = names(groups)
 )
-win_size <- 5
+win_loci <- 5
 ```
 
 Now use the `base` pipe to assign DAR values to genes based on their surrounding region.
@@ -375,7 +376,7 @@ gene_dar <- readGenotypes(vcf) |>
     countAlleles(groups = groups) |>
     filterLoci() |>
     countsToProps() |>
-    dar(contrasts = contrasts, win_size = win_size) |>
+    dar(contrasts = contrasts, win_loci = win_loci) |>
     flipRanges(extend_edges = TRUE) |>
     assignFeatureDar(features = chr1_genes, dar_val = "region")
 ```

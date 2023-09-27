@@ -15,12 +15,9 @@ order:
 object containing only the data that is required for DAR analysis.
 \item \code{\link[=countAlleles]{countAlleles()}} summarises the alleles from genotype data at each range
 for each sample group.
-\item \code{\link[=countsToProps]{countsToProps()}} normalises the allele counts and filters ranges based
-on default criteria.
-\itemize{
-\item Optionally, the user can specify their own custom filter with
-\code{\link[=filterLoci]{filterLoci()}}
-}
+\item \code{\link[=filterLoci]{filterLoci()}} removes ranges that do not match a specified criterion.
+\item \code{\link[=countsToProps]{countsToProps()}} normalises the allele counts to account for missing
+data and sample groups of different sizes.
 \item \code{\link[=dar]{dar()}} calculates the DAR between two sample groups.
 \item \code{\link[=flipRanges]{flipRanges()}} is an optional step that enables the conversion of ranges
 output by \code{\link[=dar]{dar()}} from origins to regions, or vice versa.

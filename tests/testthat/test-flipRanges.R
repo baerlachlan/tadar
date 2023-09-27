@@ -14,7 +14,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_size = 5)
+dar <- dar(props, contrasts, win_loci = 5)
 
 test_that("flipRanges returns regions", {
     darRegions <- flipRanges(dar)
@@ -28,12 +28,12 @@ test_that("flipRanges extends ranges", {
     expect_equal(max(end(darRegions$group1v2)), 59578282)
 })
 
-test_that("flipRanges errors when no win_size in metadata", {
+test_that("flipRanges errors when no win_loci in metadata", {
     dar <- endoapply(dar, function(x){
-        metadata(x) <- metadata(x)[!(names(metadata(x)) %in% "win_size")]
+        metadata(x) <- metadata(x)[!(names(metadata(x)) %in% "win_loci")]
         x
     })
-    expect_error(flipRanges(dar), "No win_size detected\\.")
+    expect_error(flipRanges(dar), "No win_loci detected\\.")
 })
 
 test_that("flipRanges errors when no seqlengths and extend_edges = TRUE", {

@@ -60,24 +60,24 @@ test_that("dar errors when contrasts are defined incorrectly", {
     )
 })
 
-test_that("dar errors with incorrect win_size", {
+test_that("dar errors with incorrect win_loci", {
     expect_error(
-        dar(props, contrasts, win_size = 0),
-        "`win_size` must be an odd integer greater than 0"
+        dar(props, contrasts, win_loci = 0),
+        "`win_loci` must be an odd integer greater than 0"
     )
     expect_error(
-        dar(props, contrasts, win_size = 10),
-        "`win_size` must be an odd integer greater than 0"
+        dar(props, contrasts, win_loci = 10),
+        "`win_loci` must be an odd integer greater than 0"
     )
     expect_error(
-        dar(props, contrasts, win_size = 10371),
-        "`win_size` greater than number of ranges"
+        dar(props, contrasts, win_loci = 10371),
+        "`win_loci` greater than number of ranges"
     )
 })
 
-test_that("dar adds win_size to metadata", {
-    win_size <- 5
-    dar <- dar(props, contrasts, win_size = win_size)
-    winMeta <- metadata(dar[[1]])$win_size
-    expect_equal(win_size, winMeta)
+test_that("dar adds win_loci to metadata", {
+    win_loci <- 5
+    dar <- dar(props, contrasts, win_loci = win_loci)
+    winMeta <- metadata(dar[[1]])$win_loci
+    expect_equal(win_loci, winMeta)
 })

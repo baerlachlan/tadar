@@ -48,7 +48,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_size = 5)
+dar <- dar(props, contrasts, win_loci = 5)
 ## Convert ranges to regions associated with dar_region values
 flipRanges(dar)
 ## Extend the outer regions the cover the entire chromosome
