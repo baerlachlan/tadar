@@ -1,0 +1,55 @@
+Package: darr
+Title: Differential Allelic Representation
+Version: 0.99.0
+Description: This package provides functions to standardise the analysis of
+    Differential Allelic Representation (DAR). DAR analysis is intended to
+    be performed on genotype calls from variant discovery software, resulting
+    in a metric that represents the allelic diversity between groups of samples
+    at each SNP locus. The DAR metric provides a good estimate for the
+    possibility of expression quantitative trait loci differences between
+    sample groups, which may contribute to unexpected variability gene
+    expression and influence to results of Differential Expression analysis.
+Authors@R: 
+    c(person("Lachlan", "Baer",
+        email = "baerlachlan@gmail.com",
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0001-5213-3401")),
+    person("Stevie", "Pederson",
+        email = "stephen.pederson.au@gmail.com",
+        role = "aut",
+        comment = c(ORCID = "0000-0001-8197-3303")))
+License: GPL-3
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Config/testthat/edition: 3
+BugReports: https://github.com/baerlachlan/darr/issues
+URL: https://github.com/baerlachlan/darr
+BiocType: Software
+biocViews: Sequencing, RNASeq, SNP, GenomicVariation, VariantAnnotation,
+    DifferentialExpression
+VignetteBuilder: knitr
+Depends: 
+    GenomicRanges,
+    ggplot2,
+    R (>= 4.3.0)
+Imports: 
+    BiocGenerics,
+    GenomeInfoDb,
+    Gviz,
+    IRanges,
+    MatrixGenerics,
+    methods,
+    rlang,
+    Rsamtools,
+    S4Vectors,
+    stats,
+    VariantAnnotation
+Suggests: 
+    BiocStyle,
+    covr,
+    knitr,
+    limma,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tidyverse

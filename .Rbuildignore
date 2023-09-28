@@ -1,0 +1,8 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^darr\.Rproj$
+^\.github$
+^codecov\.yml$
+^.*TODO\.md$
+^LICENSE\.md$
+^data-raw$
