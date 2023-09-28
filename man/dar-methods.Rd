@@ -5,9 +5,9 @@
 \alias{dar,GRangesList,matrix-method}
 \title{Calculate Differential Allelic Representation (DAR)}
 \usage{
-dar(props, contrasts, win_fixed = NULL, win_loci = NULL)
+dar(props, contrasts, region_fixed = NULL, region_loci = NULL)
 
-\S4method{dar}{GRangesList,matrix}(props, contrasts, win_fixed = NULL, win_loci = NULL)
+\S4method{dar}{GRangesList,matrix}(props, contrasts, region_fixed = NULL, region_loci = NULL)
 }
 \arguments{
 \item{props}{\code{GRangesList} containing a summary of normalised allele counts
@@ -21,17 +21,17 @@ Each column must represent a single contrast, and rows represent the levels
 The two levels involved with each contrast should be specified with
 \code{1} and \code{-1}.}
 
-\item{win_fixed}{\code{integer(1)} specifying the width (in base pairs) of a
+\item{region_fixed}{\code{integer(1)} specifying the width (in base pairs) of a
 fixed sliding window used for averaging DAR values within a region, which is
 centralised around the origin.
 Must be an integer greater than 1.
-This argument takes precedence over \code{win_loci}.}
+This argument takes precedence over \code{region_loci}.}
 
-\item{win_loci}{\code{integer(1)} specifying the number of loci to include
+\item{region_loci}{\code{integer(1)} specifying the number of loci to include
 in an elastic sliding window used for averaging DAR values within a region.
 Must be an odd integer in order to incorporate the origin locus and an
 equal number of loci either side.
-Only used when \code{win_fixed} is NULL.}
+Only used when \code{region_fixed} is NULL.}
 }
 \value{
 \code{GRangesList} containing DAR values at each overlapping range
@@ -39,14 +39,18 @@ between the contrasted sample groups.
 Two types of DAR values are reported in the metadata columns of each GRanges
 object:
 \itemize{
-\item dar_origin: The raw DAR values calculated at single nucleotide positions
+\item \code{dar_origin}: The raw DAR values calculated at single nucleotide positions
 (the origin) between sample groups.
-\item dar_region: The mean of raw DAR values in a region surrounding the origin.
-The size of the region is controlled using either the \code{win_fixed} or
-\code{win_loci} arguments, which establishes a fixed or elastic sliding window
-respectively.
-Any dar_origin values located within the window are averaged to produce the
-resulting dar_region values.
+These values represent DAR estimates at a precise locus.
+\item \code{dar_region}: The mean of raw DAR values in a specified region surrounding
+the origin.
+This is optionally returned using either of the \code{region_fixed} or
+\code{region_loci} arguments, which control the strategy and size for
+establishing regions (more information below).
+This option exists because eQTLs don't necessarily confer their effects on
+genes in close proximity.
+Therefore, DAR estimates that are representative of regions may be more
+suitable for downstream assignment DAR values to genomic features.
 }
 
 Each element of the list represents a single contrast defined in the
@@ -80,6 +84,6 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar(props, contrasts, win_loci = 5)
+dar(props, contrasts, region_loci = 5)
 
 }

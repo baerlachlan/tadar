@@ -14,8 +14,8 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_loci = 5)
-dar_fixed <- dar(props, contrasts, win_fixed = 101)
+dar <- dar(props, contrasts, region_loci = 5)
+dar_fixed <- dar(props, contrasts, region_fixed = 101)
 
 test_that("flipRanges returns regions", {
     dar_regions <- flipRanges(dar)
@@ -42,7 +42,7 @@ test_that("flipRanges errors when missing metadata", {
         flipRanges(dar),
         paste0(
             "Required metadata not detected\\. Use `dar\\(\\)` with ",
-            "either `win_fixed` or `win_loci` arguments specified ",
+            "either `region_fixed` or `region_loci` arguments specified ",
             "before `flipRanges\\(\\)`"
         )
     )

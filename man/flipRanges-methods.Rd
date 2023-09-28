@@ -16,7 +16,7 @@ positions.}
 \item{extend_edges}{\code{logical(1)} specifying if region DAR ranges at the edges
 of each chromosome should be extended to cover the entire chromosome
 when converting from origin ranges to region ranges.
-This argument is only considered if \code{win_loci} was used to construct
+This argument is only considered if \code{region_loci} was used to construct
 regions in the \code{\link[=dar]{dar()}} function.
 Useful for downstream assignment of DAR values to genomic features that
 exist at the 5' or 3' edges of the chromosome, which would have otherwise
@@ -51,7 +51,7 @@ contrasts <- matrix(
 )
 
 ## Establish regions using an elastic sliding window
-dar <- dar(props, contrasts, win_loci = 5)
+dar <- dar(props, contrasts, region_loci = 5)
 ## Convert ranges to regions associated with dar_region values
 dar_regions <- flipRanges(dar)
 ## Optionally extend the outer regions to completely cover chromosomes
@@ -60,7 +60,7 @@ dar_regions <- flipRanges(dar, extend_edges = TRUE)
 flipRanges(dar_regions)
 
 ## Establish regions using a fixed sliding window
-dar <- dar(props, contrasts, win_fixed = 1001)
+dar <- dar(props, contrasts, region_fixed = 1001)
 ## Convert ranges to regions associated with dar_region values
 dar_regions <- flipRanges(dar)
 ## Convert back to origin ranges associated with dar_origin values

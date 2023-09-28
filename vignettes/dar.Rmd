@@ -246,31 +246,31 @@ Two types of DAR values are reported by the `dar()` function as metadata columns
 - `dar_origin`: The raw DAR values calculated at single nucleotide positions (the origin) between sample groups.
 These values represent DAR estimates at a precise locus.
 - `dar_region`: The mean of raw DAR values in a specified region surrounding the origin.
-This is optionally returned using either of the `win_fixed` or `win_loci` arguments, which control the strategy and size for establishing regions (more information below).
+This is optionally returned using either of the `region_fixed` or `region_loci` arguments, which control the strategy and size for establishing regions (more information below).
 This option exists because eQTLs don't necessarily confer their effects on genes in close proximity.
 Therefore, DAR estimates that are representative of regions may be more suitable for downstream assignment DAR values to genomic features.
 
-`win_fixed` and `win_loci` are optional arguments that offer users `dar_region` values in conjunction with `dar_origin` values.
-While only one of these two arguments is required, if both are provided, `win_fixed` takes precedence.
+`region_fixed` and `region_loci` are optional arguments that offer users `dar_region` values in conjunction with `dar_origin` values.
+While only one of these two arguments is required, if both are provided, `region_fixed` takes precedence.
 Understanding the distinctions in how each option defines regions around an origin is important, as their selection carries subjective implications downstream.
 
-- `win_fixed`: Establishes a region with a fixed size around the origin.
-The total region size is defined in base pairs, meaning that the region will extend `win_fixed / 2` base pairs either side of the origin.
-For example if `win_fixed = 101` is specified, an origin at position 500 will have an associated region spanning positions 400-600.
-- `win_loci`: Establishes an elastic region to average the specified number of loci with `dar_origin` values, such that this number of values are included.
+- `region_fixed`: Establishes a region with a fixed size around the origin.
+The total region size is defined in base pairs, meaning that the region will extend `region_fixed / 2` base pairs either side of the origin.
+For example if `region_fixed = 101` is specified, an origin at position 500 will have an associated region spanning positions 450-550.
+- `region_loci`: Establishes an elastic region to average the specified number of loci with `dar_origin` values, such that this number of values are included.
 Note that whilst the number of points around the central value may be equal, the genomic distances may not be.
-In contrast to `win_fixed`, `win_loci` results in DAR estimates that cover a substantial proportion of each chromosome (i.e from the first locus to the last), which is useful for downstream assignment of DAR values to a greater number of genomic features.
+In contrast to `region_fixed`, `region_loci` results in DAR estimates that cover a substantial proportion of each chromosome (i.e from the first locus to the last), which is useful for downstream assignment of DAR values to a greater number of genomic features.
 
-The remainder of this vignette uses examples produced from specifying the `win_loci` argument.
+The remainder of this vignette uses examples produced from specifying the `region_loci` argument.
 
-```{r win_loci}
-win_loci <- 5
+```{r region_loci}
+region_loci <- 5
 ```
 
-With a chosen elastic region size of `r win_loci` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (win_loci - 1) / 2` loci either side.
+With a chosen elastic region size of `r region_loci` loci, this will smooth the DAR metric at each origin locus with the DAR values of the `r (region_loci - 1) / 2` loci either side.
 
 ```{r dar}
-dar <- dar(props = props, contrasts = contrasts, win_loci = win_loci)
+dar <- dar(props = props, contrasts = contrasts, region_loci = region_loci)
 ```
 
 ```{r head-dar, echo=FALSE}
@@ -310,7 +310,7 @@ head(gene_dar)
 
 Whilst eQTLs don't necessarily exist within a feature itself, smoothed values within a feature may still be representative of the surrounding region as inheritied haplotypes. 
 Additionally, we can opt to use the region DAR values (`dar_region` metadata column in the `dar` object) to assign DAR from the regions surrounding a feature to increase the amount of smoothing.
-The size of this region is controlled with the `win_loci` argument in the `dar()` function, which we previously set as `r win_loci`.
+The size of this region is controlled with the `region_loci` argument in the `dar()` function, which we previously set as `r region_loci`.
 
 To assign DAR values based on regions, we must firstly utilise the `flipRanges()` function.
 We can also specify the `extend_edges` option to extend the outermost ranges of each chromosome to encompass the entire chromosome.
@@ -349,10 +349,6 @@ head(gene_dar_regions)
 
 Note that because elastic regions were defined, and `extend_edges` was set to `TRUE`, all genes in `chr1_genes` now have an assigned DAR value.
 
-```{r all-genes-assigned-dar}
-length(chr1_genes) == length(gene_dar_regions$group1v2)
-```
-
 ## DAR analysis using the pipe operator
 
 The functions in this package have been designed to enable DAR analysis with minimal effort.
@@ -379,7 +375,7 @@ contrasts <- makeContrasts(
     group1v2 = group1 - group2,
     levels = names(groups)
 )
-win_loci <- 5
+region_loci <- 5
 ```
 
 Now use the `base` pipe to assign DAR values to genes based on their surrounding region.
@@ -389,7 +385,7 @@ gene_dar <- readGenotypes(vcf) |>
     countAlleles(groups = groups) |>
     filterLoci() |>
     countsToProps() |>
-    dar(contrasts = contrasts, win_loci = win_loci) |>
+    dar(contrasts = contrasts, region_loci = region_loci) |>
     flipRanges(extend_edges = TRUE) |>
     assignFeatureDar(features = chr1_genes, dar_val = "region")
 ```

@@ -71,7 +71,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_loci = 5)
+dar <- dar(props, contrasts, region_loci = 5)
 assignFeatureDar(dar, chr1_genes, dar_val = "origin")
 
 dar_regions <- flipRanges(dar, extend_edges = TRUE)

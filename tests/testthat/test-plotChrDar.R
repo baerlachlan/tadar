@@ -18,7 +18,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_loci = 5)$group1v2
+dar <- dar(props, contrasts, region_loci = 5)$group1v2
 
 test_that("plotChrDar_checks errors when passed incorrect arguments", {
     expect_error(plotChrDar(dar = NULL))
@@ -81,7 +81,10 @@ test_that("plotChrDar_checks errors when passed incorrect arguments", {
     seqlevels(foi_chr2) <- "2"
     expect_error(
         .plotChrDar_checks(dar, foi = foi_chr2),
-        "All ranges of supplied GRanges objects must exist on the same chromosome"
+        paste(
+            "All ranges of supplied GRanges objects must exist on the",
+            "same chromosome"
+        )
     )
 })
 

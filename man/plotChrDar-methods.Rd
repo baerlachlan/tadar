@@ -106,7 +106,7 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_loci = 5)
+dar <- dar(props, contrasts, region_loci = 5)
 plotChrDar(
     dar = dar$group1v2, dar_val = "region", chr = "1",
     foi = foi, foi_anno = "gene_name", foi_highlight = TRUE,

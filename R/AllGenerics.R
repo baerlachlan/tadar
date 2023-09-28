@@ -28,7 +28,7 @@ setGeneric(
 #' @export
 setGeneric(
     "dar",
-    function(props, contrasts, win_fixed = NULL, win_loci = NULL)
+    function(props, contrasts, region_fixed = NULL, region_loci = NULL)
         standardGeneric("dar")
 )
 

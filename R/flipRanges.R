@@ -10,7 +10,7 @@
 #' @param extend_edges `logical(1)` specifying if region DAR ranges at the edges
 #' of each chromosome should be extended to cover the entire chromosome
 #' when converting from origin ranges to region ranges.
-#' This argument is only considered if `win_loci` was used to construct
+#' This argument is only considered if `region_loci` was used to construct
 #' regions in the [dar()] function.
 #' Useful for downstream assignment of DAR values to genomic features that
 #' exist at the 5' or 3' edges of the chromosome, which would have otherwise
@@ -38,7 +38,7 @@
 #' )
 #'
 #' ## Establish regions using an elastic sliding window
-#' dar <- dar(props, contrasts, win_loci = 5)
+#' dar <- dar(props, contrasts, region_loci = 5)
 #' ## Convert ranges to regions associated with dar_region values
 #' dar_regions <- flipRanges(dar)
 #' ## Optionally extend the outer regions to completely cover chromosomes
@@ -47,7 +47,7 @@
 #' flipRanges(dar_regions)
 #'
 #' ## Establish regions using a fixed sliding window
-#' dar <- dar(props, contrasts, win_fixed = 1001)
+#' dar <- dar(props, contrasts, region_fixed = 1001)
 #' ## Convert ranges to regions associated with dar_region values
 #' dar_regions <- flipRanges(dar)
 #' ## Convert back to origin ranges associated with dar_origin values
@@ -66,14 +66,14 @@ setMethod(
         endoapply(dar, function(x){
             metadata_checks <- c(
                 is.null(metadata(x)$range_type),
-                is.null(metadata(x)$win_type),
-                is.null(metadata(x)$win_size)
+                is.null(metadata(x)$region_type),
+                is.null(metadata(x)$region_size)
             )
             if (any(metadata_checks))
                 stop(
                     "Required metadata not detected. Use `dar()` with ",
-                    "either `win_fixed` or `win_loci` arguments specified ",
-                    "before `flipRanges()`", call. = FALSE
+                    "either `region_fixed` or `region_loci` arguments ",
+                    "specified before `flipRanges()`", call. = FALSE
                 )
             if (metadata(x)$range_type == "origin")
                 .switchToRegion(x, extend_edges)
@@ -105,9 +105,9 @@ setMethod(
 #' @importFrom S4Vectors metadata
 .switchToRegion <- function(dar, extend_edges) {
 
-    if (metadata(dar)$win_type == "elastic")
+    if (metadata(dar)$region_type == "elastic")
         return(.asElasticRegion(dar, extend_edges))
-    if (metadata(dar)$win_type == "fixed")
+    if (metadata(dar)$region_type == "fixed")
         return(.asFixedRegion(dar))
 
 }
@@ -118,7 +118,7 @@ setMethod(
 #' @importFrom GenomeInfoDb seqnames
 .asElasticRegion <- function(dar, extend_edges) {
 
-    win_size <- metadata(dar)$win_size
+    region_size <- metadata(dar)$region_size
     removed_ranges <- dar[is.na(dar$dar_region),]
     grl <- split(dar, f = seqnames(dar))
     grl <- endoapply(grl, function(x){
@@ -128,7 +128,7 @@ setMethod(
         ## Construct regions while accounting for NA removal
         regions <- IRanges(
             start = start(x)[seq_len(n - n_NA)],
-            end = end(x)[win_size:n]
+            end = end(x)[region_size:n]
         )
         if (extend_edges) regions <- .extend(regions, x)
         x <- x[!is_NA,]
@@ -147,11 +147,11 @@ setMethod(
 #' @importFrom S4Vectors metadata 'metadata<-' 'mcols<-'
 .asFixedRegion <- function(dar) {
 
-    win_size <- metadata(dar)$win_size
+    region_size <- metadata(dar)$region_size
     mcols(dar)$origin_ranges <- ranges(dar)
     ## Resize ranges to have width specified when user executed `dar()`
     ## Suppress warnings for out-of-bound ranges because we trim these
-    dar <- suppressWarnings(resize(dar, win_size, fix = "center"))
+    dar <- suppressWarnings(resize(dar, region_size, fix = "center"))
     dar <- trim(dar)
     metadata(dar)$range_type <- "region"
     dar
@@ -168,7 +168,9 @@ setMethod(
     if (!is.null(metadata(dar)$removed_ranges)) {
         dar <- c(dar, metadata(dar)$removed_ranges)
         dar <- sort(dar)
-        metadata(dar) <- metadata(dar)[c("range_type", "win_type", "win_size")]
+        metadata(dar) <- metadata(dar)[
+            c("range_type", "region_type", "region_size")
+        ]
     }
     metadata(dar)$range_type <- "origin"
     dar

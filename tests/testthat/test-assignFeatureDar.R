@@ -15,20 +15,24 @@ contrasts <- matrix(
         Contrasts = c("group1v2")
     )
 )
-dar <- dar(props, contrasts, win_loci = 5)
-darRegions <- flipRanges(dar)
-darRegions_ex <- flipRanges(dar, extend_edges = TRUE)
+dar <- dar(props, contrasts, region_loci = 5)
+dar_regions <- flipRanges(dar)
+dar_regions_ex <- flipRanges(dar, extend_edges = TRUE)
 
 test_that("assignFeatureDar returns the expected output", {
-    geneDar_origin <- assignFeatureDar(dar, chr1_genes, dar_val = "origin")
-    expect_equal(length(geneDar_origin$group1v2), 1456)
-    expect_equal(sum(!is.na(geneDar_origin$group1v2$dar)), 820)
-    geneDar_region <- assignFeatureDar(darRegions, chr1_genes, dar_val = "region")
-    expect_equal(length(geneDar_region$group1v2), 1456)
-    expect_equal(sum(!is.na(geneDar_region$group1v2$dar)), 1455)
-    geneDar_ex <- assignFeatureDar(darRegions_ex, chr1_genes, dar_val = "region")
-    expect_equal(length(geneDar_ex$group1v2), 1456)
-    expect_equal(sum(!is.na(geneDar_ex$group1v2$dar)), 1456)
+    gene_dar_origin <- assignFeatureDar(dar, chr1_genes, dar_val = "origin")
+    expect_equal(length(gene_dar_origin$group1v2), 1456)
+    expect_equal(sum(!is.na(gene_dar_origin$group1v2$dar)), 820)
+    gene_dar_region <- assignFeatureDar(
+        dar_regions, chr1_genes, dar_val = "region"
+    )
+    expect_equal(length(gene_dar_region$group1v2), 1456)
+    expect_equal(sum(!is.na(gene_dar_region$group1v2$dar)), 1455)
+    gene_dar_ex <- assignFeatureDar(
+        dar_regions_ex, chr1_genes, dar_val = "region"
+    )
+    expect_equal(length(gene_dar_ex$group1v2), 1456)
+    expect_equal(sum(!is.na(gene_dar_ex$group1v2$dar)), 1456)
 })
 
 test_that("assignFeatureDar errors when expected", {
@@ -37,9 +41,9 @@ test_that("assignFeatureDar errors when expected", {
         assignFeatureDar(dar, chr1_genes, dar_val = "origin"),
         "No dar_origin values detected"
     )
-    darRegions <- endoapply(darRegions, function(x) x[,c()])
+    dar_regions <- endoapply(dar_regions, function(x) x[,c()])
     expect_error(
-        assignFeatureDar(darRegions, chr1_genes, dar_val = "region"),
+        assignFeatureDar(dar_regions, chr1_genes, dar_val = "region"),
         "No dar_region values detected"
     )
 })
@@ -50,7 +54,7 @@ test_that("assignFeatureDar gives warnings when expected", {
         "Range\\(s\\) detected with width == 1"
     )
     expect_warning(
-        assignFeatureDar(darRegions, chr1_genes, dar_val = "origin"),
+        assignFeatureDar(dar_regions, chr1_genes, dar_val = "origin"),
         "Range\\(s\\) detected with width > 1"
     )
 })
