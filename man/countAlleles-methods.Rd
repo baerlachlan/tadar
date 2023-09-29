@@ -25,7 +25,7 @@ Summarise the alleles from genotype calls at each single
 nucleotide locus within each sample group.
 }
 \examples{
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = paste0("sample", 1:6),

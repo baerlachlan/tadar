@@ -90,7 +90,7 @@ set.seed(230822)
 data("chr1_genes")
 foi <- sample(chr1_genes, 1)
 features <- sample(chr1_genes, 20)
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = paste0("sample", 1:6),

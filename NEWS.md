@@ -1,3 +1,3 @@
-# darr 0.99.0
+# tadar 0.99.0
 
 - Submitted to Bioconductor.

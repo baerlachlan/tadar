@@ -68,7 +68,7 @@ A DAR value of 0 represents identical allelic representation between the
 two sample groups, while a DAR value of 1 represents complete diversity.
 }
 \examples{
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = paste0("sample", 1:6),

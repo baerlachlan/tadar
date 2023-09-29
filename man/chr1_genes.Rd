@@ -22,6 +22,6 @@ zebrafish GRCz11 genome.}
 }
 \description{
 Gene features for example usage. Generation of this data is
-documented in \code{system.file("data-raw/chr1_genes.R", package = "darr")}.
+documented in \code{system.file("data-raw/chr1_genes.R", package = "tadar")}.
 }
 \keyword{datasets}

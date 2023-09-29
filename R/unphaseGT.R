@@ -11,7 +11,7 @@
 #'
 #' @examples
 #' library(VariantAnnotation)
-#' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+#' fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 #' vcf <- readVcf(fl)
 #' gt <- geno(vcf)$GT
 #' unphaseGT(gt)

@@ -1,6 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
-^darr\.Rproj$
+^tadar\.Rproj$
 ^\.github$
 ^codecov\.yml$
 ^.*TODO\.md$

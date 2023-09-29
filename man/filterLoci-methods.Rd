@@ -38,7 +38,7 @@ Each element of the list represents a distinct sample group.
 Filter loci based on allele count criteria.
 }
 \examples{
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = paste0("sample", 1:6),

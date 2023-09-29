@@ -20,7 +20,7 @@
 #' DAR origins, depending on the ranges of the input object.
 #'
 #' @examples
-#' fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+#' fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 #' genotypes <- readGenotypes(fl)
 #' groups <- list(
 #'     group1 = paste0("sample", 1:6),
