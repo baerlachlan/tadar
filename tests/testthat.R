@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/reference/test_package.html#special-files
 
 library(testthat)
-library(darr)
+library(tadar)
 
-test_check("darr")
+test_check("tadar")

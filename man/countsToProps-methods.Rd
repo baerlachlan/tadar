@@ -24,7 +24,7 @@ Normalise allele-level counts across samples by converting to a
 proportion of total alleles in all samples.
 }
 \examples{
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = paste0("sample", 1:6),

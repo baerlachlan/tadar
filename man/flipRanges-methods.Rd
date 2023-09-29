@@ -33,7 +33,7 @@ This function can also be used to revert back to the original object
 containing origin ranges if desired.
 }
 \examples{
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 genotypes <- readGenotypes(fl)
 groups <- list(
     group1 = paste0("sample", 1:6),

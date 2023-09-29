@@ -1,4 +1,4 @@
-fl <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+fl <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 
 test_that("readGenotypes returns the expected names", {
     mcolNames <- paste0("sample", 1:13)

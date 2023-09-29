@@ -11,7 +11,7 @@ author:
   - Dame Roma Mitchell Cancer Researc Laboratories, University of Adelaide
   - John Curtin School of Medical Research, Australian National University
   email: stephen.pederson.au@gmail.com
-package: darr
+package: tadar
 output:
   BiocStyle::html_document:
     toc: true
@@ -80,7 +80,7 @@ This metric can be used to identify features prone to false-positive calls in Di
 ```{r install-pkgs, eval=FALSE}
 if (!"BiocManager" %in% rownames(installed.packages()))
     install.packages("BiocManager")
-pkgs <- c("tidyverse", "limma", "darr")
+pkgs <- c("tidyverse", "limma", "tadar")
 BiocManager::install(pkgs, update = FALSE)
 ```
 
@@ -89,12 +89,12 @@ Now we can load the required packages.
 ```{r load-pkgs}
 library(tidyverse)
 library(limma)
-library(darr)
+library(tadar)
 ```
 
 ## Data
 
-The example data used in this vignette is provided within the `darr` package.
+The example data used in this vignette is provided within the `tadar` package.
 
 The `VCF` file `chr1.vcf.bgz` contains multi-sample genotype calls produced from raw RNA-seq `FASTQ` data.
 The data originates from zebrafish (*Danio rerio*) brain transcriptomes, and further information can be found in the associated manuscript by @gerken2023.
@@ -103,7 +103,7 @@ The `VCF` has been modified to remove headers and other data that are not essent
 The `GRanges` object `chr1_genes` contains gene feature information from the Ensembl database (release version 101) for *Danio rerio* Chromosome 1 (@cunningham2022).
 
 ```{r load-data}
-vcf <- system.file("extdata", "chr1.vcf.bgz", package = "darr")
+vcf <- system.file("extdata", "chr1.vcf.bgz", package = "tadar")
 data("chr1_genes")
 ```
 
@@ -359,13 +359,13 @@ First load the required packages.
 ```{r load-pkgs-pipe, eval=FALSE}
 library(tidyverse)
 library(limma)
-library(darr)
+library(tadar)
 ```
 
 Then define the input objects.
 
 ```{r objects-pipe, eval=FALSE}
-vcf <- system.file("extdata", "chr1.vcf.bgz", package="darr")
+vcf <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
 data("chr1_genes")
 groups <- list(
     group1 = paste0("sample", 1:6),

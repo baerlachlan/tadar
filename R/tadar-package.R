@@ -1,5 +1,5 @@
 #' @title
-#' darr: A package for Differential Allelic Representation (DAR) analysis
+#' tadar: A package for Differential Allelic Representation (DAR) analysis
 #'
 #' @description
 #' This package enables DAR analysis by providing functions that address
@@ -20,7 +20,7 @@
 #' output by [dar()] from origins to regions, or vice versa.
 #' 7. [assignFeatureDar()] assigns DAR values to features of interest.
 #'
-#' `darr` also provides visualisation functions that allow quick inspection
+#' `tadar` also provides visualisation functions that allow quick inspection
 #' of DAR within the dataset:
 #'
 #' - [plotChrDar()] produces a `Gviz` plot that displays the trend in DAR across
@@ -32,7 +32,7 @@
 #' Lachlan Baer, Stevie Pederson
 #'
 #' @docType package
-#' @name darr-package
+#' @name tadar-package
 NULL
 
 ## Supress R CMD check note

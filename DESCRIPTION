@@ -1,4 +1,4 @@
-Package: darr
+Package: tadar
 Title: Differential Allelic Representation
 Version: 0.99.0
 Description: This package provides functions to standardise the analysis of
@@ -23,8 +23,8 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Config/testthat/edition: 3
-BugReports: https://github.com/baerlachlan/darr/issues
-URL: https://github.com/baerlachlan/darr
+BugReports: https://github.com/baerlachlan/tadar/issues
+URL: https://github.com/baerlachlan/tadar
 BiocType: Software
 biocViews: Sequencing, RNASeq, SNP, GenomicVariation, VariantAnnotation,
     DifferentialExpression
