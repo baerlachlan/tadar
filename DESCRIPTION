@@ -1,14 +1,17 @@
 Package: tadar
-Title: Differential Allelic Representation
+Title: Transcriptome Analysis of Differential Allelic Representation
 Version: 0.99.0
 Description: This package provides functions to standardise the analysis of
-    Differential Allelic Representation (DAR). DAR analysis is intended to
-    be performed on genotype calls from variant discovery software, resulting
-    in a metric that represents the allelic diversity between groups of samples
-    at each SNP locus. The DAR metric provides a good estimate for the
-    possibility of expression quantitative trait loci differences between
-    sample groups, which may contribute to unexpected variability gene
-    expression and influence to results of Differential Expression analysis.
+    Differential Allelic Representation (DAR). DAR comprises the integrity of
+    Differential Expression analysis results as it can bias expression,
+    influencing the classification of genes (or transcripts) as being
+    differentially expressed. DAR analysis results in an easy-to-interpret
+    value between 0 and 1 for each genetic feature of interest, where 0
+    represents identical allelic representation and 1 represents complete
+    diversity. This metric can be used to identify features prone to
+    false-positive calls in Differential Expression analysis, and can be
+    leveraged with statistical methods to alleviate the impact of such
+    artefacts on RNA-seq data.
 Authors@R: 
     c(person("Lachlan", "Baer",
         email = "baerlachlan@gmail.com",
