@@ -37,7 +37,7 @@ if (!interactive())
 ## Background
 
 Differential Allelic Representation (DAR) describes a situation commonly encountered in RNA-seq experiments involving organisms that are not isogenic, and where modern techniques such as CRISPR have been used for generation of individual organisms.
-DAR comprises the integrity of Differential Expression analysis results as it can bias expression, influencing the classification of genes (or transcripts) as being differentially expressed (DE).
+DAR compromises the integrity of Differential Expression analysis results as it can bias expression, influencing the classification of genes (or transcripts) as being differentially expressed (DE).
 The concern does not lie within the statistical measures for detecting differential expression, because the underlying biology does indeed result in differential expression.
 However, without DAR analysis, the impacts of DAR are confounded with the experimental condition of interest and features can be incorrectly inferred as DE in response to the experimental condition, when they are actually an artefact of DAR.
 DAR analysis is therefore recommended as a complementary technique alongside Differential Expression analysis where non-isogenic conditions are present.
@@ -157,7 +157,7 @@ groups <- list(
 
 Now at each locus we can count the number of alleles that exist within each group with `countAlleles()`.
 This returns a `GRangesList` with each element corresponding to a different sample group.
-Columns indicate how many samples had called alleles, how many were missing and the counts of reference allele, followed by alternate alleles `n_1`, `n_2` and `n_3` ensuring multi-allelic sites are retained
+Columns indicate how many samples had called alleles, how many were missing and the counts of reference allele, followed by alternate alleles `n_1`, `n_2` and `n_3` ensuring multi-allelic sites are retained.
 
 ```{r countAlleles}
 counts <- countAlleles(genotypes = genotypes, groups = groups)
