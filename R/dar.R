@@ -149,6 +149,7 @@ setMethod(
 
 #' @keywords internal
 #' @importFrom S4Vectors endoapply 'mcols<-' 'metadata<-' from to
+#' @importFrom GenomeInfoDb seqlevels
 .smoothAcrossFixed <- function(dar, region_fixed) {
 
     if (region_fixed < 1)
@@ -161,17 +162,28 @@ setMethod(
         ## Suppress warnings for out-of-bound ranges because we trim these
         regions <- suppressWarnings(resize(x, region_fixed, fix = "center"))
         regions <- trim(regions)
-        ## Find origin ranges that overlap our regions/windows
-        hits <- findOverlaps(regions, x)
-        queries <- from(hits)
-        queries <- unique(queries)
-        ## Now average any origin dar values contained within the regions
-        dar_region <- vapply(queries, function(y){
-            subjects <- to(hits)[from(hits) == y]
-            mean(x$dar_origin[subjects])
-        }, numeric(1))
-        mcols(x)$dar_region <- dar_region
-        x
+        ## Splitting the objects improves efficiency substantially
+        dar_by_chr <- split(x, seqnames(x))
+        regions_by_chr <- split(regions, seqnames(regions))
+        lst <- lapply(seqlevels(x), function(y){
+            d <- dar_by_chr[[y]]
+            r <- regions_by_chr[[y]]
+            ## Find origin ranges that overlap our regions/windows
+            hits <- findOverlaps(r, d)
+            queries <- from(hits)
+            unique_queries <- unique(queries)
+            subjects <- to(hits)
+            dar_origin <- mcols(d)$dar_origin
+            ## Now average any origin dar values contained within the regions
+            dar_region <- vapply(unique_queries, function(z){
+                in_range <- subjects[queries == z]
+                mean(dar_origin[in_range])
+            }, numeric(1))
+            mcols(d)$dar_region <- dar_region
+            d
+        })
+        grl <- GRangesList(lst)
+        unlist(grl)
     })
 
 }
