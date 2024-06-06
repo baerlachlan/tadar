@@ -65,18 +65,31 @@ setMethod(
         dar_val <- match.arg(dar_val)
         endoapply(dar, function(x){
             .assignFeatureDar_checks(x, dar_val)
-            hits <- findOverlaps(features, x)
-            queries <- from(hits)
-            queries <- unique(queries)
-            dar_mean <- vapply(queries, function(y){
-                subjects <- to(hits)[from(hits) == y]
-                if (dar_val == "origin") featureDar <- x$dar_origin[subjects]
-                if (dar_val == "region") featureDar <- x$dar_region[subjects]
-                mean(featureDar)
-            }, numeric(1))
-            features$dar <- fill_missing
-            features[queries]$dar <- dar_mean
-            features
+            chr_in_common <- intersect(seqnames(x), seqnames(features))
+            ## Splitting the objects improves efficiency substantially
+            dar_by_chr <- split(x, seqnames(x))
+            features_by_chr <- split(features, seqnames(features))
+            lst <- lapply(chr_in_common, function(y){
+                d <- dar_by_chr[[y]]
+                f <- features_by_chr[[y]]
+                hits <- findOverlaps(f, d)
+                queries <- from(hits)
+                unique_queries <- unique(queries)
+                subjects <- to(hits)
+                dar_origin <- mcols(d)$dar_origin
+                dar_region <- mcols(d)$dar_region
+                dar_mean <- vapply(unique_queries, function(y){
+                    in_range <- subjects[queries == y]
+                    if (dar_val == "origin") featureDar <- dar_origin[in_range]
+                    if (dar_val == "region") featureDar <- dar_region[in_range]
+                    mean(featureDar)
+                }, numeric(1))
+                f$dar <- fill_missing
+                f[unique_queries]$dar <- dar_mean
+                f
+            })
+            grl <- GRangesList(lst)
+            unlist(grl)
         })
 
     }

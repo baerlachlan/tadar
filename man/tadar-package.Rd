@@ -2,6 +2,7 @@
 % Please edit documentation in R/tadar-package.R
 \docType{package}
 \name{tadar-package}
+\alias{tadar}
 \alias{tadar-package}
 \title{tadar: A package for Differential Allelic Representation (DAR) analysis}
 \description{
@@ -33,6 +34,15 @@ a chromosome.
 chromosomes.
 }
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/baerlachlan/tadar}
+  \item Report bugs at \url{https://github.com/baerlachlan/tadar/issues}
+}
+
+}
 \author{
 Lachlan Baer, Stevie Pederson
 }
+\keyword{internal}

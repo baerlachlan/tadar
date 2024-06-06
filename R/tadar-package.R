@@ -31,10 +31,9 @@
 #' @author
 #' Lachlan Baer, Stevie Pederson
 #'
-#' @docType package
-#' @name tadar-package
-NULL
+#' @keywords internal
+"_PACKAGE"
 
-## Supress R CMD check note
+## Suppress R CMD check note
 n_called <- n_missing <- NULL
 Chromosome <- NULL
