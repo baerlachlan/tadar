@@ -26,7 +26,6 @@ jobs:
         uses: grimbough/bioc-actions/setup-bioc@v1
         with:
           bioc-version: ${{ matrix.bioc-version }}
-          bioc-mirror: https://mirror.aarnet.edu.au/pub/bioconductor
           use-public-rspm: false
 
       - name: Install pandoc
