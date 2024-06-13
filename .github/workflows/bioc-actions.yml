@@ -1,0 +1,111 @@
+on:
+  push:
+
+name: bioc-actions
+
+env:
+  GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-check:
+    name: Bioc ${{ matrix.bioc-version }} (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+        ## Test using both Bioconductor devel and release
+        bioc-version: [devel, release]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Setup R and Bioconductor
+        uses: grimbough/bioc-actions/setup-bioc@v1
+        with:
+          bioc-version: ${{ matrix.bioc-version }}
+          bioc-mirror: https://mirror.aarnet.edu.au/pub/bioconductor
+          use-public-rspm: false
+
+      - name: Install pandoc
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 1
+
+      - name: Build, Install, Check
+        id: build-install-check
+        uses: grimbough/bioc-actions/build-install-check@v1
+        with:
+          package-directory: '.'
+
+      ## Turn off the checks that we know will fail
+      ## Cause the workflow to error if any new errors appear
+      - name: Run BiocCheck with arguments
+        uses: grimbough/bioc-actions/run-BiocCheck@v1
+        with:
+          package-directory: '.'
+          arguments: '--no-check-bioc-views --no-check-vignettes --no-check-bioc-help'
+          error-on: 'error'
+
+      ## Upload the Rcheck folder regardless of success or failure
+      - name: Upload output
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ matrix.os }}-bioc-${{ matrix.bioc-version}}-Rcheck
+          path: |
+            ${{ steps.build-install-check.outputs.check-dir }}
+
+      ## Upload source and binary packages
+      - name: Upload check output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.os }}-bioc-${{ matrix.bioc-version}}-pkgs
+          path: |
+            ${{ steps.build-install-check.outputs.source-tarball }}
+            ${{ steps.build-install-check.outputs.package-binary }}
+
+  # test-coverage:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - uses: r-lib/actions/setup-r@v2
+  #       with:
+  #         use-public-rspm: true
+
+  #     - uses: r-lib/actions/setup-r-dependencies@v2
+  #       with:
+  #         extra-packages: any::covr
+  #         needs: coverage
+
+  #     - name: Test coverage
+  #       run: |
+  #         covr::codecov(
+  #           quiet = FALSE,
+  #           clean = FALSE,
+  #           install_path = file.path(Sys.getenv("RUNNER_TEMP"), "package")
+  #         )
+  #       shell: Rscript {0}
+
+  #     - name: Show testthat output
+  #       if: always()
+  #       run: |
+  #         ## --------------------------------------------------------------------
+  #         find ${{ runner.temp }}/package -name 'testthat.Rout*' -exec cat '{}' \; || true
+  #       shell: bash
+
+  #     - name: Upload test results
+  #       if: failure()
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: coverage-test-failures
+  #         path: ${{ runner.temp }}/package
