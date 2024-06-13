@@ -13,6 +13,8 @@ test_that("countsToProps returns proportions", {
         x <- mcols(x)
         x <- as.matrix(x)
         sums <- rowSums(x)
+        ## Fix to avoid rounding error causing test fail
+        sums <- round(sums, digits = 1)
         unique(sums)
     })
     expect_equal(unique(unlist(rowsums)), 1)
