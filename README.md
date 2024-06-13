@@ -2,7 +2,7 @@
 
 <!-- badges: start -->
 [![check-bioc](https://github.com/baerlachlan/tadar/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/baerlachlan/tadar/actions/workflows/check-bioc.yml)
-[![Codecov test coverage](https://codecov.io/gh/baerlachlan/tadar/branch/devel/graph/badge.svg)](https://app.codecov.io/gh/baerlachlan/tadar?branch=devel)
+[![Codecov test coverage](https://codecov.io/gh/baerlachlan/tadar/branch/gh-actions/graph/badge.svg)](https://app.codecov.io/gh/baerlachlan/tadar?branch=devel)
 [![Repo Status](https://img.shields.io/badge/repository%20status-active-brightgreen)](https://shields.io/)
 <!-- badges: end -->
 
