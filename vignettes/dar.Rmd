@@ -109,7 +109,53 @@ data("chr1_genes")
 
 # Quick start
 
+DAR analysis requires only several lines of code.
+This section provides an overview of DAR analysis with `tadar`, and exists as a reference for those familiar with the process.
+See the next section if you seek a detailed walkthrough.
 
+First load the required packages.
+
+```{r quick-load-pkgs, eval=FALSE}
+library(tidyverse)
+library(limma)
+library(tadar)
+```
+
+Then define the input objects.
+
+```{r quick-objects, eval=FALSE}
+vcf <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
+data("chr1_genes")
+data("chr1_tt")
+groups <- list(
+    group1 = paste0("sample", 1:6),
+    group2 = paste0("sample", 7:13)
+)
+contrasts <- makeContrasts(
+    group1v2 = group1 - group2,
+    levels = names(groups)
+)
+region_loci <- 5
+```
+
+Now use the `base` pipe to assign DAR values to genes based on their surrounding region.
+
+```{r quick-gene_dar, eval=FALSE}
+gene_dar <- readGenotypes(vcf) |>
+    countAlleles(groups = groups) |>
+    filterLoci() |>
+    countsToProps() |>
+    dar(contrasts = contrasts, region_loci = region_loci) |>
+    flipRanges(extend_edges = TRUE) |>
+    assignFeatureDar(features = chr1_genes, dar_val = "region")
+```
+
+Lastly, use the gene-level DAR values to moderate the corresponding *p*-values from differential gene expression analysis.
+
+```{r quick-darP}
+chr1_tt <- merge(chr1_tt, mcols(gene_dar$group1v2), sort = FALSE)
+chr1_tt$darP <- modP(chr1_tt$PValue, chr1_tt$dar)
+```
 
 # DAR analysis
 
@@ -295,6 +341,7 @@ The `dar_val` argument controls whether origin or region DAR values are used whe
 In the code below we specify `dar_val = "origin"`, as the ranges of our `GRanges` objects held in `dar` currently represent those associated with origin DAR values (read further to see the alternative scenario).
 The `fill_missing` argument controls what value is assigned to features with no overlaps.
 This defaults to `NA` for easy filtering of features with unassigned DAR values.
+An alternative choice may be to set this to 0, as there is no evidence for DAR in that region.
 
 For each feature, `assignFeatureDar()` takes the mean of DAR values for any associated ranges that overlap the feature range.
 With the following configuration, it means the resulting assigned DAR values represent the average DAR that exists solely within the feature.
@@ -352,6 +399,29 @@ head(gene_dar_regions)
 ```
 
 Note that because elastic regions were defined, and `extend_edges` was set to `TRUE`, all genes in `chr1_genes` now have an assigned DAR value.
+
+## Moderating DGE *p*-values
+
+Having assigned DAR values at the gene-level, these can be utilised to moderate *p*-values from differential gene expression (DGE) analysis.
+
+Typically, under the null hypothesis, *p*-values are drawn from a uniform distribution.
+However, in the context of DAR, the *p*-value distribution is observed as right-skewed.
+This can be modelled using a beta distribution, where the $\alpha$ is set to a value < 1.
+
+This is handled with the `modP()` function, where the $\alpha$ parameter for the beta distribution is modelled as a linear relationship with DAR.
+With this technique we can directly moderate the *p*-values obtained from differential expression testing in the presence of DAR.
+By default we implement a conservative approach, resulting in a reduction of false positives, without the introduction of any further false positives (i.e. significance is reduced, never increased).
+For more information please refer to the `tadar` paper.
+<!-- Add link to manuscript when completed -->
+
+```{r modP}
+chr1_tt <- merge(chr1_tt, mcols(gene_dar$group1v2), sort = FALSE)
+chr1_tt$darP <- modP(chr1_tt$PValue, chr1_tt$dar)
+```
+
+```{r head-chr1_tt, echo=FALSE}
+head(chr1_tt)
+```
 
 # Visualisation
 
