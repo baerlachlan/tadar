@@ -107,6 +107,10 @@ vcf <- system.file("extdata", "chr1.vcf.bgz", package = "tadar")
 data("chr1_genes")
 ```
 
+# Quick start
+
+
+
 # DAR analysis
 
 DAR analysis is performed by incorporating single nucleotide-level genotype calls from variant calling software.
@@ -348,47 +352,6 @@ head(gene_dar_regions)
 ```
 
 Note that because elastic regions were defined, and `extend_edges` was set to `TRUE`, all genes in `chr1_genes` now have an assigned DAR value.
-
-## DAR analysis using the pipe operator
-
-The functions in this package have been designed to enable DAR analysis with minimal effort.
-The steps above can be performed in several lines of code as follows.
-
-First load the required packages.
-
-```{r load-pkgs-pipe, eval=FALSE}
-library(tidyverse)
-library(limma)
-library(tadar)
-```
-
-Then define the input objects.
-
-```{r objects-pipe, eval=FALSE}
-vcf <- system.file("extdata", "chr1.vcf.bgz", package="tadar")
-data("chr1_genes")
-groups <- list(
-    group1 = paste0("sample", 1:6),
-    group2 = paste0("sample", 7:13)
-)
-contrasts <- makeContrasts(
-    group1v2 = group1 - group2,
-    levels = names(groups)
-)
-region_loci <- 5
-```
-
-Now use the `base` pipe to assign DAR values to genes based on their surrounding region.
-
-```{r base-pipe, eval=FALSE}
-gene_dar <- readGenotypes(vcf) |>
-    countAlleles(groups = groups) |>
-    filterLoci() |>
-    countsToProps() |>
-    dar(contrasts = contrasts, region_loci = region_loci) |>
-    flipRanges(extend_edges = TRUE) |>
-    assignFeatureDar(features = chr1_genes, dar_val = "region")
-```
 
 # Visualisation
 
