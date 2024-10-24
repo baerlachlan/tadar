@@ -49,6 +49,15 @@ setGeneric(
     function(dar, extend_edges = FALSE) standardGeneric("flipRanges")
 )
 
+#' @name modP
+#' @rdname modP-methods
+#' @export
+setGeneric(
+    "modP",
+    function(pvals, dar, slope = -1.8)
+        standardGeneric("modP")
+)
+
 #' @name plotDarECDF
 #' @rdname plotDarECDF-methods
 #' @export
