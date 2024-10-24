@@ -105,6 +105,7 @@ The `GRanges` object `chr1_genes` contains gene feature information from the Ens
 ```{r load-data}
 vcf <- system.file("extdata", "chr1.vcf.bgz", package = "tadar")
 data("chr1_genes")
+data("chr1_tt")
 ```
 
 # Quick start
@@ -152,7 +153,7 @@ gene_dar <- readGenotypes(vcf) |>
 
 Lastly, use the gene-level DAR values to moderate the corresponding *p*-values from differential gene expression analysis.
 
-```{r quick-darP}
+```{r quick-darP, eval=FALSE}
 chr1_tt <- merge(chr1_tt, mcols(gene_dar$group1v2), sort = FALSE)
 chr1_tt$darP <- modP(chr1_tt$PValue, chr1_tt$dar)
 ```
