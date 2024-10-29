@@ -1,6 +1,6 @@
 Package: tadar
 Title: Transcriptome Analysis of Differential Allelic Representation
-Version: 1.3.2
+Version: 1.4.0
 Description: This package provides functions to standardise the analysis of
     Differential Allelic Representation (DAR). DAR compromises the integrity of
     Differential Expression analysis results as it can bias expression,
