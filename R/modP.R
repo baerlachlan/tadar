@@ -7,6 +7,7 @@
 #' @param dar `numeric` of DAR values assigned to corresponding features
 #' tested for differential expression.
 #' @param slope `numeric(1)` specifying the slope of alpha fit.
+#' @param min_dar `numeric(1)` p-values where the DAR is below this value will not be moderated
 #'
 #' @return `numeric` of DAR-moderated *p*-values of same length as
 #' input *p*-values.
@@ -43,12 +44,12 @@
 setMethod(
     "modP",
     signature = signature(pvals = "numeric", dar = "numeric"),
-    function(pvals, dar, slope) {
+    function(pvals, dar, slope, min_dar = 0.1) {
 
         if (length(pvals) != length(dar))
             stop("pvals and dar objects must be of same length")
         alpha <- 1 + (slope * dar)
-        alpha <- pmax(alpha, 0.1)
+        alpha <- pmax(alpha, min_dar)
         pbeta(q = pvals, shape1 = alpha, shape2 = 1)
 
     }
