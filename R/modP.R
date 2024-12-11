@@ -43,13 +43,27 @@
 #' @export
 setMethod(
     "modP",
-    signature = signature(pvals = "numeric", dar = "numeric"),
-    function(pvals, dar, slope, min_dar = 0.1) {
+    signature = signature(
+        pvals = "numeric", dar = "numeric",
+        slope = "numeric", min_dar = "numeric"
+    ),
+    function(pvals, dar, slope, min_dar) {
 
         if (length(pvals) != length(dar))
             stop("pvals and dar objects must be of same length")
-        alpha <- 1 + (slope * dar)
-        alpha <- pmax(alpha, min_dar)
+        if (length(slope) != 1)
+            stop("slope must be numeric(1)")
+        if (length(min_dar) != 1)
+            stop("min_dar must be numeric(1)")
+        if (max(dar) * slope < 0)
+            stop(paste0(
+                "A slope of ", slope, " will produce NaNs in pbeta. ",
+                "Please try relaxing this value"
+            ))
+        alpha <- rep(1, length(dar))
+        above_threshold <- dar > min_dar
+        alpha[above_threshold] <- 1 + (slope * dar[above_threshold])
+        # alpha <- pmax(alpha, min_dar)
         pbeta(q = pvals, shape1 = alpha, shape2 = 1)
 
     }

@@ -54,7 +54,7 @@ setGeneric(
 #' @export
 setGeneric(
     "modP",
-    function(pvals, dar, slope = -1.8)
+    function(pvals, dar, slope = -1.8, min_dar = 0.1)
         standardGeneric("modP")
 )
 
