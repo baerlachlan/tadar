@@ -1,4 +1,4 @@
-# tadar
+# tadar <img id="tadar_logo" alt="tadar Logo" src="man/figs/tadar.png" align="right" width = "125"/>
 
 <!-- badges: start -->
 [![check-bioc](https://github.com/baerlachlan/tadar/actions/workflows/check-bioc.yml/badge.svg)](https://github.com/baerlachlan/tadar/actions/workflows/check-bioc.yml)

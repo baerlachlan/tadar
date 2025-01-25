@@ -47,14 +47,3 @@ test_that("assignFeatureDar errors when expected", {
         "No dar_region values detected"
     )
 })
-
-test_that("assignFeatureDar gives warnings when expected", {
-    expect_warning(
-        assignFeatureDar(dar, chr1_genes, dar_val = "region"),
-        "Range\\(s\\) detected with width == 1"
-    )
-    expect_warning(
-        assignFeatureDar(dar_regions, chr1_genes, dar_val = "origin"),
-        "Range\\(s\\) detected with width > 1"
-    )
-})

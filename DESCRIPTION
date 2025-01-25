@@ -41,6 +41,7 @@ Imports:
     GenomeInfoDb,
     Gviz,
     IRanges,
+    lifecycle,
     MatrixGenerics,
     methods,
     rlang,
