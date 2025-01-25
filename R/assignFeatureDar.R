@@ -14,12 +14,11 @@
 #' Ranges can be converted between origins and regions with
 #' \link{flipRanges}.
 #' @param features `GRanges` object specifying the features of interest.
-#' @param dar_val `character(1)` specifying the whether to use origin or region
-#' DAR values for the chosen ranges.
-#' Options are "origin" and "region".
-#' A warning will be produced if the chosen `dar_val` does not match the
-#' ranges detected in the object provided to the `dar` argument, as this is
-#' likely unintended by the user.
+#' @param dar_val Deprecated.
+#' `character(1)` specifying the whether to use origin or region DAR values
+#' for the chosen ranges.
+#' Please use the default "origin" to avoid averaging already averaged
+#' values.
 #' @param fill_missing The DAR value to assign features with no overlaps.
 #' Defaults to `NA`.
 #'
@@ -47,10 +46,10 @@
 #'     )
 #' )
 #' dar <- dar(props, contrasts, region_loci = 5)
-#' assignFeatureDar(dar, chr1_genes, dar_val = "origin")
+#' assignFeatureDar(dar, chr1_genes)
 #'
 #' dar_regions <- flipRanges(dar, extend_edges = TRUE)
-#' assignFeatureDar(dar_regions, chr1_genes, dar_val = "region")
+#' assignFeatureDar(dar_regions, chr1_genes)
 #'
 #' @import GenomicRanges
 #' @importFrom S4Vectors endoapply from to
@@ -81,7 +80,18 @@ setMethod(
                 dar_mean <- vapply(unique_queries, function(y){
                     in_range <- subjects[queries == y]
                     if (dar_val == "origin") featureDar <- dar_origin[in_range]
-                    if (dar_val == "region") featureDar <- dar_region[in_range]
+                    if (dar_val == "region") {
+                        featureDar <- dar_region[in_range]
+                        lifecycle::deprecate_warn(
+                            "1.6.0", "assignfeatureDar(dar_val)",
+                            details = paste(
+                                "Please use dar_val = 'origin' to avoid",
+                                "averaging already averaged values. This",
+                                "argument will be removed in future versions."
+                            ),
+                            always = TRUE
+                        )
+                    }
                     mean(featureDar)
                 }, numeric(1))
                 f$dar <- fill_missing
@@ -103,19 +113,9 @@ setMethod(
     if (dar_val == "region") {
         if (!"dar_region" %in% names(mcols(dar)))
             stop("No dar_region values detected", call. = FALSE)
-        if (min(widths) == 1)
-            warning(
-                "Range(s) detected with width == 1 but dar_val = region. ",
-                "See ?assignGeneDar", call. = FALSE
-            )
     }
     if (dar_val == "origin") {
         if (!"dar_origin" %in% names(mcols(dar)))
             stop("No dar_origin values detected", call. = FALSE)
-        if (max(widths) > 1)
-            warning(
-                "Range(s) detected with width > 1 but dar_val = origin. ",
-                "See ?assignGeneDar", call. = FALSE
-            )
     }
 }

@@ -33,12 +33,11 @@ Ranges can be converted between origins and regions with
 
 \item{features}{\code{GRanges} object specifying the features of interest.}
 
-\item{dar_val}{\code{character(1)} specifying the whether to use origin or region
-DAR values for the chosen ranges.
-Options are "origin" and "region".
-A warning will be produced if the chosen \code{dar_val} does not match the
-ranges detected in the object provided to the \code{dar} argument, as this is
-likely unintended by the user.}
+\item{dar_val}{Deprecated.
+\code{character(1)} specifying the whether to use origin or region DAR values
+for the chosen ranges.
+Please use the default "origin" to avoid averaging already averaged
+values.}
 
 \item{fill_missing}{The DAR value to assign features with no overlaps.
 Defaults to \code{NA}.}
@@ -72,9 +71,9 @@ contrasts <- matrix(
     )
 )
 dar <- dar(props, contrasts, region_loci = 5)
-assignFeatureDar(dar, chr1_genes, dar_val = "origin")
+assignFeatureDar(dar, chr1_genes)
 
 dar_regions <- flipRanges(dar, extend_edges = TRUE)
-assignFeatureDar(dar_regions, chr1_genes, dar_val = "region")
+assignFeatureDar(dar_regions, chr1_genes)
 
 }

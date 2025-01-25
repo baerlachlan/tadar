@@ -338,8 +338,6 @@ It makes sense to select features that were tested for differential expression, 
 This is performed with the `assignFeatureDar()` function, passing the features of interest as a `GRanges` object.
 In this example we use the genes contained in `chr1_genes`, which was loaded earlier.
 
-The `dar_val` argument controls whether origin or region DAR values are used when assigned to features.
-In the code below we specify `dar_val = "origin"`, as the ranges of our `GRanges` objects held in `dar` currently represent those associated with origin DAR values (read further to see the alternative scenario).
 The `fill_missing` argument controls what value is assigned to features with no overlaps.
 This defaults to `NA` for easy filtering of features with unassigned DAR values.
 An alternative choice may be to set this to 0, as there is no evidence for DAR in that region.
@@ -351,7 +349,6 @@ With the following configuration, it means the resulting assigned DAR values rep
 gene_dar <- assignFeatureDar(
     dar = dar,
     features = chr1_genes,
-    dar_val = "origin",
     fill_missing = NA
 )
 ```
@@ -360,8 +357,7 @@ gene_dar <- assignFeatureDar(
 head(gene_dar)
 ```
 
-Whilst eQTLs don't necessarily exist within a feature itself, smoothed values within a feature may still be representative of the surrounding region as inheritied haplotypes. 
-Additionally, we can opt to use the region DAR values (`dar_region` metadata column in the `dar` object) to assign DAR from the regions surrounding a feature to increase the amount of smoothing.
+Whilst eQTLs don't necessarily exist within a feature itself, smoothed values within a feature may still be representative of the surrounding region as inheritied haplotypes.
 The size of this region is controlled with the `region_loci` argument in the `dar()` function, which we previously set as `r region_loci`.
 
 To assign DAR values based on regions, we must firstly utilise the `flipRanges()` function.
@@ -383,16 +379,10 @@ head(dar_regions)
 identical(dar, flipRanges(dar_regions))
 ```
 
-Now we can assign DAR values to features based on their surrounding region, by supplying our new ranges and selecting `dar_val = region`.
-A warning will be produced if the ranges don't match the selected `dar_val`, as this is likely unintended by the user.
-However, use cases may exist and the warning can be ignored if this is intended.
+Now we can assign DAR values to features based on their surrounding region.
 
 ```{r assignFeatureDar-region}
-gene_dar_regions <- assignFeatureDar(
-    dar = dar_regions,
-    features = chr1_genes,
-    dar_val = "region"
-)
+gene_dar_regions <- assignFeatureDar(dar = dar_regions, features = chr1_genes)
 ```
 
 ```{r head-gene-dar-regions, echo=FALSE}
