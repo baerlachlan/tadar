@@ -115,7 +115,7 @@ setMethod(
 #' @keywords internal
 #' @importFrom S4Vectors mcols 'mcols<-' from to 'metadata<-'
 #' @importFrom stats dist
-#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
+#' @importFrom Seqinfo 'seqlevels<-' seqlevelsInUse
 .calcDar <- function(props, contrasts) {
 
     grl <- lapply(contrasts, function(x){
@@ -149,7 +149,7 @@ setMethod(
 
 #' @keywords internal
 #' @importFrom S4Vectors endoapply 'mcols<-' 'metadata<-' from to
-#' @importFrom GenomeInfoDb seqlevels
+#' @importFrom Seqinfo seqlevels
 .smoothAcrossFixed <- function(dar, region_fixed) {
 
     if (region_fixed < 1)
@@ -190,7 +190,7 @@ setMethod(
 
 #' @keywords internal
 #' @importFrom S4Vectors endoapply mcols 'mcols<-' 'metadata<-'
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 #' @importFrom stats filter
 .smoothAcrossLoci <- function(dar, region_loci) {
 

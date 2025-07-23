@@ -85,7 +85,7 @@ setMethod(
 )
 
 #' @keywords internal
-#' @importFrom GenomeInfoDb seqnames seqlengths
+#' @importFrom Seqinfo seqnames seqlengths
 .extend <- function(regions, dar) {
     chr <- seqnames(dar)
     chr <- unique(chr)
@@ -115,7 +115,7 @@ setMethod(
 #' @keywords internal
 #' @importFrom IRanges IRanges ranges 'ranges<-'
 #' @importFrom S4Vectors endoapply 'metadata<-' 'mcols<-'
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 .asElasticRegion <- function(dar, extend_edges) {
 
     region_size <- metadata(dar)$region_size

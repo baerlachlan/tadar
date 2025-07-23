@@ -36,7 +36,7 @@
 #' @import GenomicRanges
 #' @importFrom S4Vectors mcols endoapply
 #' @importFrom rlang enquo eval_tidy
-#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
+#' @importFrom Seqinfo 'seqlevels<-' seqlevelsInUse
 #' @rdname filterLoci-methods
 #' @aliases filterLoci
 #' @export

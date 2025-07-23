@@ -107,7 +107,7 @@ setMethod(
 )
 
 #' @keywords internal
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 #' @importFrom S4Vectors mcols
 #' @importFrom Gviz AnnotationTrack
 .foiTrack <- function(chr, foi, foi_anno) {
@@ -137,7 +137,7 @@ setMethod(
 
 #' @keywords internal
 #' @importFrom Gviz GenomeAxisTrack HighlightTrack
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 .axisTrack <- function(chr, foi) {
 
     track_name <- ""  # Defaults to empty string if `chr` not provided
@@ -159,7 +159,7 @@ setMethod(
 }
 
 #' @keywords internal
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 #' @importFrom S4Vectors mcols
 #' @importFrom Gviz AnnotationTrack
 .featuresTrack <- function(chr, features, features_anno) {
@@ -187,7 +187,7 @@ setMethod(
 }
 
 #' @keywords internal
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 #' @importFrom Gviz DataTrack HighlightTrack
 .darTrack <- function(
         dar, dar_val, chr, foi, foi_highlight, features, features_highlight
@@ -255,7 +255,7 @@ setMethod(
 }
 
 #' @keywords internal
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 #' @importFrom methods is
 .checkGRanges <- function(msg, gr, chr, arg_name = deparse(substitute(gr))) {
 
@@ -290,7 +290,7 @@ setMethod(
 }
 
 #' @keywords internal
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 .checkConsistentSeqnames <- function(msg, dar, chr, foi, features) {
 
     ## Only need to check when `chr` missing because .checkGRanges()

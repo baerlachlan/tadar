@@ -51,7 +51,7 @@ setMethod(
 #' @importFrom VariantAnnotation readVcf ScanVcfParam geno vcfGeno
 #' @importFrom MatrixGenerics rowRanges
 #' @importFrom S4Vectors 'mcols<-'
-#' @importFrom GenomeInfoDb 'seqlevels<-' seqlevelsInUse
+#' @importFrom Seqinfo 'seqlevels<-' seqlevelsInUse
 #' @keywords internal
 .readGenotypes <- function(file, unphase, ...) {
 

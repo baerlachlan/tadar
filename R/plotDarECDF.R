@@ -36,7 +36,7 @@
 #'     theme_bw()
 #'
 #' @import GenomicRanges ggplot2
-#' @importFrom GenomeInfoDb seqnames
+#' @importFrom Seqinfo seqnames
 #' @rdname plotDarECDF-methods
 #' @aliases plotDarECDF
 #' @export
